@@ -36,7 +36,20 @@ repositories {
                     url = 'https://maven.neoforged.net/releases'
                 }
         )
-        filter { includeGroup('org.parchmentmc.data') }
+        filter {
+            includeGroup('org.parchmentmc.data')
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'GeckoLib'
+                url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+            }
+        }
+        filter {
+            includeGroupAndSubgroups('software.bernie.geckolib')
+        }
     }
     maven {
         name = 'BlameJared'

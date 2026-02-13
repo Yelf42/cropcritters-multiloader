@@ -23,7 +23,7 @@ dependencies {
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
     // Geckolib
-    //compileOnly "software.bernie.geckolib:geckolib-common:${geckolib_version}"
+    compileOnly "software.bernie.geckolib:geckolib-common-${minecraft_version}:${geckolib_version}"
 }
 
 configurations {
