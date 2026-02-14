@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:underwater_bonemeals",
+    "minecraft:kelp",
+    "minecraft:sea_pickle",
+    "minecraft:small_dripleaf",
+    "minecraft:big_dripleaf",
+    "minecraft:mangrove_propagule",
+    "cropcritters:liverwort"
+  ]
+}

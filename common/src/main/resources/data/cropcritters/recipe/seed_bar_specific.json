@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "SGS",
+    "SSS"
+  ],
+  "key": {
+    "S": [
+      "minecraft:beetroot_seeds",
+      "minecraft:melon_seeds",
+      "minecraft:pumpkin_seeds",
+      "minecraft:torchflower_seeds",
+      "minecraft:wheat_seeds",
+      "cropcritters:bone_trap"
+    ],
+    "G": [
+      "minecraft:sweet_berries",
+      "minecraft:glow_berries"
+    ]
+  },
+  "result": {
+    "id": "cropcritters:seed_bar",
+    "count": 2
+  }
+}

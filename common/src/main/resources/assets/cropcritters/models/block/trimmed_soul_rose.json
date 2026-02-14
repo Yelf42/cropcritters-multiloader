@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross_emissive",
+  "textures": {
+    "cross": "cropcritters:block/trimmed_soul_rose",
+    "cross_emissive": "cropcritters:block/trimmed_soul_rose"
+  }
+}

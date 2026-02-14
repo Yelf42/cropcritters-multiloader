@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "cropcritters:block/lost_soul_in_a_jar"
+    },
+    "hanging=true": {
+      "model": "cropcritters:block/lost_soul_in_a_jar_hanging"
+    }
+  }
+}

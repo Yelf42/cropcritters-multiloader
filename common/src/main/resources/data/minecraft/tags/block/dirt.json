@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:farmland",
+    "minecraft:soul_sand",
+    "minecraft:soul_soil",
+    "cropcritters:soul_farmland"
+  ]
+}

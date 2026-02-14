@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "cropcritters:puffbomb_mushroom",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "age": "2"
+              }
+            }
+          ],
+          "name": "cropcritters:puffbomb_mushroom"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "cropcritters:puffbomb_mushroom"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "cropcritters:puffbomb_mushroom"
+}

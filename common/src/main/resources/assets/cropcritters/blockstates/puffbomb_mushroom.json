@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "cropcritters:block/puffbomb_mushroom0"
+    },
+    "age=1": {
+      "model": "cropcritters:block/puffbomb_mushroom1"
+    },
+    "age=2": {
+      "model": "cropcritters:block/puffbomb_mushroom2"
+    }
+  }
+}

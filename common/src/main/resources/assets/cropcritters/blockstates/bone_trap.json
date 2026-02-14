@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "stage=0,facing=east": {
+      "model": "cropcritters:block/bone_trap0",
+      "y": 270
+    },
+    "stage=1,facing=east": {
+      "model": "cropcritters:block/bone_trap1",
+      "y": 270
+    },
+    "stage=2,facing=east": {
+      "model": "cropcritters:block/bone_trap2",
+      "y": 270
+    },
+    "stage=0,facing=north": {
+      "model": "cropcritters:block/bone_trap0",
+      "y": 180
+    },
+    "stage=1,facing=north": {
+      "model": "cropcritters:block/bone_trap1",
+      "y": 180
+    },
+    "stage=2,facing=north": {
+      "model": "cropcritters:block/bone_trap2",
+      "y": 180
+    },
+    "stage=0,facing=south": {
+      "model": "cropcritters:block/bone_trap0"
+    },
+    "stage=1,facing=south": {
+      "model": "cropcritters:block/bone_trap1"
+    },
+    "stage=2,facing=south": {
+      "model": "cropcritters:block/bone_trap2"
+    },
+    "stage=0,facing=west": {
+      "model": "cropcritters:block/bone_trap0",
+      "y": 90
+    },
+    "stage=1,facing=west": {
+      "model": "cropcritters:block/bone_trap1",
+      "y": 90
+    },
+    "stage=2,facing=west": {
+      "model": "cropcritters:block/bone_trap2",
+      "y": 90
+    }
+  }
+}

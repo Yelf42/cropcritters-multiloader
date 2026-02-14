@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:hoglin",
+    "minecraft:piglin",
+    "minecraft:piglin_brute",
+    "minecraft:magma_cube",
+    "#minecraft:undead",
+    "#cropcritters:crop_critters",
+    "minecraft:parrot",
+    "minecraft:ocelot",
+    "minecraft:fox",
+    "minecraft:bee"
+  ]
+}

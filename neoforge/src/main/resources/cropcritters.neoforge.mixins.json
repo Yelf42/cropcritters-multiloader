@@ -3,9 +3,10 @@
   "minVersion": "0.8",
   "package": "com.yelf42.cropcritters.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
+  "mixins": [
+    "CropBlockMixinNeoforge"
+  ],
   "client": [
-    "MixinTitleScreen"
   ],
   "server": [],
   "injectors": {

@@ -1,0 +1,139 @@
+{
+  "itemGroup.cropcritters": "Crop Critters",
+
+  "item.cropcritters.strange_fertilizer": "Strange Fertilizer",
+  "item.cropcritters.lost_soul": "Lost Soul",
+  "item.cropcritters.herbicide": "Herbicide",
+  "item.cropcritters.seed_bar": "Farmer's Treat",
+
+  "tag.item.cropcritters.seed_ball_crops": "Seed Ball Crops",
+  "item.cropcritters.seed_ball": "Seed Ball",
+  "item.cropcritters.tooltip.poisonous_seed_ball" : "Poisonous",
+
+  "block.cropcritters.soul_farmland": "Soul Farmland",
+  "item.cropcritters.soul_farmland": "Soul Farmland",
+
+  "block.cropcritters.crawl_thistle": "Crawl Thistle",
+  "item.cropcritters.crawl_thistle": "Crawl Thistle",
+
+  "block.cropcritters.mazewood_sapling": "Mazewood Sapling",
+  "item.cropcritters.mazewood_sapling": "Mazewood Sapling",
+
+  "block.cropcritters.mazewood": "Mazewood",
+  "item.cropcritters.mazewood": "Mazewood",
+
+  "block.cropcritters.crimson_thornweed": "Crimson Thornweed",
+  "item.cropcritters.crimson_thornweed": "Crimson Thornweed",
+
+  "block.cropcritters.withering_spiteweed": "Withering Spiteweed",
+  "item.cropcritters.withering_spiteweed": "Withering Spiteweed",
+
+  "block.cropcritters.waftgrass": "Waftgrass",
+  "item.cropcritters.waftgrass": "Waftgrass",
+
+  "block.cropcritters.strangle_fern": "Strangle Fern",
+  "item.cropcritters.strangle_fern": "Strangle Fern Spores",
+  "effect.cropcritters.spores_effect": "Spores",
+
+  "block.cropcritters.puffbomb_mushroom": "Puffbomb Mushroom",
+  "item.cropcritters.puffbomb_mushroom": "Puffbomb Mushroom",
+  "block.cropcritters.puffbomb_mushroom_block": "Puffbomb Mushroom Block",
+  "item.cropcritters.puffbomb_mushroom_block": "Puffbomb Mushroom Block",
+  "item.cropcritters.puffbomb_slice": "Puffbomb Slice",
+  "item.cropcritters.cooked_puffbomb_steak": "Cooked Puffbomb Steak",
+  "effect.cropcritters.puffbomb_poisoning": "Ticking",
+
+  "block.cropcritters.liverwort": "Liverwort",
+  "item.cropcritters.liverwort": "Liverwort",
+
+  "block.cropcritters.bone_trap": "Bonejaw",
+  "item.cropcritters.bone_trap": "Bony Seeds",
+
+  "item.cropcritters.popper_pod": "Popper Pod",
+  "block.cropcritters.popper_plant": "Popper Plant",
+  "item.cropcritters.popper_plant": "Popper Seed",
+
+  "block.cropcritters.soul_rose": "Soul Rose",
+  "item.cropcritters.soul_rose": "Soul Rose",
+  "block.cropcritters.trimmed_soul_rose": "Trimmed Soul Rose",
+  "item.cropcritters.trimmed_soul_rose": "Trimmed Soul Rose",
+
+  "block.cropcritters.tall_bush": "Tall Bush",
+  "item.cropcritters.tall_bush": "Tall Bush",
+
+  "block.cropcritters.ornamental_bush": "Ornamental Bush",
+  "item.cropcritters.ornamental_bush": "Ornamental Bush",
+
+  "block.cropcritters.lost_soul_in_a_jar": "Lost Soul in a Bottle",
+  "item.cropcritters.lost_soul_in_a_jar": "Lost Soul in a Bottle",
+
+  "block.cropcritters.soul_pot": "Soul Pot",
+  "item.cropcritters.soul_pot": "Soul Pot",
+  "painting.cropcritters.ritual.title" : "Ritual",
+
+  "block.cropcritters.torchflower_spark": "Torchflower Spark",
+
+  "entity.cropcritters.wheat_critter": "Wheat Critter",
+  "item.cropcritters.wheat_critter_spawn_egg": "Wheat Critter Spawn Egg",
+
+  "entity.cropcritters.melon_critter": "Melon Critter",
+  "item.cropcritters.melon_critter_spawn_egg": "Melon Critter Spawn Egg",
+
+  "entity.cropcritters.pumpkin_critter": "Pumpkin Critter",
+  "item.cropcritters.pumpkin_critter_spawn_egg": "Pumpkin Critter Spawn Egg",
+
+  "entity.cropcritters.carrot_critter": "Carrot Critter",
+  "item.cropcritters.carrot_critter_spawn_egg": "Carrot Critter Spawn Egg",
+
+  "entity.cropcritters.potato_critter": "Potato Critter",
+  "item.cropcritters.potato_critter_spawn_egg": "Potato Critter Spawn Egg",
+
+  "entity.cropcritters.beetroot_critter": "Beetroot Critter",
+  "item.cropcritters.beetroot_critter_spawn_egg": "Beetroot Critter Spawn Egg",
+
+  "entity.cropcritters.nether_wart_critter": "Nether Wart Critter",
+  "item.cropcritters.nether_wart_critter_spawn_egg": "Nether Wart Critter Spawn Egg",
+
+  "entity.cropcritters.poisonous_potato_critter": "Poisonous Potato Critter",
+  "item.cropcritters.poisonous_potato_critter_spawn_egg": "Poisonous Potato Critter Spawn Egg",
+
+  "entity.cropcritters.torchflower_critter": "Torchflower Critter",
+  "item.cropcritters.torchflower_critter_spawn_egg": "Torchflower Critter Spawn Egg",
+
+  "entity.cropcritters.pitcher_critter": "Pitcher Critter",
+  "item.cropcritters.pitcher_critter_spawn_egg": "Pitcher Critter Spawn Egg",
+
+  "entity.cropcritters.cocoa_critter": "Cocoa Critter",
+  "item.cropcritters.cocoa_critter_spawn_egg": "Cocoa Critter Spawn Egg",
+
+
+
+  "sounds.cropcritters.ticking": "Ticking",
+  "sounds.cropcritters.puffbomb_explode": "Puffbomb Explosion",
+  "sounds.cropcritters.bone_trap_close": "Bone Trap Close",
+  "sounds.cropcritters.bone_trap_open": "Bone Trap Open",
+  "sounds.cropcritters.lost_soul_jar_chime": "Lost Soul in a Bottle Chime",
+  "sounds.cropcritters.mazewood_mature": "Mazewood Mature",
+  "sounds.cropcritters.mazewood_grow": "Mazewood Grow",
+  "sounds.cropcritters.spore_infest": "Spore Infest",
+  "sounds.cropcritters.spawn_slime": "Slime Spawned",
+  "sounds.cropcritters.spawn_critter": "Critter Spawned",
+  "sounds.cropcritters.throw_seed_ball": "Seed Ball Thrown",
+  "sounds.cropcritters.wither_rose_convert": "Wither Rose Conversion",
+  "sounds.cropcritters.revive_coral": "Revived Coral",
+
+  "sounds.cropcritters.entity_critter_ambient": "Crop Critter",
+  "sounds.cropcritters.entity_critter_evil_ambient": "Evil Crop Critter",
+  "sounds.cropcritters.entity_critter_evil_sting": "Evil Crop Critter Stings",
+  "sounds.cropcritters.entity_critter_hurt": "Crop Critter Hurt",
+  "sounds.cropcritters.entity_critter_death": "Crop Critter Died",
+  "sounds.cropcritters.entity_critter_till": "Crop Critter Tills",
+  "sounds.cropcritters.entity_critter_shear": "Crop Critter Shears",
+  "sounds.cropcritters.entity_critter_drop": "Crop Critter Drops",
+  "sounds.cropcritters.entity_critter_spit": "Crop Critter Spit",
+  "sounds.cropcritters.entity_critter_water": "Crop Critter Waters",
+  "sounds.cropcritters.entity_critter_eat": "Crop Critter Eat",
+  "sounds.cropcritters.popper_pod_pop": "Popper Pod Pop",
+  "sounds.cropcritters.popper_pod_launch": "Popper Pod Launch"
+
+}

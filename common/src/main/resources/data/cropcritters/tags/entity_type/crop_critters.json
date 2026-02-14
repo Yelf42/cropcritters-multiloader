@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "cropcritters:wheat_critter",
+    "cropcritters:melon_critter",
+    "cropcritters:carrot_critter",
+    "cropcritters:potato_critter",
+    "cropcritters:poisonous_potato_critter",
+    "cropcritters:beetroot_critter",
+    "cropcritters:pumpkin_critter",
+    "cropcritters:nether_wart_critter",
+    "cropcritters:pitcher_critter",
+    "cropcritters:torchflower_critter",
+    "cropcritters:cocoa_critter"
+  ]
+}

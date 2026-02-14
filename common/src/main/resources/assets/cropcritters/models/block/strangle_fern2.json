@@ -1,0 +1,6 @@
+{
+  "parent": "cropcritters:block/strangle_fern_template",
+  "textures": {
+    "text": "cropcritters:block/strangle_fern2"
+  }
+}

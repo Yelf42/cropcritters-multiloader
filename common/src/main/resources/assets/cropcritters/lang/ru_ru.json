@@ -1,0 +1,75 @@
+{
+  "itemGroup.cropcritters": "Урожайные твари",
+
+  "item.cropcritters.strange_fertilizer": "Странное удобрение",
+  "item.cropcritters.lost_soul": "Потерянная душа",
+
+  "tag.item.cropcritters.seed_ball_crops": "Семена шариковых культур",
+  "item.cropcritters.seed_ball": "Шариковые семена",
+  "item.cropcritters.tooltip.poisonous_seed_ball" : "Отравленные",
+
+  "block.cropcritters.soul_farmland": "Пашня душ",
+  "item.cropcritters.soul_farmland": "Пашня душ",
+
+  "block.cropcritters.crawl_thistle": "Ползучий чертополох",
+  "item.cropcritters.crawl_thistle": "Ползучий чертополох",
+
+  "block.cropcritters.mazewood_sapling": "Саженец лабиринтового дерева",
+  "item.cropcritters.mazewood_sapling": "Саженец лабиринтового дерева",
+
+  "block.cropcritters.mazewood": "Лабиринтовое дерево",
+  "item.cropcritters.mazewood": "Лабиринтовое дерево",
+
+  "block.cropcritters.crimson_thornweed": "Багровый колючник",
+  "item.cropcritters.crimson_thornweed": "Багровый колючник",
+
+  "block.cropcritters.withering_spiteweed": "Иссушающий злоцвет",
+  "item.cropcritters.withering_spiteweed": "Иссушающий злоцвет",
+
+  "block.cropcritters.waftgrass": "Вей-трава",
+  "item.cropcritters.waftgrass": "Вей-трава",
+
+  "block.cropcritters.tall_bush": "Высокий куст",
+  "item.cropcritters.tall_bush": "Высокий куст",
+
+  "block.cropcritters.ornamental_bush": "Декоративный куст",
+  "item.cropcritters.ornamental_bush": "Декоративный куст",
+
+  "block.cropcritters.lost_soul_in_a_jar": "Потерянная душа в бутылке",
+  "item.cropcritters.lost_soul_in_a_jar": "Потерянная душа в бутылке",
+
+  "block.cropcritters.torchflower_spark": "Искра факельника",
+
+  "entity.cropcritters.wheat_critter": "Пшеничный живчик",
+  "item.cropcritters.wheat_critter_spawn_egg": "Яйцо призыва пшеничного живчика",
+
+  "entity.cropcritters.melon_critter": "Арбузный живчик",
+  "item.cropcritters.melon_critter_spawn_egg": "Яйцо призыва арбузного живчика",
+
+  "entity.cropcritters.pumpkin_critter": "Тыквенный живчик",
+  "item.cropcritters.pumpkin_critter_spawn_egg": "Яйцо призыва тыквенного живчика",
+
+  "entity.cropcritters.carrot_critter": "Морковный живчик",
+  "item.cropcritters.carrot_critter_spawn_egg": "Яйцо призыва морковного живчика",
+
+  "entity.cropcritters.potato_critter": "Картофельный живчик",
+  "item.cropcritters.potato_critter_spawn_egg": "Яйцо призыва картофельного живчика",
+
+  "entity.cropcritters.beetroot_critter": "Свекольный живчик",
+  "item.cropcritters.beetroot_critter_spawn_egg": "Яйцо призыва свекольного живчика",
+
+  "entity.cropcritters.nether_wart_critter": "Живчик адского нароста",
+  "item.cropcritters.nether_wart_critter_spawn_egg": "Яйцо призыва живчика адского нароста",
+
+  "entity.cropcritters.poisonous_potato_critter": "Ядовитый картофельный живчик",
+  "item.cropcritters.poisonous_potato_critter_spawn_egg": "Яйцо призыва ядовитого картофельного живчика",
+
+  "entity.cropcritters.torchflower_critter": "Живчик факельник",
+  "item.cropcritters.torchflower_critter_spawn_egg": "Яйцо призыва живчика факельника",
+
+  "entity.cropcritters.pitcher_critter": "Живчик кувшинник",
+  "item.cropcritters.pitcher_critter_spawn_egg": "Яйцо призыва живчика кувшинника",
+
+  "entity.cropcritters.cocoa_critter": "Какао живчик",
+  "item.cropcritters.cocoa_critter_spawn_egg": "Яйцо призыва какао живчика"
+}

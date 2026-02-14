@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "cropcritters:crawl_thistle",
+    "cropcritters:crimson_thornweed",
+    "cropcritters:waftgrass",
+    "cropcritters:withering_spiteweed",
+    "cropcritters:mazewood_sapling",
+    "cropcritters:strangle_fern",
+    "cropcritters:puffbomb_mushroom",
+    "cropcritters:liverwort",
+    "cropcritters:popper_plant",
+    "cropcritters:bone_trap"
+  ]
+}

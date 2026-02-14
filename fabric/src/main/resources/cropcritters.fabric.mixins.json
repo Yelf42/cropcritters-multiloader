@@ -4,9 +4,10 @@
   "package": "com.yelf42.cropcritters.mixin",
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
+  "mixins": [
+    "CropBlockMixinFabric"
+  ],
   "client": [
-    "MixinTitleScreen"
   ],
   "server": [],
   "injectors": {

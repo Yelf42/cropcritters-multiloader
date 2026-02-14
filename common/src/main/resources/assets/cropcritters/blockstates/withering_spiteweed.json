@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "cropcritters:block/withering_spiteweed0"
+    },
+    "age=1": {
+      "model": "cropcritters:block/withering_spiteweed1"
+    }
+  }
+}

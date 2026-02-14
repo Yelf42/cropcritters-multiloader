@@ -1,0 +1,8 @@
+{
+  "replace" : false,
+  "values": [
+    "cropcritters:wheat_critter",
+    "cropcritters:nether_wart_critter",
+    "cropcritters:torchflower_critter"
+  ]
+}

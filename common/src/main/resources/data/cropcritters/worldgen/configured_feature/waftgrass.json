@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:nether_forest_vegetation",
+  "config": {
+    "spread_height": 2,
+    "spread_width": 1,
+    "state_provider": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "cropcritters:waftgrass"
+          },
+          "weight": 1
+        }
+      ]
+    }
+  }
+}

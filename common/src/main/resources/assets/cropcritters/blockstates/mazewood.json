@@ -1,0 +1,47 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "cropcritters:block/mazewood_post"
+      },
+      "when": {
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "cropcritters:block/mazewood_side"
+      },
+      "when": {
+        "north": "tall"
+      }
+    },
+    {
+      "apply": {
+        "model": "cropcritters:block/mazewood_side",
+        "y": 90
+      },
+      "when": {
+        "east": "tall"
+      }
+    },
+    {
+      "apply": {
+        "model": "cropcritters:block/mazewood_side",
+        "y": 180
+      },
+      "when": {
+        "south": "tall"
+      }
+    },
+    {
+      "apply": {
+        "model": "cropcritters:block/mazewood_side",
+        "y": 270
+      },
+      "when": {
+        "west": "tall"
+      }
+    }
+  ]
+}

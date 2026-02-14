@@ -1,0 +1,511 @@
+{
+  "ticking": {
+    "subtitle" : "sounds.cropcritters.ticking",
+    "sounds" : [
+      {
+        "attenuation_distance": 6,
+        "name": "block/copper_bulb/toggle"
+      }
+    ]
+  },
+  "bone_trap_close": {
+    "subtitle" : "sounds.cropcritters.bone_trap_close",
+    "sounds" : [
+      "mob/evocation_illager/fangs"
+    ]
+  },
+  "bone_trap_open": {
+    "subtitle" : "sounds.cropcritters.bone_trap_open",
+    "sounds" : [
+      "mob/skeleton/step1",
+      "mob/skeleton/step2",
+      "mob/skeleton/step3",
+      "mob/skeleton/step4"
+    ]
+  },
+  "lost_soul_jar_chime": {
+    "subtitle" : "sounds.cropcritters.lost_soul_jar_chime",
+    "sounds" : [
+      "note/icechime"
+    ]
+  },
+  "mazewood_mature": {
+    "subtitle" : "sounds.cropcritters.mazewood_mature",
+    "sounds" : [
+      {
+        "name": "block/bamboo/place1",
+        "volume": 0.8
+      },
+      {
+        "name": "block/bamboo/place2",
+        "volume": 0.8
+      },
+      {
+        "name": "block/bamboo/place3",
+        "volume": 0.8
+      },
+      {
+        "name": "block/bamboo/place4",
+        "volume": 0.8
+      },
+      {
+        "name": "block/bamboo/place5",
+        "volume": 0.8
+      },
+      {
+        "name": "block/bamboo/place6",
+        "volume": 0.8
+      }
+    ]
+  },
+  "mazewood_grow": {
+    "subtitle" : "sounds.cropcritters.mazewood_grow",
+    "sounds" : [
+      {
+        "name": "block/mangrove_roots/step1",
+        "volume": 0.25
+      },
+      {
+        "name": "block/mangrove_roots/step2",
+        "volume": 0.25
+      },
+      {
+        "name": "block/mangrove_roots/step3",
+        "volume": 0.25
+      },
+      {
+        "name": "block/mangrove_roots/step4",
+        "volume": 0.25
+      },
+      {
+        "name": "block/mangrove_roots/step5",
+        "volume": 0.25
+      },
+      {
+        "name": "block/mangrove_roots/step6",
+        "volume": 0.25
+      }
+    ]
+  },
+  "puffbomb_explode": {
+    "subtitle" : "sounds.cropcritters.puffbomb_explode",
+    "sounds" : [
+      {
+        "name": "mob/breeze/wind_burst1",
+        "pitch": 1.2
+      },
+      {
+        "name": "mob/breeze/wind_burst2",
+        "pitch": 1.2
+      },
+      {
+        "name": "mob/breeze/wind_burst3",
+        "pitch": 1.2
+      }
+    ]
+  },
+  "spore_infest": {
+    "subtitle" : "sounds.cropcritters.spore_infest",
+    "sounds" : [
+      {
+        "name": "block/sweet_berry_bush/place1",
+        "volume": 0.8
+      },
+      {
+        "name": "block/sweet_berry_bush/place2",
+        "volume": 0.8
+      },
+      {
+        "name": "block/sweet_berry_bush/place3",
+        "volume": 0.8
+      },
+      {
+        "name": "block/sweet_berry_bush/place4",
+        "volume": 0.8
+      },
+      {
+        "name": "block/sweet_berry_bush/place5",
+        "volume": 0.8
+      },
+      {
+        "name": "block/sweet_berry_bush/place6",
+        "volume": 0.8
+      }
+    ]
+  },
+  "spawn_slime": {
+    "subtitle" : "sounds.cropcritters.spawn_slime",
+    "sounds" : [
+      "mob/slime/big1",
+      "mob/slime/big2",
+      "mob/slime/big3",
+      "mob/slime/big4"
+    ]
+  },
+  "spawn_critter": {
+    "subtitle" : "sounds.cropcritters.spawn_critter",
+    "sounds" : [
+      {
+        "name": "mob/allay/idle_with_item1",
+        "pitch": 1.25,
+        "volume": 0.3
+      },
+      {
+        "name": "mob/allay/idle_with_item2",
+        "pitch": 1.25,
+        "volume": 0.3
+      },
+      {
+        "name": "mob/allay/idle_with_item3",
+        "pitch": 1.25,
+        "volume": 0.3
+      },
+      {
+        "name": "mob/allay/idle_with_item4",
+        "pitch": 1.25,
+        "volume": 0.3
+      }
+    ]
+  },
+  "throw_seed_ball": {
+    "subtitle" : "sounds.cropcritters.throw_seed_ball",
+    "sounds" : [
+      "random/bow"
+    ]
+  },
+  "wither_rose_convert": {
+    "subtitle" : "sounds.cropcritters.wither_rose_convert",
+    "sounds" : [
+      {
+        "name": "enchant/soulspeed/soulspeed4",
+        "volume": 0.5
+      },
+      {
+        "name": "enchant/soulspeed/soulspeed5",
+        "volume": 0.5
+      },
+      {
+        "name": "enchant/soulspeed/soulspeed6",
+        "volume": 0.5
+      },
+      {
+        "name": "enchant/soulspeed/soulspeed7",
+        "volume": 0.5
+      },
+      {
+        "name": "enchant/soulspeed/soulspeed8",
+        "volume": 0.5
+      },
+      {
+        "name": "enchant/soulspeed/soulspeed9",
+        "volume": 0.5
+      },
+      {
+        "name": "enchant/soulspeed/soulspeed10",
+        "volume": 0.5
+      },
+      {
+        "name": "enchant/soulspeed/soulspeed11",
+        "volume": 0.5
+      },
+      {
+        "name": "enchant/soulspeed/soulspeed12",
+        "volume": 0.5
+      },
+      {
+        "name": "enchant/soulspeed/soulspeed13",
+        "volume": 0.5
+      }
+    ]
+  },
+  "wither_rose_convert_extra": {
+    "sounds" : [
+      "block/amethyst/shimmer"
+    ]
+  },
+  "revive_coral": {
+    "subtitle" : "sounds.cropcritters.revive_coral",
+    "sounds" : [
+      {
+        "name": "item/axe/strip1",
+        "volume": 0.9
+      },
+      {
+        "name": "item/axe/strip1",
+        "pitch": 0.85,
+        "volume": 0.9
+      },
+      {
+        "name": "item/axe/strip2",
+        "volume": 0.9
+      },
+      {
+        "name": "item/axe/strip2",
+        "pitch": 0.85,
+        "volume": 0.9
+      },
+      {
+        "name": "item/axe/strip3",
+        "volume": 0.9
+      },
+      {
+        "name": "item/axe/strip3",
+        "pitch": 0.85,
+        "volume": 0.9
+      },
+      {
+        "name": "item/axe/strip4",
+        "volume": 0.9
+      },
+      {
+        "name": "item/axe/strip4",
+        "pitch": 0.85,
+        "volume": 0.9
+      }
+    ]
+  },
+  "entity_critter_ambient": {
+    "subtitle" : "sounds.cropcritters.entity_critter_ambient",
+    "sounds" : [
+      {
+        "name": "mob/allay/item_given1",
+        "volume": 0.1
+      },
+      {
+        "name": "mob/allay/item_given2",
+        "volume": 0.1
+      },
+      {
+        "name": "mob/allay/item_given3",
+        "volume": 0.1
+      },
+      {
+        "name": "mob/allay/item_given4",
+        "volume": 0.1
+      }
+    ]
+  },
+  "entity_critter_evil_ambient": {
+    "subtitle" : "sounds.cropcritters.entity_critter_evil_ambient",
+    "sounds" : [
+      "mob/vex/idle1",
+      "mob/vex/idle2",
+      "mob/vex/idle3",
+      "mob/vex/idle4"
+    ]
+  },
+  "entity_critter_evil_sting": {
+    "subtitle" : "sounds.cropcritters.entity_critter_evil_sting",
+    "sounds" : [
+      "mob/pufferfish/sting1",
+      "mob/pufferfish/sting2"
+    ]
+  },
+  "entity_critter_hurt": {
+    "subtitle" : "sounds.cropcritters.entity_critter_hurt",
+    "sounds" : [
+      {
+        "name": "mob/allay/hurt1",
+        "pitch": 1.5,
+        "volume": 0.8
+      },
+      {
+        "name": "mob/allay/hurt2",
+        "pitch": 1.5,
+        "volume": 0.8
+      }
+    ]
+  },
+  "entity_critter_death": {
+    "subtitle" : "sounds.cropcritters.entity_critter_death",
+    "sounds" : [
+      {
+        "name": "mob/allay/death1",
+        "volume": 0.6
+      },
+      {
+        "name": "mob/allay/death2",
+        "volume": 0.6
+      }
+    ]
+  },
+  "entity_critter_large": {
+    "sounds" : [
+      "mob/glow_squid/death1",
+      "mob/glow_squid/death2",
+      "mob/glow_squid/death3"
+    ]
+  },
+  "entity_critter_till": {
+    "subtitle" : "sounds.cropcritters.entity_critter_till",
+    "sounds" : [
+      "item/hoe/till1",
+      "item/hoe/till2",
+      "item/hoe/till3",
+      "item/hoe/till4"
+    ]
+  },
+  "entity_critter_shear": {
+    "subtitle" : "sounds.cropcritters.entity_critter_shear",
+    "sounds" : [
+      "mob/sheep/shear"
+    ]
+  },
+  "entity_critter_drop": {
+    "subtitle" : "sounds.cropcritters.entity_critter_drop",
+    "sounds" : [
+      {
+        "name": "mob/fox/spit1",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/fox/spit2",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/fox/spit3",
+        "volume": 0.7
+      }
+    ]
+  },
+  "entity_critter_spit": {
+    "subtitle" : "sounds.cropcritters.entity_critter_spit",
+    "sounds" : [
+      "ui/hud/hud_bubble"
+    ]
+  },
+  "entity_critter_water": {
+    "subtitle" : "sounds.cropcritters.entity_critter_water",
+    "sounds" : [
+      "ambient/weather/rain1",
+      "ambient/weather/rain2",
+      "ambient/weather/rain3",
+      "ambient/weather/rain4",
+      "ambient/weather/rain5",
+      "ambient/weather/rain6",
+      "ambient/weather/rain7",
+      "ambient/weather/rain8"
+    ]
+  },
+  "entity_critter_eat": {
+    "subtitle" : "sounds.cropcritters.entity_critter_eat",
+    "sounds" : [
+      {
+        "name": "mob/dolphin/eat1",
+        "volume": 0.75
+      },
+      {
+        "name": "mob/dolphin/eat2",
+        "volume": 0.75
+      },
+      {
+        "name": "mob/dolphin/eat3",
+        "volume": 0.75
+      }
+    ]
+  },
+  "popper_pod_pop": {
+    "subtitle" : "sounds.cropcritters.popper_pod_pop",
+    "sounds" : [
+      "ui/hud/hud_bubble"
+    ]
+  },
+  "popper_pod_launch": {
+    "subtitle" : "sounds.cropcritters.popper_pod_launch",
+    "sounds" : [
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish1"
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish1",
+        "volume": 0.9
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish1",
+        "pitch": 0.9
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish1",
+        "pitch": 0.9,
+        "volume": 0.9
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish1",
+        "pitch": 1.1
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish1",
+        "pitch": 1.1,
+        "volume": 0.9
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish2"
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish2",
+        "volume": 0.9
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish2",
+        "pitch": 0.9
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish2",
+        "pitch": 0.9,
+        "volume": 0.9
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish2",
+        "pitch": 1.1
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish2",
+        "pitch": 1.1,
+        "volume": 0.9
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish3"
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish3",
+        "volume": 0.9
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish3",
+        "pitch": 0.9
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish3",
+        "pitch": 0.9,
+        "volume": 0.9
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish3",
+        "pitch": 1.1
+      },
+      {
+        "attenuation_distance": 8,
+        "name": "block/candle/extinguish3",
+        "pitch": 1.1,
+        "volume": 0.9
+      }
+    ]
+  }
+}

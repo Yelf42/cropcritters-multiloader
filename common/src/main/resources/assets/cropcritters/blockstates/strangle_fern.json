@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "cropcritters:block/strangle_fern0"
+    },
+    "age=1": {
+      "model": "cropcritters:block/strangle_fern1"
+    },
+    "age=2": {
+      "model": "cropcritters:block/strangle_fern2"
+    },
+    "age=3": {
+      "model": "cropcritters:block/strangle_fern3"
+    }
+  }
+}

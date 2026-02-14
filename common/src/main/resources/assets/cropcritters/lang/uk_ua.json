@@ -1,0 +1,75 @@
+{
+  "itemGroup.cropcritters": "Врожайні створіння",
+
+  "item.cropcritters.strange_fertilizer": "Дивне добриво",
+  "item.cropcritters.lost_soul": "Загублена душа",
+
+  "tag.item.cropcritters.seed_ball_crops": "Насіння кулькових культур",
+  "item.cropcritters.seed_ball": "Кулькове насіння",
+  "item.cropcritters.tooltip.poisonous_seed_ball" : "Отруйні",
+
+  "block.cropcritters.soul_farmland": "Рілля душ",
+  "item.cropcritters.soul_farmland": "Рілля душ",
+
+  "block.cropcritters.crawl_thistle": "Повзучий будяк",
+  "item.cropcritters.crawl_thistle": "Повзучий будяк",
+
+  "block.cropcritters.mazewood_sapling": "Саджанець лабіринтового дерева",
+  "item.cropcritters.mazewood_sapling": "Саджанець лабіринтового дерева",
+
+  "block.cropcritters.mazewood": "Лабіринтове дерево",
+  "item.cropcritters.mazewood": "Лабіринтове дерево",
+
+  "block.cropcritters.crimson_thornweed": "Багряний колючник",
+  "item.cropcritters.crimson_thornweed": "Багряний колючник",
+
+  "block.cropcritters.withering_spiteweed": "Виснажливий злістоквіт",
+  "item.cropcritters.withering_spiteweed": "Виснажливий злістоквіт",
+
+  "block.cropcritters.waftgrass": "Хвиль-трава",
+  "item.cropcritters.waftgrass": "Хвиль-трава",
+
+  "block.cropcritters.tall_bush": "Високий кущ",
+  "item.cropcritters.tall_bush": "Високий кущ",
+
+  "block.cropcritters.ornamental_bush": "Декоративний кущ",
+  "item.cropcritters.ornamental_bush": "Декоративний кущ",
+
+  "block.cropcritters.lost_soul_in_a_jar": "Загублена душа в пляшці",
+  "item.cropcritters.lost_soul_in_a_jar": "Загублена душа в пляшці",
+
+  "block.cropcritters.torchflower_spark": "Іскра факельника",
+
+  "entity.cropcritters.wheat_critter": "Пшеничний живчик",
+  "item.cropcritters.wheat_critter_spawn_egg": "Яйце призову пшеничного живчика",
+
+  "entity.cropcritters.melon_critter": "Кавуновий живчик",
+  "item.cropcritters.melon_critter_spawn_egg": "Яйце призову кавунового живчика",
+
+  "entity.cropcritters.pumpkin_critter": "Гарбузовий живчик",
+  "item.cropcritters.pumpkin_critter_spawn_egg": "Яйце призову гарбузового живчика",
+
+  "entity.cropcritters.carrot_critter": "Морквяний живчик",
+  "item.cropcritters.carrot_critter_spawn_egg": "Яйце призову морквяного живчика",
+
+  "entity.cropcritters.potato_critter": "Картопляний живчик",
+  "item.cropcritters.potato_critter_spawn_egg": "Яйце призову картопляного живчика",
+
+  "entity.cropcritters.beetroot_critter": "Буряковий живчик",
+  "item.cropcritters.beetroot_critter_spawn_egg": "Яйце призову бурякового живчика",
+
+  "entity.cropcritters.nether_wart_critter": "Незерський наріст живчик",
+  "item.cropcritters.nether_wart_critter_spawn_egg": "Яйце прикликання незерського наріст живчика",
+
+  "entity.cropcritters.poisonous_potato_critter": "Отруйний картопляний живчик",
+  "item.cropcritters.poisonous_potato_critter_spawn_egg": "Яйце призову отруйного картопляного живчика",
+
+  "entity.cropcritters.torchflower_critter": "Живчик факельник",
+  "item.cropcritters.torchflower_critter_spawn_egg": "Яйце призову живчика факельника",
+
+  "entity.cropcritters.pitcher_critter": "Живчик куві‌шник",
+  "item.cropcritters.pitcher_critter_spawn_egg": "Яйце призову живчика куві‌шника",
+
+  "entity.cropcritters.cocoa_critter": "Какао живчик",
+  "item.cropcritters.cocoa_critter_spawn_egg": "Яйце призову какао живчика"
+}

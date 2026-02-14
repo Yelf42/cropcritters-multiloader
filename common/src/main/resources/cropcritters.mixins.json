@@ -4,9 +4,26 @@
   "package": "com.yelf42.cropcritters.mixin",
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_18",
-  "mixins": [],
+  "mixins": [
+    "AttachedStemBlockMixin",
+    "BiomeMixin",
+    "BlockItemMixin",
+    "BlockMixin",
+    "CropBlockMixin",
+    "FarmBlockMixin",
+    "HoeItemMixin",
+    "LightningBoltMixin",
+    "NetherWartBlockMixin",
+    "PitcherCropBlockMixin",
+    "PlayerMixin",
+    "ServerLevelMixin",
+    "ShearsDispenserBehaviourMixin",
+    "ShearsItemMixin",
+    "StemBlockMixin",
+    "VegetationBlockMixin",
+    "WalkNodeEvaluatorMixin"
+  ],
   "client": [
-    "MixinMinecraft"
   ],
   "server": [],
   "injectors": {

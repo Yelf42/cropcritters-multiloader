@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#cropcritters:weeds",
+    "minecraft:nether_wart",
+    "minecraft:pitcher_crop"
+  ]
+}

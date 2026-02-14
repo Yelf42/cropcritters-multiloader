@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/flower_pot_cross_emissive",
+  "textures": {
+    "cross_emissive": "cropcritters:block/soul_rose0_emissive",
+    "plant": "cropcritters:block/soul_rose0"
+  }
+}

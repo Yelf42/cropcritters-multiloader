@@ -1,27 +1,30 @@
 {
     "schemaVersion": 1,
-    "id": "${mod_id}",
+    "id": "cropcritters",
     "version": "${version}",
-    "name": "${mod_name}",
-    "description": "${description}",
+    "name": "Crop Critters",
+    "description": "Making Farming Exciting!",
     "authors": [
-        "${mod_author}"
+        "Yelf42"
     ],
     "contact": {
         "homepage": "https://fabricmc.net/",
         "sources": "https://github.com/FabricMC/fabric-example-mod"
     },
     "license": "${license}",
-    "icon": "${mod_id}.png",
+    "icon": "icon.png",
     "environment": "*",
     "entrypoints": {
         "main": [
           "com.yelf42.cropcritters.CropCrittersFabric"
-        ]
+        ],
+      "client": [
+        "com.yelf42.cropcritters.CropCrittersFabricClient"
+      ]
     },
     "mixins": [
-        "${mod_id}.mixins.json",
-        "${mod_id}.fabric.mixins.json"
+        "cropcritters.mixins.json",
+        "cropcritters.fabric.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",

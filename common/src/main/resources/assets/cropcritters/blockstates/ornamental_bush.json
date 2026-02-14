@@ -1,0 +1,20 @@
+{
+  "multipart": [
+    {
+      "when": { "half": "lower" },
+      "apply": [
+        { "model": "cropcritters:block/ornamental_bush_bottom_leaves" }
+      ]
+    },
+    {
+      "when": { "half": "lower" },
+      "apply": [
+        { "model": "cropcritters:block/ornamental_bush_bottom_branch" }
+      ]
+    },
+    {
+      "when": { "half": "upper" },
+      "apply": { "model": "cropcritters:block/ornamental_bush_top" }
+    }
+  ]
+}

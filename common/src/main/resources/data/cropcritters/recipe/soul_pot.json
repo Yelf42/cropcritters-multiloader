@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "minecraft:soul_soil",
+    "B": "minecraft:brick"
+  },
+  "pattern": [
+    " B ",
+    "B#B",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "cropcritters:soul_pot"
+  }
+}

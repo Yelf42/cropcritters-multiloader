@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "cropcritters:block/ornamental_bush_bottom_branch"
+  }
+}
