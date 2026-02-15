@@ -27,6 +27,11 @@ type="required" #mandatory (Can be one of "required", "optional", "incompatible"
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
+[[dependencies.cropcritters]]
+modId = "geckolib"
+type="required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
+ordering = "NONE"
+side = "BOTH"
 
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
