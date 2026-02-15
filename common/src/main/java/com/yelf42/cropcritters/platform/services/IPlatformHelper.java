@@ -56,4 +56,5 @@ public interface IPlatformHelper {
 
     AffectorPositions getAffectorPositions(ServerLevel world);
     void setAffectorPositions(ServerLevel world, AffectorPositions positions);
+
 }

@@ -1,0 +1,7 @@
+{
+  "type": "cropcritters:configurable_feature",
+  "biomes": "minecraft:warped_forest",
+  "features": "cropcritters:waftgrass",
+  "step": "vegetal_decoration",
+  "config_key": "waftgrass"
+}

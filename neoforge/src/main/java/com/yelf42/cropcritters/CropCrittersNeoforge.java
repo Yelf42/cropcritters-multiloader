@@ -1,22 +1,37 @@
 package com.yelf42.cropcritters;
 
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.yelf42.cropcritters.config.ConfigManager;
 import com.yelf42.cropcritters.entity.*;
 import com.yelf42.cropcritters.platform.NeoForgePlatformHelper;
 import com.yelf42.cropcritters.registry.*;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.world.BiomeGenerationSettingsBuilder;
+import net.neoforged.neoforge.common.world.BiomeModifier;
+import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Mod(CropCritters.MOD_ID)
 public class CropCrittersNeoforge {
@@ -61,6 +76,8 @@ public class CropCrittersNeoforge {
         ModDispenserBehaviours.registerDispenserBehavior();
         eventBus.addListener(this::setupDispenserBehaviors);
 
+        BiomeModifiers.register(eventBus);
+
         CropCritters.init();
 
     }
@@ -74,9 +91,7 @@ public class CropCrittersNeoforge {
     }
 
     public void setupDispenserBehaviors(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            ModDispenserBehaviours.DISPENSER_BEHAVIORS.forEach(Runnable::run);
-        });
+        event.enqueueWork(ModDispenserBehaviours::runDispenserRegistration);
     }
 
     private void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -92,4 +107,5 @@ public class CropCrittersNeoforge {
         event.put(ModEntities.PITCHER_CRITTER, PitcherCritterEntity.createAttributes().build());
         event.put(ModEntities.COCOA_CRITTER, CocoaCritterEntity.createAttributes().build());
     }
+
 }

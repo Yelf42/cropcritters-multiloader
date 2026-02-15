@@ -1,0 +1,7 @@
+{
+  "type": "cropcritters:configurable_feature",
+  "biomes": "minecraft:plains",
+  "features": "cropcritters:plains_puffbomb_blob",
+  "step": "vegetal_decoration",
+  "config_key": "puffbomb"
+}

@@ -1,0 +1,7 @@
+{
+  "type": "cropcritters:configurable_feature",
+  "biomes": "minecraft:crimson_forest",
+  "features": "cropcritters:crimson_thornweed",
+  "step": "vegetal_decoration",
+  "config_key": "thornweed"
+}

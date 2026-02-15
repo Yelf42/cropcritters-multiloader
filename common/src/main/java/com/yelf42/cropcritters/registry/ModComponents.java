@@ -18,19 +18,6 @@ import java.util.function.Consumer;
 
 public class ModComponents {
 
-    public static void initialize() {
-        CropCritters.LOGGER.info("Initializing components for " + CropCritters.MOD_ID);
-        // TODO figure this out
-//        ComponentTooltipAppenderRegistry.addAfter(
-//                DataComponents.DAMAGE,
-//                POISONOUS_SEED_BALL
-//        );
-//        ComponentTooltipAppenderRegistry.addAfter(
-//                POISONOUS_SEED_BALL,
-//                SEED_TYPES
-//        );
-    }
-
     // Item components
     public static final DataComponentType<SeedTypesComponent> SEED_TYPES = DataComponentType.<SeedTypesComponent>builder().persistent(SeedTypesComponent.CODEC).build();
     public record SeedTypesComponent(List<Identifier> seedTypes) implements TooltipProvider {

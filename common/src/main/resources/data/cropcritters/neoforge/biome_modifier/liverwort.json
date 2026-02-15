@@ -1,0 +1,7 @@
+{
+  "type": "cropcritters:configurable_feature",
+  "biomes": "minecraft:swamp",
+  "features": "cropcritters:liverwort",
+  "step": "vegetal_decoration",
+  "config_key": "liverwort"
+}

@@ -1,0 +1,7 @@
+{
+  "type": "cropcritters:configurable_feature",
+  "biomes": "#minecraft:is_beach",
+  "features": "cropcritters:dead_coral_shelf",
+  "step": "underground_ores",
+  "config_key": "dead_coral"
+}

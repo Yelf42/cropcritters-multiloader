@@ -37,6 +37,9 @@ public class CropCrittersFabric implements ModInitializer {
         registerEntityAttributes();
 
         ModDispenserBehaviours.registerDispenserBehavior();
+        ModDispenserBehaviours.runDispenserRegistration();
+
+        BiomeModifiers.register();
 
         CropCritters.init();
     }

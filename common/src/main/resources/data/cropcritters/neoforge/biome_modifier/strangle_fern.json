@@ -1,0 +1,7 @@
+{
+  "type": "cropcritters:configurable_feature",
+  "biomes": "minecraft:swamp",
+  "features": "cropcritters:strangle_fern",
+  "step": "vegetal_decoration",
+  "config_key": "strangle_fern"
+}

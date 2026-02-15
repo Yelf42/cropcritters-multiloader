@@ -42,4 +42,8 @@ public class ModDispenserBehaviours {
                 })
         );
     }
+
+    public static void runDispenserRegistration() {
+        DISPENSER_BEHAVIORS.forEach(Runnable::run);
+    }
 }

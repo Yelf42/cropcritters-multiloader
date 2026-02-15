@@ -1,0 +1,7 @@
+{
+  "type": "cropcritters:configurable_feature",
+  "biomes": "minecraft:soul_sand_valley",
+  "features": "cropcritters:withering_spiteweed",
+  "step": "surface_structures",
+  "config_key": "spiteweed"
+}

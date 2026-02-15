@@ -1,0 +1,7 @@
+{
+  "type": "cropcritters:configurable_feature",
+  "biomes": "minecraft:soul_sand_valley",
+  "features": "cropcritters:soul_rose_hint",
+  "step": "vegetal_decoration",
+  "config_key": "soul_rose_hint"
+}
