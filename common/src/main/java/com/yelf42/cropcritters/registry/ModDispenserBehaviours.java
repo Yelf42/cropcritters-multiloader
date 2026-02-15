@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO test
 public class ModDispenserBehaviours {
     public static final List<Runnable> DISPENSER_BEHAVIORS = new ArrayList<>();
 

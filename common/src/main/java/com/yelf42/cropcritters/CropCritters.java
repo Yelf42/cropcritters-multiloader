@@ -13,9 +13,6 @@ import net.minecraft.world.level.block.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO strange fertilizer issue (Tallbush placement, rarity)
-// TODO herbicide ignore infestedState in StrangleFern
-// TODO puffbomb blob cancel if bad block below
 public class CropCritters {
 
     public static final String MOD_ID = "cropcritters";

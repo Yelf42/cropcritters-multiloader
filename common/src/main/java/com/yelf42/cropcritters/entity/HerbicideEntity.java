@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.yelf42.cropcritters.blocks.StrangleFernBlockEntity;
 import com.yelf42.cropcritters.registry.ModEntities;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -8,6 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.CommonColors;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
@@ -51,7 +53,16 @@ public class HerbicideEntity extends ThrowableItemProjectile {
             BlockState check = world.getBlockState(pos);
             boolean airState = check.getFluidState().isEmpty();
             if (check.is(CropCritters.WEEDS) && !check.is(ModBlocks.PUFFBOMB_MUSHROOM)) {
-                world.setBlock(pos, airState ? Blocks.AIR.defaultBlockState() : Blocks.WATER.defaultBlockState(), 3);
+                if (check.is(ModBlocks.STRANGLE_FERN)) {
+                    StrangleFernBlockEntity sfbe = (StrangleFernBlockEntity) world.getBlockEntity(pos);
+                    BlockState infested = Blocks.DEAD_BUSH.defaultBlockState();
+                    if (sfbe != null) {
+                        infested = sfbe.getInfestedState();
+                    }
+                    world.setBlock(pos, infested, 3);
+                } else {
+                    world.setBlock(pos, airState ? Blocks.AIR.defaultBlockState() : Blocks.WATER.defaultBlockState(), 3);
+                }
             }
         }
     }

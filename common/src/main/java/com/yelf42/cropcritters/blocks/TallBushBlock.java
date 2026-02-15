@@ -1,5 +1,7 @@
 package com.yelf42.cropcritters.blocks;
 
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
@@ -23,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.Nullable;
 
 public class TallBushBlock extends BushBlock {
@@ -44,6 +47,17 @@ public class TallBushBlock extends BushBlock {
         BlockPos blockPos = ctx.getClickedPos();
         Level world = ctx.getLevel();
         return blockPos.getY() < world.getMaxY() && world.getBlockState(blockPos.above()).canBeReplaced(ctx) ? super.getStateForPlacement(ctx) : null;
+    }
+
+    // From DoubleTallPlant
+    @Override
+    protected BlockState updateShape(BlockState p_52894_, LevelReader p_374107_, ScheduledTickAccess p_374359_, BlockPos p_52898_, Direction p_52895_, BlockPos p_52899_, BlockState p_52896_, RandomSource p_374454_) {
+        DoubleBlockHalf doubleblockhalf = (DoubleBlockHalf)p_52894_.getValue(HALF);
+        if (p_52895_.getAxis() != Direction.Axis.Y || doubleblockhalf == DoubleBlockHalf.LOWER != (p_52895_ == Direction.UP) || p_52896_.is(this) && p_52896_.getValue(HALF) != doubleblockhalf) {
+            return doubleblockhalf == DoubleBlockHalf.LOWER && p_52895_ == Direction.DOWN && !p_52894_.canSurvive(p_374107_, p_52898_) ? Blocks.AIR.defaultBlockState() : super.updateShape(p_52894_, p_374107_, p_374359_, p_52898_, p_52895_, p_52899_, p_52896_, p_374454_);
+        } else {
+            return Blocks.AIR.defaultBlockState();
+        }
     }
 
     @Override

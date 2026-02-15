@@ -1,7 +1,11 @@
 package com.yelf42.cropcritters.features;
 
 import com.mojang.serialization.Codec;
+import com.yelf42.cropcritters.CropCritters;
+import com.yelf42.cropcritters.blocks.PuffbombPlantBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,7 +39,10 @@ public class PuffbombBlobFeature extends Feature<NoneFeatureConfiguration> {
         WorldGenLevel world = context.level();
         BlockPos centerPos = context.origin();
         RandomSource random = context.random();
-        ChunkGenerator chunkGenerator = context.chunkGenerator();
+
+        // Stop worldgen on leaves etc
+        BlockState soil = world.getBlockState(centerPos.below());
+        if ((!soil.is(BlockTags.MUSHROOM_GROW_BLOCK) && !soil.is(BlockTags.DIRT)) && (!soil.isSolidRender())) return false;
 
         // Seed center block
         BlockState toPlace = ModBlocks.PUFFBOMB_MUSHROOM_BLOCK.defaultBlockState();

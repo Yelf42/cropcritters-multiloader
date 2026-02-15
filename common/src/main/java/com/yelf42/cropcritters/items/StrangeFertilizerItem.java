@@ -201,21 +201,35 @@ public class StrangeFertilizerItem extends BoneMealItem {
 
         RandomSource random = world.getRandom();
 
-        outerLoop:
-        for (int i = 0; i < 128; i++) {
+        int successfulPlacements = 0;
+        int maxAttempts = 128;
+        int targetPlacements = 32;
+
+        for (int attempt = 0; attempt < maxAttempts && successfulPlacements < targetPlacements; attempt++) {
             BlockPos blockPos2 = blockPos;
 
-            for (int j = 0; j < i / 16; j++) {
-                blockPos2 = blockPos2.offset(random.nextInt(3) - 1, (random.nextInt(3) - 1) * random.nextInt(3) / 2, random.nextInt(3) - 1);
+            int walkSteps = random.nextInt(5) + 1;
+
+            for (int j = 0; j < walkSteps; j++) {
+                blockPos2 = blockPos2.offset(
+                        random.nextInt(3) - 1,
+                        (random.nextInt(3) - 1) * random.nextInt(3) / 2,
+                        random.nextInt(3) - 1
+                );
+
                 if (world.getBlockState(blockPos2).isCollisionShapeFullBlock(world, blockPos2)) {
-                    continue outerLoop;
+                    blockPos2 = null;
+                    break;
                 }
             }
+
+            if (blockPos2 == null) continue;
 
             BlockState blockState2 = world.getBlockState(blockPos2);
             if (blockState2.is(Blocks.AIR)) {
                 BlockState toPlace;
                 BlockState floor = world.getBlockState(blockPos2.below());
+
                 if (floor.is(Blocks.CRIMSON_NYLIUM) || floor.is(Blocks.WARPED_NYLIUM)) {
                     toPlace = BuiltInRegistries.BLOCK
                             .getRandomElementOf(CropCritters.ON_NYLIUM_STRANGE_FERTILIZERS, world.random)
@@ -228,18 +242,20 @@ public class StrangeFertilizerItem extends BoneMealItem {
                             .orElse(Blocks.BROWN_MUSHROOM.defaultBlockState());
                 } else {
                     toPlace = BuiltInRegistries.BLOCK
-                            .getRandomElementOf((random.nextInt(4) == 0) ? CropCritters.ON_LAND_RARE_STRANGE_FERTILIZERS : CropCritters.ON_LAND_COMMON_STRANGE_FERTILIZERS, world.random)
+                            .getRandomElementOf((random.nextInt(2) == 0) ? CropCritters.ON_LAND_RARE_STRANGE_FERTILIZERS : CropCritters.ON_LAND_COMMON_STRANGE_FERTILIZERS, world.random)
                             .map(blockEntry -> ((Block)blockEntry.value()).defaultBlockState())
                             .orElse(Blocks.SHORT_GRASS.defaultBlockState());
                 }
 
                 if (!toPlace.is(CropCritters.IGNORE_STRANGE_FERTILIZERS) && toPlace.canSurvive(world, blockPos2)) {
-                    if (toPlace.getBlock() instanceof DoublePlantBlock) {
+                    if (toPlace.getBlock() instanceof DoublePlantBlock || toPlace.getBlock() instanceof TallBushBlock) {
                         if (world.getBlockState(blockPos2.above()).is(Blocks.AIR)) {
                             DoublePlantBlock.placeAt(world, toPlace, blockPos2, 3);
+                            successfulPlacements++;
                         }
                     } else {
                         world.setBlock(blockPos2, toPlace, Block.UPDATE_ALL);
+                        successfulPlacements++;
                     }
                 }
             }

@@ -132,6 +132,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
         WeedGrowNotifier.notifyEvent(world, pos);
         StrangleFernBlockEntity sfbe = (StrangleFernBlockEntity) world.getBlockEntity(pos);
         if (sfbe != null && !oldState.is(this)) {
+            if (!canInfest(oldState)) oldState = Blocks.SHORT_GRASS.defaultBlockState();
             sfbe.setInfestedState(oldState);
         }
         super.onPlace(state, world, pos, oldState, notify);

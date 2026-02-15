@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.blocks;
 
+import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceKey;
@@ -62,7 +63,7 @@ public class PuffbombPlantBlock extends MushroomBlock {
         if (blockState.is(BlockTags.MUSHROOM_GROW_BLOCK) || blockState.is(BlockTags.DIRT)) {
             return true;
         } else {
-            return world.getRawBrightness(pos, 0) < 13 && this.mayPlaceOn(blockState, world, blockPos);
+            return world.getRawBrightness(pos, 0) < 13 && blockState.isSolidRender();
         }
     }
 
