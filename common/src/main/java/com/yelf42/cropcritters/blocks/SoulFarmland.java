@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FarmBlock;
@@ -32,7 +33,7 @@ public class SoulFarmland extends FarmBlock {
         if (world instanceof ServerLevel serverWorld) {
             if ((double)world.random.nextFloat() < fallDistance - (double)0.5F
                     && entity instanceof LivingEntity
-                    && (entity instanceof Player || serverWorld.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.MOB_GRIEFING))
+                    && (entity instanceof Player || serverWorld.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))
                     && (entity.getBbWidth() * entity.getBbWidth() * entity.getBbHeight() > 0.512F || entity.getType().is(CropCritters.CROP_CRITTERS))) {
                 setToSoulSoil(entity, state, world, pos);
             }

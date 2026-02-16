@@ -1,12 +1,11 @@
 package com.yelf42.cropcritters.client.renderer.entity;
 
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.FireworkRocketRenderState;
-import net.minecraft.client.renderer.state.CameraRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.ItemDisplayContext;
 import com.mojang.math.Axis;
@@ -20,10 +19,11 @@ public class PopperPodEntityRenderer extends EntityRenderer<PopperPodEntity, Fir
         this.itemModelManager = context.getItemModelResolver();
     }
 
-    public void submit(FireworkRocketRenderState fireworkRocketEntityRenderState, PoseStack matrixStack, SubmitNodeCollector orderedRenderCommandQueue, CameraRenderState cameraRenderState) {
+    @Override
+    public void render(FireworkRocketRenderState fireworkRocketEntityRenderState, PoseStack matrixStack, MultiBufferSource bufferSource, int packedLight) {
         matrixStack.pushPose();
 
-        matrixStack.mulPose(cameraRenderState.orientation);
+        matrixStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
         matrixStack.mulPose(Axis.ZP.rotationDegrees(45.0F));
         if (fireworkRocketEntityRenderState.isShotAtAngle) {
             matrixStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
@@ -32,9 +32,9 @@ public class PopperPodEntityRenderer extends EntityRenderer<PopperPodEntity, Fir
         }
 
 
-        fireworkRocketEntityRenderState.item.submit(matrixStack, orderedRenderCommandQueue, fireworkRocketEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, fireworkRocketEntityRenderState.outlineColor);
+        fireworkRocketEntityRenderState.item.render(matrixStack, bufferSource, packedLight, OverlayTexture.NO_OVERLAY);
         matrixStack.popPose();
-        super.submit(fireworkRocketEntityRenderState, matrixStack, orderedRenderCommandQueue, cameraRenderState);
+        super.render(fireworkRocketEntityRenderState, matrixStack, bufferSource, packedLight);
     }
 
     public FireworkRocketRenderState createRenderState() {

@@ -39,9 +39,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.manager.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import com.yelf42.cropcritters.config.RecognizedCropsState;
 import com.yelf42.cropcritters.registry.ModItems;
@@ -118,7 +118,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
                 DefaultAnimations.genericWalkIdleController(),
                 new AnimationController<>("Hold", test -> {
                     if ((this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty())) {
-                        test.controller().reset();
+                        //test.controller().reset();
                         return PlayState.STOP;
                     } else {
                         return (test.setAndContinue(HOLD));

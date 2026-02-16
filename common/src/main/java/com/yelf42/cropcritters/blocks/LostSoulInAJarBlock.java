@@ -79,7 +79,7 @@ public class LostSoulInAJarBlock extends LanternBlock {
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos, Direction direction) {
+    protected int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
         return (Boolean)world.getBlockState(pos).getValue(POWERED) ? 15 : 0;
     }
 

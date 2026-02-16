@@ -1,9 +1,7 @@
 package com.yelf42.cropcritters;
 
-import com.mojang.serialization.JsonOps;
 import com.yelf42.cropcritters.client.particle.*;
 import com.yelf42.cropcritters.client.renderer.blockentity.SoulPotBlockEntityRenderer;
-import com.yelf42.cropcritters.client.renderer.blockentity.SoulPotModelRenderer;
 import com.yelf42.cropcritters.client.renderer.blockentity.StrangleFernBlockEntityRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.AbstractCritterRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.PopperPodEntityRenderer;
@@ -47,15 +45,8 @@ public class CropCrittersNeoforgeClient {
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.MAZEWOOD, ChunkSectionLayer.CUTOUT);
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.MAZEWOOD_SAPLING, ChunkSectionLayer.CUTOUT);
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.STRANGLE_FERN, ChunkSectionLayer.CUTOUT);
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOUL_POT, ChunkSectionLayer.CUTOUT);
         });
-    }
-
-    @SubscribeEvent
-    public static void registerModelLoaders(RegisterSpecialModelRendererEvent event) {
-        event.register(
-                CropCritters.identifier("soul_pot"),
-                SoulPotModelRenderer.Unbaked.CODEC
-        );
     }
 
     @SubscribeEvent

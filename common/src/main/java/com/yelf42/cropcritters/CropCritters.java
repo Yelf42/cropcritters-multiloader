@@ -4,7 +4,7 @@ import com.yelf42.cropcritters.area_affectors.AffectorPositions;
 import com.yelf42.cropcritters.config.ConfigManager;
 import com.yelf42.cropcritters.platform.Services;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -51,8 +51,8 @@ public class CropCritters {
         }
     }
 
-    public static Identifier identifier(String path) {
-        return Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, path);
+    public static ResourceLocation identifier(String path) {
+        return ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, path);
     }
 
     public static AffectorPositions getAffectorPositions(ServerLevel world) {

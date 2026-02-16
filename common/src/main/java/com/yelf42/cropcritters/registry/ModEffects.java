@@ -7,7 +7,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import com.yelf42.cropcritters.CropCritters;
 
 import java.util.LinkedHashMap;
@@ -33,7 +33,7 @@ public class ModEffects {
     }
 
     /// BINDER
-    public static void register(BiConsumer<MobEffect, Identifier> consumer) {
+    public static void register(BiConsumer<MobEffect, ResourceLocation> consumer) {
         REGISTERED_EFFECTS.forEach((key, value) -> consumer.accept(value, CropCritters.identifier(key)));
     }
 }

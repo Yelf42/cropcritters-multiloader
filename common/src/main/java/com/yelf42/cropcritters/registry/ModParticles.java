@@ -7,7 +7,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import com.yelf42.cropcritters.CropCritters;
 
 import java.util.LinkedHashMap;
@@ -55,7 +55,7 @@ public class ModParticles {
     }
 
     /// BINDER
-    public static void register(BiConsumer<ParticleType<?>, Identifier> consumer) {
+    public static void register(BiConsumer<ParticleType<?>, ResourceLocation> consumer) {
         REGISTERED_PARTICLES.forEach((key, value) -> consumer.accept(value, CropCritters.identifier(key)));
     }
 }

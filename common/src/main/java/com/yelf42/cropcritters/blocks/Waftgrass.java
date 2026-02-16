@@ -28,7 +28,7 @@ public class Waftgrass extends SpreadingWeedBlock {
     public int getMaxNeighbours() { return 3; }
 
     @Override
-    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean bl) {
+    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler) {
         // Apply damage, avoid critters and nether mobs
         if (world instanceof ServerLevel
                 && entity instanceof LivingEntity livingEntity

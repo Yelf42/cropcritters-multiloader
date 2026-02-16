@@ -24,7 +24,7 @@ public abstract class ShearsDispenserBehaviourMixin {
 
     // TODO tryShearBeehive is a weird remapping, but should work
     @Inject(method = "tryShearBeehive", at = @At("TAIL"), cancellable = true)
-    private static void shearPopperPlant(ServerLevel world, ItemStack tool, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+    private static void shearPopperPlant(ServerLevel world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         BlockState blockState = world.getBlockState(pos);
         if (blockState.is(ModBlocks.POPPER_PLANT) && (blockState.getValueOrElse(PopperPlantBlock.AGE, 0) == PopperPlantBlock.MAX_AGE)) {
             world.gameEvent((Entity)null, GameEvent.SHEAR, pos);

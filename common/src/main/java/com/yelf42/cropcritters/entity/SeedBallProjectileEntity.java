@@ -1,6 +1,7 @@
 package com.yelf42.cropcritters.entity;
 
 import com.yelf42.cropcritters.registry.ModEntities;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.Entity;
@@ -9,7 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -18,7 +18,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -30,7 +30,7 @@ import java.util.List;
 
 public class SeedBallProjectileEntity extends ThrowableItemProjectile {
 
-    private static final List<Identifier> DefaultSeedTypes = Arrays.asList(BuiltInRegistries.BLOCK.getKey(Blocks.WHEAT), BuiltInRegistries.BLOCK.getKey(Blocks.CARROTS), BuiltInRegistries.BLOCK.getKey(Blocks.POTATOES), BuiltInRegistries.BLOCK.getKey(Blocks.BEETROOTS));
+    private static final List<ResourceLocation> DefaultSeedTypes = Arrays.asList(BuiltInRegistries.BLOCK.getKey(Blocks.WHEAT), BuiltInRegistries.BLOCK.getKey(Blocks.CARROTS), BuiltInRegistries.BLOCK.getKey(Blocks.POTATOES), BuiltInRegistries.BLOCK.getKey(Blocks.BEETROOTS));
 
 
     public SeedBallProjectileEntity(EntityType<? extends ThrowableItemProjectile> entityType, Level world) {
@@ -90,7 +90,7 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
                 return;
             }
 
-            List<Identifier> crops = this.getItem().getOrDefault(ModComponents.SEED_TYPES, new ModComponents.SeedTypesComponent(DefaultSeedTypes)).seedTypes();
+            List<ResourceLocation> crops = this.getItem().getOrDefault(ModComponents.SEED_TYPES, new ModComponents.SeedTypesComponent(DefaultSeedTypes)).seedTypes();
             if (crops.isEmpty()) {
                 this.discard();
                 return;

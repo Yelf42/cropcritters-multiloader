@@ -3,7 +3,7 @@ package com.yelf42.cropcritters.registry;
 import com.yelf42.cropcritters.CropCritters;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
@@ -65,7 +65,7 @@ public class ModSounds {
     }
 
     /// BINDER
-    public static void register(BiConsumer<SoundEvent, Identifier> consumer) {
+    public static void register(BiConsumer<SoundEvent, ResourceLocation> consumer) {
         REGISTERED_SOUNDS.forEach((key, value) -> consumer.accept(value, CropCritters.identifier(key)));
     }
 

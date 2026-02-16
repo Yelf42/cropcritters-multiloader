@@ -8,12 +8,11 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -34,7 +33,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
@@ -48,13 +46,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.ScheduledTickAccess;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
+// TODO emissive glow
 public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final MapCodec<SoulPotBlock> CODEC = simpleCodec(SoulPotBlock::new);
-    public static final EnumProperty<Direction> FACING;
     public static final BooleanProperty CRACKED;
     public static final BooleanProperty WATERLOGGED;
+    public static final IntegerProperty LEVEL;
     private static final VoxelShape SHAPE;
 
     public MapCodec<SoulPotBlock> codec() {
@@ -63,7 +62,7 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
 
     public SoulPotBlock(Properties settings) {
         super(settings);
-        this.registerDefaultState((((this.stateDefinition.any()).setValue(FACING, Direction.NORTH)).setValue(WATERLOGGED, false)).setValue(CRACKED, false));
+        this.registerDefaultState((((this.stateDefinition.any())).setValue(WATERLOGGED, false)).setValue(CRACKED, false).setValue(LEVEL, 0));
     }
 
     protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
@@ -76,7 +75,7 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
 
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
-        return ((this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection())).setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER)).setValue(CRACKED, false);
+        return ((this.defaultBlockState()).setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER)).setValue(CRACKED, false).setValue(LEVEL, 0);
     }
 
     @Override
@@ -155,6 +154,7 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
 
                     soulPotBlockEntity.setChanged();
                     world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                    world.setBlock(pos, state.setValue(LEVEL, Math.clamp(soulPotBlockEntity.count(), 0, 12)), 3);
                     return InteractionResult.SUCCESS;
                 } else {
                     return InteractionResult.TRY_WITH_EMPTY_HAND;
@@ -186,7 +186,7 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED, CRACKED);
+        builder.add(LEVEL, WATERLOGGED, CRACKED);
     }
 
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -231,20 +231,12 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
         return true;
     }
 
-    protected int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos, Direction direction) {
+    protected int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
     }
 
-    protected BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
-    }
-
-    protected BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(FACING)));
-    }
-
     static {
-        FACING = BlockStateProperties.HORIZONTAL_FACING;
+        LEVEL = IntegerProperty.create("level", 0, 12);
         CRACKED = BlockStateProperties.CRACKED;
         WATERLOGGED = BlockStateProperties.WATERLOGGED;
         SHAPE = Block.column(14.0F, 0.0F, 16.0F);

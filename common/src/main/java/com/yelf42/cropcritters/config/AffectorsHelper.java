@@ -4,7 +4,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
-import org.jspecify.annotations.Nullable;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.area_affectors.AffectorPositions;
 import com.yelf42.cropcritters.area_affectors.AffectorType;
@@ -12,6 +11,7 @@ import com.yelf42.cropcritters.area_affectors.TypedBlockArea;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import com.yelf42.cropcritters.blocks.SoulRoseBlock;
 import com.yelf42.cropcritters.blocks.SoulRoseType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 

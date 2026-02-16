@@ -24,7 +24,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class SoulRoseBlock extends BaseEntityBlock {
     public static final MapCodec<SoulRoseBlock> CODEC = simpleCodec(SoulRoseBlock::new);

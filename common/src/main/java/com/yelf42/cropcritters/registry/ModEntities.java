@@ -7,7 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
@@ -59,7 +59,7 @@ public class ModEntities {
     }
 
     /// BINDER
-    public static void register(BiConsumer<EntityType<?>, Identifier> consumer) {
+    public static void register(BiConsumer<EntityType<?>, ResourceLocation> consumer) {
         REGISTERED_ENTITIES.forEach((key, value) -> consumer.accept(value, CropCritters.identifier(key)));
     }
 

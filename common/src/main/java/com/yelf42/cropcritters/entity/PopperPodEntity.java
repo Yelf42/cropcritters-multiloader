@@ -11,9 +11,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.projectile.ItemSupplier;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.projectile.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -27,15 +26,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
-import org.jspecify.annotations.Nullable;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import com.yelf42.cropcritters.registry.ModItems;
 import com.yelf42.cropcritters.registry.ModSounds;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.OptionalInt;
 
-public class PopperPodEntity extends Projectile implements ItemSupplier {
+public class PopperPodEntity extends ThrowableItemProjectile {
     private static final EntityDataAccessor<ItemStack> ITEM;
     private static final EntityDataAccessor<OptionalInt> SHOOTER_ENTITY_ID;
     private static final EntityDataAccessor<Boolean> SHOT_AT_ANGLE;
@@ -79,6 +78,7 @@ public class PopperPodEntity extends Projectile implements ItemSupplier {
     }
 
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
         builder.define(ITEM, getDefaultStack());
         builder.define(SHOOTER_ENTITY_ID, OptionalInt.empty());
         builder.define(SHOT_AT_ANGLE, false);
@@ -139,7 +139,7 @@ public class PopperPodEntity extends Projectile implements ItemSupplier {
 
         if (!this.noPhysics && this.isAlive() && hitResult.getType() != HitResult.Type.MISS) {
             this.hitTargetOrDeflectSelf(hitResult);
-            this.needsSync = true;
+            this.hasImpulse = true;
         }
 
         this.updateRotation();
@@ -181,7 +181,7 @@ public class PopperPodEntity extends Projectile implements ItemSupplier {
 
     protected void onHitBlock(BlockHitResult blockHitResult) {
         BlockPos blockPos = new BlockPos(blockHitResult.getBlockPos());
-        this.level().getBlockState(blockPos).entityInside(this.level(), blockPos, this, InsideBlockEffectApplier.NOOP, true);
+        this.level().getBlockState(blockPos).entityInside(this.level(), blockPos, this, InsideBlockEffectApplier.NOOP);
         Level var4 = this.level();
         if (var4 instanceof ServerLevel serverWorld) {
             this.explodeAndRemove(serverWorld);
@@ -232,6 +232,11 @@ public class PopperPodEntity extends Projectile implements ItemSupplier {
         this.lifeTime = view.getIntOr("LifeTime", 0);
         this.entityData.set(ITEM, (ItemStack)view.read("PopperPodItem", ItemStack.CODEC).orElse(getDefaultStack()));
         this.entityData.set(SHOT_AT_ANGLE, view.getBooleanOr("ShotAtAngle", false));
+    }
+
+    @Override
+    protected Item getDefaultItem() {
+        return ModItems.POPPER_POD;
     }
 
     public ItemStack getItem() {

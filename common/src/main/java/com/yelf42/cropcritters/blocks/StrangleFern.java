@@ -26,10 +26,10 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import org.jspecify.annotations.Nullable;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModEffects;
 import com.yelf42.cropcritters.events.WeedGrowNotifier;
+import org.jetbrains.annotations.Nullable;
 
 public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
 
@@ -118,12 +118,12 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean bl) {
-        if (world instanceof ServerLevel
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
+        if (level instanceof ServerLevel
                 && isMature(state)
                 && entity instanceof LivingEntity livingEntity) {
             livingEntity.addEffect(ModEffects.NATURAL_SPORES);
-            world.setBlock(pos, state.setValue(AGE, this.getMaxAge() - 1), 3);
+            level.setBlock(pos, state.setValue(AGE, this.getMaxAge() - 1), 3);
         }
     }
 

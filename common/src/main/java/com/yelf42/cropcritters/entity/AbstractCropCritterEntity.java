@@ -46,9 +46,9 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.manager.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import com.yelf42.cropcritters.CropCritters;
@@ -128,7 +128,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
                     if ((this.entityData.get(DATA_FLAGS_ID) & 0x01) != 0) {
                         return (test.setAndContinue(SIT));
                     }
-                    test.controller().reset();
+                    //test.controller().reset();
                     return PlayState.STOP;
                 }),
                 DefaultAnimations.genericWalkIdleController()

@@ -17,7 +17,7 @@ import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
@@ -63,10 +63,10 @@ public class ModBlocks {
     }
 
     /// BINDERS
-    public static void registerItems(BiConsumer<Item, Identifier> consumer) {
+    public static void registerItems(BiConsumer<Item, ResourceLocation> consumer) {
         REGISTERED_BLOCK_ITEMS.forEach((key, value) -> consumer.accept(value, CropCritters.identifier(key)));
     }
-    public static void registerBlocks(BiConsumer<Block, Identifier> consumer) {
+    public static void registerBlocks(BiConsumer<Block, ResourceLocation> consumer) {
         REGISTERED_BLOCKS.forEach((key, value) -> consumer.accept(value, CropCritters.identifier(key)));
     }
 
@@ -85,7 +85,7 @@ public class ModBlocks {
             CrawlThistle::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.PLANT)
-                    .noCollision()
+                    .noCollission()
                     .randomTicks()
                     .strength(0.4f)
                     .sound(SoundType.SWEET_BERRY_BUSH)
@@ -99,7 +99,7 @@ public class ModBlocks {
             MazewoodSaplingBlock::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.PLANT)
-                    .noCollision()
+                    .noCollission()
                     .randomTicks()
                     .instabreak()
                     .sound(SoundType.GRASS)
@@ -123,7 +123,7 @@ public class ModBlocks {
             CrimsonThornweed::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.NETHER)
-                    .noCollision()
+                    .noCollission()
                     .randomTicks()
                     .strength(0.6f)
                     .sound(SoundType.SWEET_BERRY_BUSH)
@@ -137,7 +137,7 @@ public class ModBlocks {
             WitheringSpiteweed::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_BLACK)
-                    .noCollision()
+                    .noCollission()
                     .randomTicks()
                     .strength(0.6f)
                     .sound(SoundType.SWEET_BERRY_BUSH)
@@ -151,7 +151,7 @@ public class ModBlocks {
             Waftgrass::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_CYAN)
-                    .noCollision()
+                    .noCollission()
                     .randomTicks()
                     .strength(0.6f)
                     .sound(SoundType.SWEET_BERRY_BUSH)
@@ -165,7 +165,7 @@ public class ModBlocks {
             StrangleFern::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.PLANT)
-                    .noCollision()
+                    .noCollission()
                     .randomTicks()
                     .strength(0.4f)
                     .sound(SoundType.SWEET_BERRY_BUSH)
@@ -178,7 +178,7 @@ public class ModBlocks {
             PopperPlantBlock::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.PLANT)
-                    .noCollision()
+                    .noCollission()
                     .randomTicks()
                     .strength(0.4f)
                     .sound(SoundType.SWEET_BERRY_BUSH)
@@ -192,7 +192,7 @@ public class ModBlocks {
             BoneTrapBlock::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.WOOL)
-                    .noCollision()
+                    .noCollission()
                     .strength(0.4f)
                     .sound(SoundType.BONE_BLOCK)
                     .pushReaction(PushReaction.DESTROY),
@@ -204,7 +204,7 @@ public class ModBlocks {
             PuffbombPlantBlock::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.WOOL)
-                    .noCollision()
+                    .noCollission()
                     .randomTicks()
                     .instabreak()
                     .sound(SoundType.FUNGUS)
@@ -236,7 +236,7 @@ public class ModBlocks {
             LiverwortBlock::new,
             BlockBehaviour.Properties.of()
                     .replaceable()
-                    .noCollision()
+                    .noCollission()
                     .instabreak()
                     .sound(SoundType.GLOW_LICHEN)
                     .ignitedByLava().pushReaction(PushReaction.DESTROY),
@@ -248,7 +248,7 @@ public class ModBlocks {
             SoulRoseBlock::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.DIAMOND)
-                    .noCollision()
+                    .noCollission()
                     .strength(0.9f)
                     .sound(SoundType.TWISTING_VINES)
                     .lightLevel((state) -> 3)
@@ -261,7 +261,7 @@ public class ModBlocks {
             TrimmedSoulRoseBlock::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.DIAMOND)
-                    .noCollision()
+                    .noCollission()
                     .instabreak()
                     .sound(SoundType.TWISTING_VINES)
                     .lightLevel((state) -> 3)
@@ -285,7 +285,7 @@ public class ModBlocks {
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.PLANT)
                     .replaceable()
-                    .noCollision()
+                    .noCollission()
                     .instabreak()
                     .sound(SoundType.GRASS)
                     .ignitedByLava()
@@ -299,7 +299,7 @@ public class ModBlocks {
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.PLANT)
                     .replaceable()
-                    .noCollision()
+                    .noCollission()
                     .instabreak()
                     .sound(SoundType.GRASS)
                     .ignitedByLava()
@@ -339,7 +339,7 @@ public class ModBlocks {
             BlockBehaviour.Properties.of()
                     .lightLevel((state) -> 12)
                     .replaceable()
-                    .noCollision()
+                    .noCollission()
                     .noLootTable()
                     .randomTicks()
                     .air(),

@@ -6,7 +6,7 @@ import com.yelf42.cropcritters.features.PuffbombBlobFeature;
 import com.yelf42.cropcritters.features.SoulRoseHintFeature;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.configurations.CountConfiguration;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -21,25 +21,25 @@ public class ModFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> PUFFBOMB_BLOB_CONFIGURED_FEATURE =
             ResourceKey.create(
                     Registries.CONFIGURED_FEATURE,
-                    Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "puffbomb_blob")
+                    ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "puffbomb_blob")
             );
 
     public static final Feature<CountConfiguration> LIVERWORT_FEATURE = new LiverwortFeature(CountConfiguration.CODEC);
     public static final ResourceKey<ConfiguredFeature<?, ?>> LIVERWORT_CONFIGURED_FEATURE =
             ResourceKey.create(
                     Registries.CONFIGURED_FEATURE,
-                    Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "liverwort_patch")
+                    ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "liverwort_patch")
             );
 
     public static final Feature<NoneFeatureConfiguration> SOUL_ROSE_HINT_FEATURE = new SoulRoseHintFeature(NoneFeatureConfiguration.CODEC);
     public static final ResourceKey<ConfiguredFeature<?, ?>> SOUL_ROSE_HINT_CONFIGURED_FEATURE =
             ResourceKey.create(
                     Registries.CONFIGURED_FEATURE,
-                    Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "soul_rose_hint")
+                    ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "soul_rose_hint")
             );
 
     /// BINDER
-    public static void registerFeatures(BiConsumer<Feature<?>, Identifier> consumer) {
+    public static void registerFeatures(BiConsumer<Feature<?>, ResourceLocation> consumer) {
         consumer.accept(PUFFBOMB_BLOB_FEATURE, CropCritters.identifier("puffbomb_blob"));
         consumer.accept(LIVERWORT_FEATURE, CropCritters.identifier("liverwort_patch"));
         consumer.accept(SOUL_ROSE_HINT_FEATURE, CropCritters.identifier("soul_rose_hint"));

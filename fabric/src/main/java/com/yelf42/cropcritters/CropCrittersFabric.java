@@ -6,7 +6,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -44,7 +44,7 @@ public class CropCrittersFabric implements ModInitializer {
         CropCritters.init();
     }
 
-    public static <T> void bind(Registry<T> registry, Consumer<BiConsumer<T, Identifier>> source) {
+    public static <T> void bind(Registry<T> registry, Consumer<BiConsumer<T, ResourceLocation>> source) {
         source.accept((t, rl) -> Registry.register(registry, rl, t));
     }
 

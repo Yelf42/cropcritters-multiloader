@@ -25,7 +25,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.ScheduledTickAccess;
 import com.yelf42.cropcritters.config.WeedHelper;
 
@@ -97,7 +96,7 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
         }
 
         // Dry out in nether (any dimension where water evaporates)
-        if (world.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, pos)) {
+        if (world.dimensionType().ultraWarm()) {
             world.blockEvent(pos, this, 0, 0);
             return;
         }

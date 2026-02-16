@@ -5,48 +5,44 @@
 	"textures": {
       "particle": "#text"
 	},
-	"elements": [
-		{
-			"name": "side",
-			"from": [1, -1, 2],
-			"to": [15, 13, 2],
-			"rotation": {"x": 0, "y": -90, "z": 0, "origin": [2, -1, 2]},
-			"faces": {
-				"north": {"uv": [1, 1, 15, 15], "texture": "#text", "tintindex": 0},
-				"south": {"uv": [15, 1, 1, 15], "texture": "#text", "tintindex": 0}
-            }
-		},
-		{
-			"name": "side",
-			"from": [1, -1, 2],
-			"to": [15, 13, 2],
-			"rotation": {"angle": 0, "axis": "y", "origin": [2, -1, 2]},
-			"faces": {
-				"north": {"uv": [15, 1, 1, 15], "texture": "#text", "tintindex": 0},
-				"south": {"uv": [1, 1, 15, 15], "texture": "#text", "tintindex": 0}
-            }
-		},
-		{
-			"name": "side",
-			"from": [1, -1, 14],
-			"to": [15, 13, 14],
-			"rotation": {"angle": 0, "axis": "y", "origin": [2, -1, 14]},
-			"faces": {
-				"north": {"uv": [1, 1, 15, 15], "texture": "#text", "tintindex": 0},
-				"south": {"uv": [15, 1, 1, 15], "texture": "#text", "tintindex": 0}
-            }
-		},
-		{
-			"name": "side",
-			"from": [13, -1, 2],
-			"to": [27, 13, 2],
-			"rotation": {"x": 0, "y": -90, "z": 0, "origin": [14, -1, 2]},
-			"faces": {
-				"north": {"uv": [15, 1, 1, 15], "texture": "#text", "tintindex": 0},
-				"south": {"uv": [1, 1, 15, 15], "texture": "#text", "tintindex": 0}
-            }
-		}
-	],
+  "elements": [
+    {
+      "name": "side_north",
+      "from": [1, -1, 2],
+      "to": [15, 13, 2],
+      "faces": {
+        "north": {"uv": [1, 1, 15, 15], "texture": "#text", "tintindex": 0},
+        "south": {"uv": [15, 1, 1, 15], "texture": "#text", "tintindex": 0}
+      }
+    },
+    {
+      "name": "side_south",
+      "from": [1, -1, 14],
+      "to": [15, 13, 14],
+      "faces": {
+        "north": {"uv": [15, 1, 1, 15], "texture": "#text", "tintindex": 0},
+        "south": {"uv": [1, 1, 15, 15], "texture": "#text", "tintindex": 0}
+      }
+    },
+    {
+      "name": "side_west",
+      "from": [2, -1, 1],
+      "to": [2, 13, 15],
+      "faces": {
+        "west": {"uv": [1, 1, 15, 15], "texture": "#text", "tintindex": 0},
+        "east": {"uv": [15, 1, 1, 15], "texture": "#text", "tintindex": 0}
+      }
+    },
+    {
+      "name": "side_east",
+      "from": [14, -1, 1],
+      "to": [14, 13, 15],
+      "faces": {
+        "west": {"uv": [15, 1, 1, 15], "texture": "#text", "tintindex": 0},
+        "east": {"uv": [1, 1, 15, 15], "texture": "#text", "tintindex": 0}
+      }
+    }
+  ],
 	"groups": [
 		{
 			"name": "sides",

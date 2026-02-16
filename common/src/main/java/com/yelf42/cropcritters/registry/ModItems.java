@@ -14,7 +14,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
 import com.yelf42.cropcritters.CropCritters;
 
@@ -71,7 +71,7 @@ public class ModItems {
     }
 
     public static Item registerSpawnEgg(String name, EntityType<? extends Mob> entityType) {
-        return registerItem(vanillaItemId(name), SpawnEggItem::new, new Item.Properties().spawnEgg(entityType));
+        return registerItem(vanillaItemId(name), (properties -> new SpawnEggItem(entityType, properties)));
     }
 
     public static Item registerItem(ResourceKey<Item> key, Function<Item.Properties, Item> factory) {
@@ -80,13 +80,13 @@ public class ModItems {
 
     public static Item registerItem(ResourceKey<Item> key, Function<Item.Properties, Item> factory, Item.Properties properties) {
         var item = factory.apply(properties.setId(key));
-        REGISTERED_ITEMS.put(key.identifier().getPath(), item);
+        REGISTERED_ITEMS.put(key.location().getPath(), item);
 
         return item;
     }
 
     /// BINDER
-    public static void register(BiConsumer<Item, Identifier> consumer) {
+    public static void register(BiConsumer<Item, ResourceLocation> consumer) {
         REGISTERED_ITEMS.forEach((key, value) -> consumer.accept(value, CropCritters.identifier(key)));
     }
 
@@ -100,8 +100,8 @@ public class ModItems {
             }).build();
 
     /// BINDER
-    public static void registerTabs(BiConsumer<CreativeModeTab, Identifier> consumer) {
-        consumer.accept(CROPCRITTERS_TAB, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "cropcritters_tab"));
+    public static void registerTabs(BiConsumer<CreativeModeTab, ResourceLocation> consumer) {
+        consumer.accept(CROPCRITTERS_TAB, ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "cropcritters_tab"));
     }
 
 
@@ -110,9 +110,9 @@ public class ModItems {
     public static final RecipeSerializer<SeedBarRecipe> SEED_BAR_RECIPE = new CustomRecipe.Serializer<>(SeedBarRecipe::new);
 
     /// BINDER
-    public static void registerRecipes(BiConsumer<RecipeSerializer<?>, Identifier> consumer) {
-        consumer.accept(SEED_BALL_RECIPE, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_ball"));
-        consumer.accept(SEED_BAR_RECIPE, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_bar"));
+    public static void registerRecipes(BiConsumer<RecipeSerializer<?>, ResourceLocation> consumer) {
+        consumer.accept(SEED_BALL_RECIPE, ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_ball"));
+        consumer.accept(SEED_BAR_RECIPE, ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_bar"));
     }
 //    public static void initialize() {
 //

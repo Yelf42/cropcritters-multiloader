@@ -2,7 +2,6 @@ package com.yelf42.cropcritters;
 
 import com.yelf42.cropcritters.client.particle.*;
 import com.yelf42.cropcritters.client.renderer.blockentity.SoulPotBlockEntityRenderer;
-import com.yelf42.cropcritters.client.renderer.blockentity.SoulPotModelRenderer;
 import com.yelf42.cropcritters.client.renderer.blockentity.StrangleFernBlockEntityRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.AbstractCritterRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.PopperPodEntityRenderer;
@@ -12,6 +11,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.HeartParticle;
@@ -19,11 +19,8 @@ import net.minecraft.client.particle.SuspendedTownParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.client.renderer.special.SpecialModelRenderers;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public class CropCrittersFabricClient implements ClientModInitializer {
@@ -41,6 +38,7 @@ public class CropCrittersFabricClient implements ClientModInitializer {
         BlockRenderLayerMap.putBlock(ModBlocks.SOUL_ROSE, ChunkSectionLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(ModBlocks.TRIMMED_SOUL_ROSE, ChunkSectionLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(ModBlocks.POTTED_SOUL_ROSE, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.SOUL_POT, ChunkSectionLayer.CUTOUT);
 
         BlockRenderLayerMap.putBlock(ModBlocks.TALL_BUSH, ChunkSectionLayer.CUTOUT);
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
@@ -75,30 +73,26 @@ public class CropCrittersFabricClient implements ClientModInitializer {
                         : 0x91BD59, ModBlocks.STRANGLE_FERN
         );
 
-        SpecialModelRenderers.ID_MAPPER.put(
-                CropCritters.identifier("soul_pot"),
-                SoulPotModelRenderer.Unbaked.CODEC
-        );
         BlockEntityRenderers.register(ModBlockEntities.SOUL_POT, SoulPotBlockEntityRenderer::new);
 
         // Entities
-        EntityRenderers.register(ModEntities.WHEAT_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "wheat_critter"), true));
-        EntityRenderers.register(ModEntities.MELON_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "melon_critter"), true));
-        EntityRenderers.register(ModEntities.PUMPKIN_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "pumpkin_critter"), false));
-        EntityRenderers.register(ModEntities.POTATO_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "potato_critter"), true));
-        EntityRenderers.register(ModEntities.CARROT_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "carrot_critter"), true));
-        EntityRenderers.register(ModEntities.BEETROOT_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "beetroot_critter"), true));
-        EntityRenderers.register(ModEntities.NETHER_WART_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "nether_wart_critter"), true));
-        EntityRenderers.register(ModEntities.POISONOUS_POTATO_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "poisonous_potato_critter"), true));
-        EntityRenderers.register(ModEntities.TORCHFLOWER_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "torchflower_critter"), true));
-        EntityRenderers.register(ModEntities.PITCHER_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "pitcher_critter"), false));
-        EntityRenderers.register(ModEntities.COCOA_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "cocoa_critter"), false));
+        EntityRendererRegistry.register(ModEntities.WHEAT_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier( "wheat_critter"), true));
+        EntityRendererRegistry.register(ModEntities.MELON_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier( "melon_critter"), true));
+        EntityRendererRegistry.register(ModEntities.PUMPKIN_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier( "pumpkin_critter"), false));
+        EntityRendererRegistry.register(ModEntities.POTATO_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier( "potato_critter"), true));
+        EntityRendererRegistry.register(ModEntities.CARROT_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier( "carrot_critter"), true));
+        EntityRendererRegistry.register(ModEntities.BEETROOT_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier( "beetroot_critter"), true));
+        EntityRendererRegistry.register(ModEntities.NETHER_WART_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier( "nether_wart_critter"), true));
+        EntityRendererRegistry.register(ModEntities.POISONOUS_POTATO_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier( "poisonous_potato_critter"), true));
+        EntityRendererRegistry.register(ModEntities.TORCHFLOWER_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier( "torchflower_critter"), true));
+        EntityRendererRegistry.register(ModEntities.PITCHER_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier( "pitcher_critter"), false));
+        EntityRendererRegistry.register(ModEntities.COCOA_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier( "cocoa_critter"), false));
 
-        EntityRenderers.register(ModEntities.SEED_BALL_PROJECTILE, ThrownItemRenderer::new);
-        EntityRenderers.register(ModEntities.SPIT_SEED_PROJECTILE, ThrownItemRenderer::new);
-        EntityRenderers.register(ModEntities.POPPER_POD_PROJECTILE, PopperPodEntityRenderer::new);
-        EntityRenderers.register(ModEntities.POPPER_SEED_PROJECTILE, ThrownItemRenderer::new);
-        EntityRenderers.register(ModEntities.HERBICIDE_PROJECTILE, ThrownItemRenderer::new);
+        EntityRendererRegistry.register(ModEntities.SEED_BALL_PROJECTILE, ThrownItemRenderer::new);
+        EntityRendererRegistry.register(ModEntities.SPIT_SEED_PROJECTILE, ThrownItemRenderer::new);
+        EntityRendererRegistry.register(ModEntities.POPPER_POD_PROJECTILE, PopperPodEntityRenderer::new);
+        EntityRendererRegistry.register(ModEntities.POPPER_SEED_PROJECTILE, ThrownItemRenderer::new);
+        EntityRendererRegistry.register(ModEntities.HERBICIDE_PROJECTILE, ThrownItemRenderer::new);
 
         // Particles
         ParticleFactoryRegistry.getInstance().register(ModParticles.WATER_SPRAY, WaterSprayParticle.Factory::new);

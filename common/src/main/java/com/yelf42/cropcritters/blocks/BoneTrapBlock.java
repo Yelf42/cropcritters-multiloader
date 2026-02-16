@@ -81,7 +81,7 @@ public class BoneTrapBlock extends VegetationBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean bl) {
+    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler) {
         if (entity instanceof LivingEntity livingEntity) {
             double dist = livingEntity.position().distanceTo(pos.getBottomCenter());
             if (this.getStage(state) == 0 && dist <= 0.2F) {

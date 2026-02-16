@@ -7,17 +7,20 @@ import net.minecraft.client.particle.RisingParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 
 public class SoulSiphonParticle extends RisingParticle {
-    public SoulSiphonParticle(ClientLevel world, double x, double y, double z, double vX, double vY, double vZ, SpriteSet spriteProvider) {
-        super(world, x, y, z, 0.0, 0.1, 0.0, spriteProvider.first());
+    private final SpriteSet sprites;
+
+    public SoulSiphonParticle(ClientLevel world, double x, double y, double z, double vX, double vY, double vZ, SpriteSet sprites) {
+        super(world, x, y, z, 0.0, 0.1, 0.0);
+        this.sprites = sprites;
+        this.scale(1.5F);
+        this.setSpriteFromAge(sprites);
     }
 
-    @Override
-    public Layer getLayer() {
-        return Layer.OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     public void move(double dx, double dy, double dz) {
@@ -52,8 +55,8 @@ public class SoulSiphonParticle extends RisingParticle {
         }
 
         @Override
-        public @Nullable Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, RandomSource random) {
-            return new SoulSiphonParticle(world, x, y, z, velocityX, velocityY, velocityZ, this.spriteProvider);
+        public @Nullable Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new SoulSiphonParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteProvider);
         }
     }
 }

@@ -12,7 +12,7 @@ import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import com.yelf42.cropcritters.CropCritters;
 
@@ -53,7 +53,7 @@ public class SeedBallRecipe extends CustomRecipe {
     public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
         ItemStack result = new ItemStack(ModItems.SEED_BALL, 1);
 
-        List<Identifier> usedSeeds = new ArrayList<>();
+        List<ResourceLocation> usedSeeds = new ArrayList<>();
         int poisonousPotatoes = 0;
 
         for (int i = 0; i < 3; i++){
@@ -62,7 +62,7 @@ public class SeedBallRecipe extends CustomRecipe {
                 if (is.is(Items.POISONOUS_POTATO)) {
                     poisonousPotatoes += 1;
                 } else {
-                    Identifier id = validItem(is);
+                    ResourceLocation id = validItem(is);
                     if (id != null) {
                         if (!usedSeeds.contains(id)) usedSeeds.add(id);
                     }
@@ -76,7 +76,7 @@ public class SeedBallRecipe extends CustomRecipe {
         return result;
     }
 
-    private static Identifier validItem(ItemStack stack) {
+    private static ResourceLocation validItem(ItemStack stack) {
         if (stack.getItem() instanceof BlockItem blockItem && (stack.is(CropCritters.SEED_BALL_CROPS) || blockItem.getBlock() instanceof CropBlock)) {
             return BuiltInRegistries.BLOCK.getKey(blockItem.getBlock());
         }

@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.LinkedHashMap;
@@ -32,7 +32,7 @@ public class ModBlockEntities {
         return blockEntity;
     }
 
-    public static void register(BiConsumer<BlockEntityType<?>, Identifier> consumer) {
+    public static void register(BiConsumer<BlockEntityType<?>, ResourceLocation> consumer) {
         REGISTERED_BLOCK_ENTITIES.forEach((key, value) -> consumer.accept(value, CropCritters.identifier(key)));
     }
 }

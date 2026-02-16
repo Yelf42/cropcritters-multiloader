@@ -2,7 +2,6 @@ package com.yelf42.cropcritters.client.particle;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.particle.*;
@@ -10,14 +9,15 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import org.jetbrains.annotations.Nullable;
 
-public class SporeParticle extends SingleQuadParticle {
+public class SporeParticle extends TextureSheetParticle {
     private static final RandomSource RANDOM = RandomSource.create();
     private final SpriteSet spriteProvider;
     private float defaultAlpha = 1.0F;
 
     SporeParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider) {
-        super(world, x, y, z, (double) 0.5F - RANDOM.nextDouble(), velocityY, (double) 0.5F - RANDOM.nextDouble(), spriteProvider.first());
+        super(world, x, y, z, (double) 0.5F - RANDOM.nextDouble(), velocityY, (double) 0.5F - RANDOM.nextDouble());
         this.friction = 0.96F;
         this.gravity = 0.1F;
         this.speedUpWhenYMotionIsBlocked = false;
@@ -38,8 +38,8 @@ public class SporeParticle extends SingleQuadParticle {
 
     }
 
-    public Layer getLayer() {
-        return Layer.TRANSLUCENT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     public void tick() {
@@ -71,10 +71,11 @@ public class SporeParticle extends SingleQuadParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(ColorParticleOption tintedParticleEffect, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i, RandomSource random) {
-            SporeParticle sporeParticle = new SporeParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
-            sporeParticle.setColor(tintedParticleEffect.getRed(), tintedParticleEffect.getGreen(), tintedParticleEffect.getBlue());
-            sporeParticle.setAlpha(tintedParticleEffect.getAlpha());
+        @Override
+        public @Nullable Particle createParticle(ColorParticleOption colorParticleOption, ClientLevel clientLevel, double v, double v1, double v2, double v3, double v4, double v5) {
+            SporeParticle sporeParticle = new SporeParticle(clientLevel, v, v1, v2, v3, v4, v5, this.spriteProvider);
+            sporeParticle.setColor(colorParticleOption.getRed(), colorParticleOption.getGreen(), colorParticleOption.getBlue());
+            sporeParticle.setAlpha(colorParticleOption.getAlpha());
             return sporeParticle;
         }
     }

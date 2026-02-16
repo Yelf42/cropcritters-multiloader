@@ -21,7 +21,6 @@
 			"name": "top_layer",
 			"from": [0, 0, 0.5],
 			"to": [16, 16, 0.5],
-			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0.4]},
 			"faces": {
 				"north": {"uv": [16, 0, 0, 16], "texture": "#liverwort_top"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#liverwort_top"}
@@ -30,7 +29,6 @@
 		{
 			"from": [3, 5, 0.1],
 			"to": [4, 6, 0.1],
-			"rotation": {"x": 0, "y": 90, "z": 90, "origin": [3, 5.5, 0.1]},
 			"faces": {
 				"north": {"uv": [2, 0, 1, 1], "texture": "#liverwort_base"},
 				"south": {"uv": [1, 0, 2, 1], "texture": "#liverwort_base"}
@@ -39,7 +37,6 @@
 		{
 			"from": [3, 5, 0.1],
 			"to": [4, 6, 0.1],
-			"rotation": {"x": 0, "y": 90, "z": 0, "origin": [3, 5.5, 0.1]},
 			"faces": {
 				"north": {"uv": [2, 0, 1, 1], "texture": "#liverwort_base"},
 				"south": {"uv": [1, 0, 2, 1], "texture": "#liverwort_base"}
@@ -48,7 +45,6 @@
 		{
 			"from": [7, 8, 0.1],
 			"to": [8, 9, 0.1],
-			"rotation": {"x": 0, "y": 90, "z": 90, "origin": [7, 8.5, 0.1]},
 			"faces": {
 				"north": {"uv": [2, 0, 1, 1], "texture": "#liverwort_base"},
 				"south": {"uv": [1, 0, 2, 1], "texture": "#liverwort_base"}
@@ -57,7 +53,6 @@
 		{
 			"from": [7, 8, 0.1],
 			"to": [8, 9, 0.1],
-			"rotation": {"x": 0, "y": 90, "z": 0, "origin": [7, 8.5, 0.1]},
 			"faces": {
 				"north": {"uv": [2, 0, 1, 1], "texture": "#liverwort_base"},
 				"south": {"uv": [1, 0, 2, 1], "texture": "#liverwort_base"}
@@ -66,7 +61,6 @@
 		{
 			"from": [5, 12, 0.1],
 			"to": [6, 13, 0.1],
-			"rotation": {"x": 0, "y": 90, "z": 90, "origin": [5, 12.5, 0.1]},
 			"faces": {
 				"north": {"uv": [2, 0, 1, 1], "texture": "#liverwort_base"},
 				"south": {"uv": [1, 0, 2, 1], "texture": "#liverwort_base"}
@@ -75,7 +69,6 @@
 		{
 			"from": [5, 12, 0.1],
 			"to": [6, 13, 0.1],
-			"rotation": {"x": 0, "y": 90, "z": 0, "origin": [5, 12.5, 0.1]},
 			"faces": {
 				"north": {"uv": [2, 0, 1, 1], "texture": "#liverwort_base"},
 				"south": {"uv": [1, 0, 2, 1], "texture": "#liverwort_base"}
@@ -84,7 +77,6 @@
 		{
 			"from": [13, 2, 0.1],
 			"to": [14, 3, 0.1],
-			"rotation": {"x": 0, "y": 90, "z": 90, "origin": [13, 2.5, 0.1]},
 			"faces": {
 				"north": {"uv": [2, 0, 1, 1], "texture": "#liverwort_base"},
 				"south": {"uv": [1, 0, 2, 1], "texture": "#liverwort_base"}
@@ -93,7 +85,6 @@
 		{
 			"from": [13, 2, 0.1],
 			"to": [14, 3, 0.1],
-			"rotation": {"x": 0, "y": 90, "z": 0, "origin": [13, 2.5, 0.1]},
 			"faces": {
 				"north": {"uv": [2, 0, 1, 1], "texture": "#liverwort_base"},
 				"south": {"uv": [1, 0, 2, 1], "texture": "#liverwort_base"}
@@ -102,7 +93,6 @@
 		{
 			"from": [14, 10, 0.1],
 			"to": [15, 11, 0.1],
-			"rotation": {"x": 0, "y": 90, "z": 90, "origin": [14, 10.5, 0.1]},
 			"faces": {
 				"north": {"uv": [2, 0, 1, 1], "texture": "#liverwort_base"},
 				"south": {"uv": [1, 0, 2, 1], "texture": "#liverwort_base"}
@@ -111,7 +101,6 @@
 		{
 			"from": [14, 10, 0.1],
 			"to": [15, 11, 0.1],
-			"rotation": {"x": 0, "y": 90, "z": 0, "origin": [14, 10.5, 0.1]},
 			"faces": {
 				"north": {"uv": [2, 0, 1, 1], "texture": "#liverwort_base"},
 				"south": {"uv": [1, 0, 2, 1], "texture": "#liverwort_base"}

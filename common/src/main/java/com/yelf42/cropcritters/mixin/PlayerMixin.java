@@ -27,7 +27,7 @@ import java.util.Optional;
 public abstract class PlayerMixin {
 
     @Inject(method = "killedEntity", at = @At("HEAD"))
-    public void dropLostSouls(ServerLevel world, LivingEntity killedEntity, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
+    public void dropLostSouls(ServerLevel world, LivingEntity killedEntity, CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player) (Object) this;
         ItemStack stack = player.getMainHandItem();
 
@@ -41,13 +41,13 @@ public abstract class PlayerMixin {
             }
 
             // Silk Touch
-            Optional<Holder.Reference<Enchantment>> e = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(Enchantments.SILK_TOUCH.identifier());
+            Optional<Holder.Reference<Enchantment>> e = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(Enchantments.SILK_TOUCH.location());
             if (e.isPresent()) {
                 dropChance += (EnchantmentHelper.getItemEnchantmentLevel(e.get(), stack) > 0) ? 2 * ConfigManager.CONFIG.lostSoulDropChance : 0;
             }
 
             // Looting
-            Optional<Holder.Reference<Enchantment>> e2 = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(Enchantments.LOOTING.identifier());
+            Optional<Holder.Reference<Enchantment>> e2 = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(Enchantments.LOOTING.location());
             if (e2.isPresent()) {
                 dropChance += (ConfigManager.CONFIG.lostSoulDropChance / 2) * EnchantmentHelper.getItemEnchantmentLevel(e2.get(), stack);
             }

@@ -20,7 +20,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -160,6 +160,10 @@ public class SoulPotBlockEntity extends BlockEntity implements RandomizableConta
         } else {
             return super.triggerEvent(type, data);
         }
+    }
+
+    public long count() {
+        return stack.getCount();
     }
 
     public static enum WobbleType {

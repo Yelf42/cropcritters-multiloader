@@ -19,7 +19,7 @@ public class CrawlThistle extends SpreadingWeedBlock {
     public int getMaxNeighbours() { return 2; }
 
     @Override
-    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean bl) {
+    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler) {
         if (entity instanceof LivingEntity livingEntity && !(livingEntity.getType().is(CropCritters.WEED_IMMUNE))) {
             Vec3 vec3d = new Vec3(0.9, 0.9F, 0.9);
             livingEntity.makeStuckInBlock(state, vec3d);
