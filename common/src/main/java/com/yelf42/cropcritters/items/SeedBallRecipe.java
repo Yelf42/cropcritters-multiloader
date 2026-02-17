@@ -76,6 +76,11 @@ public class SeedBallRecipe extends CustomRecipe {
         return result;
     }
 
+    @Override
+    public boolean canCraftInDimensions(int i, int i1) {
+        return i * i1 >= 9;
+    }
+
     private static ResourceLocation validItem(ItemStack stack) {
         if (stack.getItem() instanceof BlockItem blockItem && (stack.is(CropCritters.SEED_BALL_CROPS) || blockItem.getBlock() instanceof CropBlock)) {
             return BuiltInRegistries.BLOCK.getKey(blockItem.getBlock());

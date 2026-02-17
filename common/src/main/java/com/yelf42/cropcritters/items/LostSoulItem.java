@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.PitcherCropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -46,7 +45,7 @@ public class LostSoulItem extends Item {
                 world.sendParticles(ParticleTypes.SMOKE, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 10, 0.5, 0.5, 0.5, 0F);
             } else {
                 world.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
-                Slime slime = EntityType.SLIME.create(world, EntitySpawnReason.SPAWN_ITEM_USE);
+                Slime slime = EntityType.SLIME.create(world);
                 slime.setSize(2, true);
                 slime.setPos(blockPos.getBottomCenter());
                 world.addFreshEntity(slime);
@@ -69,7 +68,7 @@ public class LostSoulItem extends Item {
             world.sendParticles(ParticleTypes.SMOKE, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 10, 0.5, 0.5, 0.5, 0F);
         } else {
             BlockPos toSpawnAt = blockPos;
-            if (state.getValueOrElse(PitcherCropBlock.HALF, DoubleBlockHalf.LOWER) == DoubleBlockHalf.UPPER) {
+            if (state.getOptionalValue(PitcherCropBlock.HALF).orElse(DoubleBlockHalf.LOWER) == DoubleBlockHalf.UPPER) {
                 world.setBlock(blockPos.below(), Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
                 toSpawnAt = blockPos.below();
             }

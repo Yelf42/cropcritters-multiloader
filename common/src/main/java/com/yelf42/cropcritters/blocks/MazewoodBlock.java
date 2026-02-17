@@ -3,6 +3,8 @@ package com.yelf42.cropcritters.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
+import com.yelf42.cropcritters.registry.ModBlocks;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,10 +29,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.ScheduledTickAccess;
 
+import java.util.EnumMap;
 import java.util.Map;
-import java.util.function.Function;
 
 public class MazewoodBlock extends Block {
     public static final MapCodec<MazewoodBlock> CODEC = simpleCodec(MazewoodBlock::new);
@@ -40,8 +41,8 @@ public class MazewoodBlock extends Block {
     public static final EnumProperty<MazewoodShape> SOUTH_WALL_SHAPE;
     public static final EnumProperty<MazewoodShape> WEST_WALL_SHAPE;
     public static final Map<Direction, EnumProperty<MazewoodShape>> WALL_SHAPE_PROPERTIES_BY_DIRECTION;
-    private final Function<BlockState, VoxelShape> outlineShapeFunction;
-    private final Function<BlockState, VoxelShape> collisionShapeFunction;
+    private final Map<BlockState, VoxelShape> outlineShapeFunction;
+    private final Map<BlockState, VoxelShape> collisionShapeFunction;
     private static final Map<Direction, VoxelShape> WALL_SHAPES_FOR_TALL_TEST_BY_DIRECTION;
 
     public MapCodec<MazewoodBlock> codec() {
@@ -55,21 +56,27 @@ public class MazewoodBlock extends Block {
         this.collisionShapeFunction = this.createShapeFunction(24.0F);
     }
 
-    private Function<BlockState, VoxelShape> createShapeFunction(float tallHeight) {
-        VoxelShape voxelShape = Block.column((double)8.0F, (double)0.0F, (double)tallHeight);
-        Map<Direction, VoxelShape> map = Shapes.rotateHorizontal(Block.boxZ((double)8.0F, (double)0.0F, (double)tallHeight, (double)0.0F, (double)11.0F));
+    // TODO
+    private Map<BlockState, VoxelShape> createShapeFunction(float tallHeight) {
+        VoxelShape voxelShape = ModBlocks.column((double)8.0F, (double)0.0F, (double)tallHeight);
+
+        Map<Direction, VoxelShape> map = new EnumMap<>(Direction.class);
+        VoxelShape northShape = ModBlocks.boxZ((double)8.0F, (double)0.0F, (double)tallHeight, (double)0.0F, (double)11.0F);
+        map.put(Direction.NORTH, northShape);
+        map.put(Direction.SOUTH, northShape); // Same as north, opposite side
+        map.put(Direction.EAST, Block.box(5.0D, 0.0D, 0.0D, 11.0D, tallHeight, 16.0D)); // Rotated 90°
+        map.put(Direction.WEST, Block.box(5.0D, 0.0D, 0.0D, 11.0D, tallHeight, 16.0D)); // Same as east
+
         return this.getShapeForEachState((state) -> {
-            VoxelShape voxelShape2 = (Boolean)state.getValue(UP) ? voxelShape : Shapes.empty();
+            VoxelShape voxelShape2 = state.getValue(UP) ? voxelShape : Shapes.empty();
 
             for(Map.Entry<Direction, EnumProperty<MazewoodShape>> entry : WALL_SHAPE_PROPERTIES_BY_DIRECTION.entrySet()) {
-                VoxelShape var10001;
-                switch ((MazewoodShape)state.getValue((Property)entry.getValue())) {
-                    case NONE -> var10001 = Shapes.empty();
-                    case TALL -> var10001 = (VoxelShape)map.get(entry.getKey());
-                    default -> throw new MatchException((String)null, (Throwable)null);
-                }
+                VoxelShape shapeToAdd = switch (state.getValue(entry.getValue())) {
+                    case NONE -> Shapes.empty();
+                    case TALL -> map.get(entry.getKey());
+                };
 
-                voxelShape2 = Shapes.or(voxelShape2, var10001);
+                voxelShape2 = Shapes.or(voxelShape2, shapeToAdd);
             }
 
             return voxelShape2;
@@ -77,11 +84,11 @@ public class MazewoodBlock extends Block {
     }
 
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return (VoxelShape)this.outlineShapeFunction.apply(state);
+        return (VoxelShape)this.outlineShapeFunction.get(state);
     }
 
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return (VoxelShape)this.collisionShapeFunction.apply(state);
+        return (VoxelShape)this.collisionShapeFunction.get(state);
     }
 
     protected boolean isPathfindable(BlockState state, PathComputationType type) {
@@ -113,18 +120,18 @@ public class MazewoodBlock extends Block {
         return this.getStateWith(worldView, blockState6, blockPos6, blockState5, bl, bl2, bl3, bl4);
     }
 
-    protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
-        if (!this.canSurvive(state, world, pos)) {
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+        if (!this.canSurvive(state, world, currentPos)) {
             if (world instanceof Level w) {
-                w.scheduleTick(pos, this, 1);
+                w.scheduleTick(currentPos, this, 1);
             }
             return Blocks.AIR.defaultBlockState();
         }
 
         if (direction == Direction.DOWN) {
-            return super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+            return super.updateShape(state, direction, facingState, world, currentPos, facingPos);
         } else {
-            return direction == Direction.UP ? this.getStateAt(world, state, neighborPos, neighborState) : this.getStateWithNeighbor(world, pos, state, neighborPos, neighborState, direction);
+            return direction == Direction.UP ? this.getStateAt(world, state, facingPos, facingState) : this.getStateWithNeighbor(world, currentPos, state, facingPos, facingState, direction);
         }
     }
 
@@ -223,6 +230,12 @@ public class MazewoodBlock extends Block {
         SOUTH_WALL_SHAPE = EnumProperty.create("south", MazewoodShape.class);
         WEST_WALL_SHAPE = EnumProperty.create("west", MazewoodShape.class);
         WALL_SHAPE_PROPERTIES_BY_DIRECTION = ImmutableMap.copyOf(Maps.newEnumMap(Map.of(Direction.NORTH, NORTH_WALL_SHAPE, Direction.EAST, EAST_WALL_SHAPE, Direction.SOUTH, SOUTH_WALL_SHAPE, Direction.WEST, WEST_WALL_SHAPE)));
-        WALL_SHAPES_FOR_TALL_TEST_BY_DIRECTION = Shapes.rotateHorizontal(Block.boxZ((double)2.0F, (double)16.0F, (double)0.0F, (double)9.0F));
+        // TODO
+        WALL_SHAPES_FOR_TALL_TEST_BY_DIRECTION = Map.of(
+                Direction.NORTH, Block.box(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 9.0D),
+                Direction.SOUTH, Block.box(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 9.0D),
+                Direction.EAST, Block.box(0.0D, 0.0D, 6.0D, 9.0D, 16.0D, 10.0D),
+                Direction.WEST, Block.box(0.0D, 0.0D, 6.0D, 9.0D, 16.0D, 10.0D)
+        );
     }
 }

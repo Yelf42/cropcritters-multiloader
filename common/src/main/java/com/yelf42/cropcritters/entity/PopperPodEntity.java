@@ -181,7 +181,7 @@ public class PopperPodEntity extends ThrowableItemProjectile {
 
     protected void onHitBlock(BlockHitResult blockHitResult) {
         BlockPos blockPos = new BlockPos(blockHitResult.getBlockPos());
-        this.level().getBlockState(blockPos).entityInside(this.level(), blockPos, this, InsideBlockEffectApplier.NOOP);
+        this.level().getBlockState(blockPos).entityInside(this.level(), blockPos, this);
         Level var4 = this.level();
         if (var4 instanceof ServerLevel serverWorld) {
             this.explodeAndRemove(serverWorld);

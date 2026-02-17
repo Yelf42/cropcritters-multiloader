@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.util.random.WeightedList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -26,7 +25,6 @@ import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.ticks.TickPriority;
 import com.yelf42.cropcritters.CropCritters;
-import com.yelf42.cropcritters.events.WeedGrowNotifier;
 import com.yelf42.cropcritters.registry.ModFeatures;
 import com.yelf42.cropcritters.registry.ModSounds;
 
@@ -34,7 +32,7 @@ public class PuffbombPlantBlock extends MushroomBlock {
 
     public static final int MAX_AGE = 2;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_2;
-    private static final VoxelShape[] SHAPES_BY_AGE = Block.boxes(2, age -> Block.column(5 + age * 4, -1.0, 5 + age * 4));
+    private static final VoxelShape[] SHAPES_BY_AGE = ModBlocks.boxes(2, age -> ModBlocks.column(5 + age * 4, -1.0, 5 + age * 4));
 
     private static final ResourceKey<ConfiguredFeature<?, ?>> FEATURE_KEY = ModFeatures.PUFFBOMB_BLOB_CONFIGURED_FEATURE;
 
@@ -63,7 +61,7 @@ public class PuffbombPlantBlock extends MushroomBlock {
         if (blockState.is(BlockTags.MUSHROOM_GROW_BLOCK) || blockState.is(BlockTags.DIRT)) {
             return true;
         } else {
-            return world.getRawBrightness(pos, 0) < 13 && blockState.isSolidRender();
+            return world.getRawBrightness(pos, 0) < 13 && blockState.isSolidRender(world, pos);
         }
     }
 
@@ -129,15 +127,8 @@ public class PuffbombPlantBlock extends MushroomBlock {
 
     @Override
     protected void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
-        WeedGrowNotifier.notifyEvent(world, pos);
         world.scheduleTick(pos, state.getBlock(), 40, TickPriority.EXTREMELY_LOW);
         super.onPlace(state, world, pos, oldState, notify);
-    }
-
-    @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean moved) {
-        WeedGrowNotifier.notifyRemoval(world, pos);
-        super.affectNeighborsAfterRemoval(state, world, pos, moved);
     }
 
     @Override

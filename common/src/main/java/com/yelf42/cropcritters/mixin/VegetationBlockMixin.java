@@ -1,7 +1,7 @@
 package com.yelf42.cropcritters.mixin;
 
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(VegetationBlock.class)
+@Mixin(BushBlock.class)
 public abstract class VegetationBlockMixin {
 
     // Allows plants to be planted on SOUL_FARMLAND

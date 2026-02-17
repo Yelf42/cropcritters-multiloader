@@ -3,7 +3,6 @@ package com.yelf42.cropcritters.blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
@@ -27,13 +26,13 @@ public class CrimsonThornweed extends SpreadingWeedBlock {
     public int getMaxNeighbours() { return 3; }
 
     @Override
-    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler) {
+    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         // Apply damage, avoid critters and nether mobs
         if (entity instanceof LivingEntity livingEntity
                 && !(livingEntity.getType().is(CropCritters.WEED_IMMUNE))) {
             Vec3 vec3d = new Vec3(0.9, 0.9F, 0.9);
             livingEntity.makeStuckInBlock(state, vec3d);
-            if (world instanceof ServerLevel serverWorld) livingEntity.hurtServer(serverWorld, world.damageSources().sweetBerryBush(), 2.0F);
+            if (world instanceof ServerLevel) livingEntity.hurt(world.damageSources().sweetBerryBush(), 2.0F);
         }
     }
 }

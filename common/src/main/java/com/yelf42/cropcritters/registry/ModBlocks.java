@@ -4,24 +4,23 @@ import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.blocks.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.block.HugeMushroomBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.food.Foods;
-import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.IntFunction;
+import java.util.stream.IntStream;
 
 public class ModBlocks {
 
@@ -36,28 +35,23 @@ public class ModBlocks {
     }
 
     public static Block register(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties settings, Item.Properties itemSettings) {
-        var key = vanillaBlockId(name);
-        var block = factory.apply(settings.setId(key));
+        Block block = factory.apply(settings);
         REGISTERED_BLOCKS.put(name, block);
-        var item = new BlockItem(block, itemSettings.setId(vanillaItemId(name)));
-        REGISTERED_BLOCK_ITEMS.put(name, item);
+        REGISTERED_BLOCK_ITEMS.put(name, new BlockItem(block, itemSettings));
         return block;
     }
 
     public static Block register(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties settings, boolean shouldRegisterItem) {
-        var key = vanillaBlockId(name);
-        var block = factory.apply(settings.setId(key));
+        Block block = factory.apply(settings);
         REGISTERED_BLOCKS.put(name, block);
         if (shouldRegisterItem) {
-            var item = new BlockItem(block, new Item.Properties().setId(vanillaItemId(name)));
-            REGISTERED_BLOCK_ITEMS.put(name, item);
+            REGISTERED_BLOCK_ITEMS.put(name, new BlockItem(block, new Item.Properties()));
         }
         return block;
     }
 
     private static Block registerPotted(String name, BlockBehaviour.Properties settings, Block flower) {
-        var key = vanillaBlockId(name);
-        var block = new FlowerPotBlock(flower, settings.setId(key));
+        Block block = new FlowerPotBlock(flower, settings);
         REGISTERED_BLOCKS.put(name, block);
         return block;
     }
@@ -209,13 +203,8 @@ public class ModBlocks {
                     .instabreak()
                     .sound(SoundType.FUNGUS)
                     .pushReaction(PushReaction.DESTROY),
-            new Item.Properties().food(Foods.CARROT,
-                    Consumable.builder()
-                            .consumeSeconds(1.6F)
-                            .animation(ItemUseAnimation.EAT)
-                            .sound(SoundEvents.GENERIC_EAT)
-                            .hasConsumeParticles(true)
-                            .onConsume(new ApplyStatusEffectsConsumeEffect(ModEffects.EATEN_PUFFBOMB_POISONING))
+            new Item.Properties().food((new FoodProperties.Builder())
+                            .effect(ModEffects.EATEN_PUFFBOMB_POISONING, 1.0F)
                             .build())
     );
 
@@ -279,34 +268,6 @@ public class ModBlocks {
             SOUL_ROSE
     );
 
-    public static final Block TALL_BUSH = register(
-            "tall_bush",
-            TallBushBlock::new,
-            BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.PLANT)
-                    .replaceable()
-                    .noCollission()
-                    .instabreak()
-                    .sound(SoundType.GRASS)
-                    .ignitedByLava()
-                    .pushReaction(PushReaction.DESTROY),
-            true
-    );
-
-    public static final Block ORNAMENTAL_BUSH = register(
-            "ornamental_bush",
-            TallBushBlock::new,
-            BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.PLANT)
-                    .replaceable()
-                    .noCollission()
-                    .instabreak()
-                    .sound(SoundType.GRASS)
-                    .ignitedByLava()
-                    .pushReaction(PushReaction.DESTROY),
-            true
-    );
-
     public static final Block LOST_SOUL_IN_A_JAR = register(
             "lost_soul_in_a_jar",
             LostSoulInAJarBlock::new,
@@ -346,6 +307,7 @@ public class ModBlocks {
             false
     );
 
+    // TODO add
 //    public static void initialize() {
 //        CropCritters.LOGGER.info("Initializing blocks for " + CropCritters.MOD_ID);
 //
@@ -366,4 +328,19 @@ public class ModBlocks {
 //
 //
 //    }
+
+    public static VoxelShape[] boxes(int i, IntFunction<VoxelShape> intFunction) {
+        return IntStream.rangeClosed(0, i).mapToObj(intFunction).toArray(VoxelShape[]::new);
+    }
+
+    public static VoxelShape boxZ(double d, double e, double f, double g, double h) {
+        double i = d / (double)2.0F;
+        return Block.box((double)8.0F - i, e, g, (double)8.0F + i, f, h);
+    }
+
+    public static VoxelShape column(double sizeXz, double minY, double maxY) {
+        double h = sizeXz / (double)2.0F;
+        double i = sizeXz / (double)2.0F;
+        return Block.box((double)8.0F - h, minY, (double)8.0F - i, (double)8.0F + h, maxY, (double)8.0F + i);
+    }
 }

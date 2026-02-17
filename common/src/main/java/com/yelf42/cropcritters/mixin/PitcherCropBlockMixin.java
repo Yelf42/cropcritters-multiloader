@@ -28,7 +28,6 @@ import static net.minecraft.world.level.block.Block.pushEntitiesUp;
 public abstract class PitcherCropBlockMixin {
 
     @Shadow @Final public static IntegerProperty AGE;
-    @Shadow @Final public static EnumProperty<DoubleBlockHalf> HALF;
 
     @Inject(method = "mayPlaceOn", at = @At("HEAD"), cancellable = true)
     private void allowPlantOnSoulAndDirt(BlockState floor, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
@@ -43,7 +42,7 @@ public abstract class PitcherCropBlockMixin {
 
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/PitcherCropBlock;grow(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;I)V", shift = At.Shift.AFTER))
     private void removeNutrientsAndSpawnCritters(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo ci) {
-        if (state.getValueOrElse(AGE, 0) <= 3) return;
+        if (state.getOptionalValue(AGE).orElse(0) <= 3) return;
 
         BlockState soilCheck = world.getBlockState(pos.below());
         if (soilCheck.is(Blocks.FARMLAND)) {

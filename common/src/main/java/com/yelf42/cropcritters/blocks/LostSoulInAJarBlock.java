@@ -27,7 +27,7 @@ public class LostSoulInAJarBlock extends LanternBlock {
 
     public LostSoulInAJarBlock(Properties settings) {
         super(settings);
-        this.registerDefaultState((BlockState)((BlockState)this.defaultBlockState().setValue(POWERED, false)));
+        this.registerDefaultState((this.defaultBlockState().setValue(POWERED, false)));
     }
 
     @Override
@@ -37,9 +37,9 @@ public class LostSoulInAJarBlock extends LanternBlock {
 
     @Override
     protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        if ((Boolean)state.getValue(POWERED)) world.setBlock(pos, (BlockState)state.setValue(POWERED, false), 3);
+        if (state.getValue(POWERED)) world.setBlock(pos, state.setValue(POWERED, false), 3);
         if (WeedGrowNotifier.checkWeedsToRing(world, pos)) {
-            world.setBlock(pos, (BlockState)state.setValue(POWERED, true), 3);
+            world.setBlock(pos, state.setValue(POWERED, true), 3);
             ring(world, pos, random);
         }
         world.scheduleTick(pos, state.getBlock(), 15 + world.random.nextInt(30), TickPriority.EXTREMELY_LOW);

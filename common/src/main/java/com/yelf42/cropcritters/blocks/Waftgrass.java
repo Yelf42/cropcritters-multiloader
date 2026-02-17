@@ -3,7 +3,6 @@ package com.yelf42.cropcritters.blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -28,7 +27,7 @@ public class Waftgrass extends SpreadingWeedBlock {
     public int getMaxNeighbours() { return 3; }
 
     @Override
-    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler) {
+    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         // Apply damage, avoid critters and nether mobs
         if (world instanceof ServerLevel
                 && entity instanceof LivingEntity livingEntity

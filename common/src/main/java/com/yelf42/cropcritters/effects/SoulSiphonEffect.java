@@ -7,12 +7,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.NetherWartBlock;
-import net.minecraft.world.level.block.PitcherCropBlock;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import com.yelf42.cropcritters.CropCritters;
@@ -56,7 +51,7 @@ public class SoulSiphonEffect extends MobEffect {
             if (world.random.nextInt(2) == 0) continue;
 
             BlockState blockState = world.getBlockState(blockPos);
-            if (!(blockState.getBlock() instanceof VegetationBlock)) continue;
+            if (!(blockState.getBlock() instanceof BushBlock)) continue;
 
             if (blockState.getBlock() instanceof BonemealableBlock fertilizable) {
                 if (fertilizable.isValidBonemealTarget(world, blockPos, blockState)) {
@@ -71,15 +66,15 @@ public class SoulSiphonEffect extends MobEffect {
                     }
                 }
             } else {
-                if (blockState.is(Blocks.NETHER_WART) && blockState.getValueOrElse(NetherWartBlock.AGE, 0) == NetherWartBlock.MAX_AGE) {
+                if (blockState.is(Blocks.NETHER_WART) && blockState.getOptionalValue(NetherWartBlock.AGE).orElse(0) == NetherWartBlock.MAX_AGE) {
                     CritterHelper.spawnCritter(world, blockState, world.random, blockPos);
                 }
             }
         }
     }
 
-    public boolean applyEffectTick(ServerLevel world, LivingEntity entity, int amplifier) {
-        entity.hurtServer(world, entity.damageSources().magic(), 3.0F);
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+        entity.hurt(entity.damageSources().magic(), 3.0F);
         return true;
     }
 

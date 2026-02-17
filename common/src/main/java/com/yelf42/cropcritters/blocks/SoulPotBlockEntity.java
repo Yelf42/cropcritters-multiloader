@@ -4,7 +4,6 @@ import com.yelf42.cropcritters.registry.ModBlockEntities;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.RandomizableContainer;
@@ -16,8 +15,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
@@ -36,22 +33,26 @@ public class SoulPotBlockEntity extends BlockEntity implements RandomizableConta
         this.stack = ItemStack.EMPTY;
     }
 
-    protected void saveAdditional(ValueOutput view) {
-        super.saveAdditional(view);
-        if (!this.trySaveLootTable(view) && !this.stack.isEmpty()) {
-            view.store("item", ItemStack.CODEC, this.stack);
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        if (!this.trySaveLootTable(tag) && !this.stack.isEmpty()) {
+            tag.put("item", this.stack.save(registries));
         }
-
     }
 
-    protected void loadAdditional(ValueInput view) {
-        super.loadAdditional(view);
-        if (!this.tryLoadLootTable(view)) {
-            this.stack = view.read("item", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (!this.tryLoadLootTable(tag)) {
+            if (tag.contains("item")) {
+                this.stack = ItemStack.parse(registries, tag.getCompound("item")).orElse(ItemStack.EMPTY);
+            } else {
+                this.stack = ItemStack.EMPTY;
+            }
         } else {
             this.stack = ItemStack.EMPTY;
         }
-
     }
 
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -87,14 +88,16 @@ public class SoulPotBlockEntity extends BlockEntity implements RandomizableConta
         builder.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of(this.stack)));
     }
 
-    protected void applyImplicitComponents(DataComponentGetter components) {
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
-        this.stack = (components.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY)).copyOne();
+        this.stack = components.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyOne();
     }
 
-    public void removeComponentsFromTag(ValueOutput view) {
-        super.removeComponentsFromTag(view);
-        view.discard("item");
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove("item");
     }
 
     public ItemStack getTheItem() {

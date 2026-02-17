@@ -1,12 +1,11 @@
 package com.yelf42.cropcritters.blocks;
 
 import com.mojang.serialization.MapCodec;
+import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,11 +20,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.Nullable;
 import com.yelf42.cropcritters.config.ConfigManager;
-import com.yelf42.cropcritters.events.WeedGrowNotifier;
 
 public class MazewoodSaplingBlock extends BaseEntityBlock implements BonemealableBlock {
     public static final MapCodec<MazewoodSaplingBlock> CODEC = simpleCodec(MazewoodSaplingBlock::new);
-    private static final VoxelShape SHAPE = Block.column((double)8.0F, (double)0.0F, (double)8.0F);;
+    private static final VoxelShape SHAPE = ModBlocks.column(8.0F, 0.0F,8.0F);;
     public static final IntegerProperty SPREAD = IntegerProperty.create("spread", 0, 128);
 
     public MazewoodSaplingBlock(Properties settings) {
@@ -79,17 +77,6 @@ public class MazewoodSaplingBlock extends BaseEntityBlock implements Bonemealabl
         if (be instanceof MazewoodSaplingBlockEntity spreader) {
             spreader.tickRandom(random);
         }
-    }
-
-    @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.setPlacedBy(world, pos, state, placer, itemStack);
-    }
-
-    @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean moved) {
-        WeedGrowNotifier.notifyRemoval(world, pos);
-        super.affectNeighborsAfterRemoval(state, world, pos, moved);
     }
 
     @Override

@@ -78,13 +78,13 @@ public class SoulRoseBlockEntity extends BlockEntity {
 
     // Particles
     public static void clientTick(Level world, BlockPos pos, BlockState state, SoulRoseBlockEntity blockEntity) {
-        int level = state.getValueOrElse(SoulRoseBlock.LEVEL, 0);
-        SoulRoseType type = state.getValueOrElse(SoulRoseBlock.TYPE, SoulRoseType.NONE);
+        int level = state.getOptionalValue(SoulRoseBlock.LEVEL).orElse(0);
+        SoulRoseType type = state.getOptionalValue(SoulRoseBlock.TYPE).orElse(SoulRoseType.NONE);
         if (level == 0 || type == SoulRoseType.NONE) return;
 
         // Particles for being active
         if (world.getGameTime() % 20 == 0L) {
-            if (world.isBrightOutside()) return;
+            if (world.isDay()) return;
             if (world.dimensionType().hasFixedTime() && !world.getBiome(pos).is(Biomes.SOUL_SAND_VALLEY)) return;
 
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
@@ -108,7 +108,7 @@ public class SoulRoseBlockEntity extends BlockEntity {
         // Update block level and type
         if (world.getGameTime() % 100L == 0L) {
             int lvl = updateLevel(world, pos);
-            if (lvl != state.getValueOrElse(SoulRoseBlock.LEVEL, 0)) {
+            if (lvl != state.getOptionalValue(SoulRoseBlock.LEVEL).orElse(0)) {
                 BlockState core = world.getBlockState(pos.offset(0, -2, 0));
                 world.setBlockAndUpdate(pos, state.setValue(SoulRoseBlock.LEVEL, lvl).setValue(SoulRoseBlock.TYPE, SoulRoseType.getType(core, lvl)));
                 if (SoulRoseBlock.isDoubleTallAtLevel(lvl)) {
@@ -119,8 +119,8 @@ public class SoulRoseBlockEntity extends BlockEntity {
             }
         }
 
-        int level = state.getValueOrElse(SoulRoseBlock.LEVEL, 0);
-        SoulRoseType type = state.getValueOrElse(SoulRoseBlock.TYPE, SoulRoseType.NONE);
+        int level = state.getOptionalValue(SoulRoseBlock.LEVEL).orElse(0);
+        SoulRoseType type = state.getOptionalValue(SoulRoseBlock.TYPE).orElse(SoulRoseType.NONE);
         if (level == 0 || type == SoulRoseType.NONE) return;
 
         // Copper undead attack
@@ -132,7 +132,7 @@ public class SoulRoseBlockEntity extends BlockEntity {
     }
 
     private static void tryAttack(ServerLevel world, BlockPos pos, BlockState state, SoulRoseBlockEntity blockEntity) {
-        int level = state.getValueOrElse(SoulRoseBlock.LEVEL, 0);
+        int level = state.getOptionalValue(SoulRoseBlock.LEVEL).orElse(0);
 
         List<LivingEntity> list = world.getEntitiesOfClass(LivingEntity.class, getAttackZone(pos, level), (entity) -> entity.getType().is(EntityTypeTags.UNDEAD) && !entity.hasCustomName());
         for (LivingEntity livingEntity : list) {

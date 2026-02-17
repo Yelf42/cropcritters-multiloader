@@ -1,7 +1,7 @@
 package com.yelf42.cropcritters.items;
 
 import com.yelf42.cropcritters.registry.ModItems;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +43,12 @@ public class SeedBarRecipe extends CustomRecipe {
     private static boolean validItem(ItemStack stack) {
         Item item = stack.getItem();
         String itemName = stack.getHoverName().getString();
-        return itemName.contains("Seeds") && item instanceof BlockItem blockItem && blockItem.getBlock() instanceof VegetationBlock;
+        return itemName.contains("Seeds") && item instanceof BlockItem blockItem && blockItem.getBlock() instanceof BushBlock;
+    }
+
+    @Override
+    public boolean canCraftInDimensions(int i, int i1) {
+        return i * i1 >= 9;
     }
 
     @Override

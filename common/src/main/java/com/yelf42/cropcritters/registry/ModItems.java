@@ -12,11 +12,11 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Rarity;
 import com.yelf42.cropcritters.CropCritters;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 
 import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
@@ -71,7 +71,7 @@ public class ModItems {
     }
 
     public static Item registerSpawnEgg(String name, EntityType<? extends Mob> entityType) {
-        return registerItem(vanillaItemId(name), (properties -> new SpawnEggItem(entityType, properties)));
+        return registerItem(vanillaItemId(name), (properties -> new SpawnEggItem(entityType, 0, 0, properties)));
     }
 
     public static Item registerItem(ResourceKey<Item> key, Function<Item.Properties, Item> factory) {
@@ -79,7 +79,7 @@ public class ModItems {
     }
 
     public static Item registerItem(ResourceKey<Item> key, Function<Item.Properties, Item> factory, Item.Properties properties) {
-        var item = factory.apply(properties.setId(key));
+        var item = factory.apply(properties);
         REGISTERED_ITEMS.put(key.location().getPath(), item);
 
         return item;
@@ -106,8 +106,8 @@ public class ModItems {
 
 
     // RECIPES
-    public static final RecipeSerializer<SeedBallRecipe> SEED_BALL_RECIPE = new CustomRecipe.Serializer<>(SeedBallRecipe::new);
-    public static final RecipeSerializer<SeedBarRecipe> SEED_BAR_RECIPE = new CustomRecipe.Serializer<>(SeedBarRecipe::new);
+    public static final RecipeSerializer<SeedBallRecipe> SEED_BALL_RECIPE = new SimpleCraftingRecipeSerializer<>(SeedBallRecipe::new);
+    public static final RecipeSerializer<SeedBarRecipe> SEED_BAR_RECIPE = new SimpleCraftingRecipeSerializer<>(SeedBarRecipe::new);
 
     /// BINDER
     public static void registerRecipes(BiConsumer<RecipeSerializer<?>, ResourceLocation> consumer) {

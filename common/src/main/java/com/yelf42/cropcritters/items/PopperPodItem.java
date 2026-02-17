@@ -1,11 +1,9 @@
 package com.yelf42.cropcritters.items;
 
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
@@ -36,7 +34,9 @@ public class PopperPodItem extends Item implements ProjectileItem {
                 ItemStack itemStack = context.getItemInHand();
                 Vec3 vec3d = context.getClickLocation();
                 Direction direction = context.getClickedFace();
-                Projectile.spawnProjectile(new PopperPodEntity(world, context.getPlayer(), vec3d.x + (double)direction.getStepX() * 0.15, vec3d.y + (double)direction.getStepY() * 0.15, vec3d.z + (double)direction.getStepZ() * 0.15, itemStack), serverWorld, itemStack);
+                PopperPodEntity pod = new PopperPodEntity(world, context.getPlayer(), vec3d.x + (double)direction.getStepX() * 0.15, vec3d.y + (double)direction.getStepY() * 0.15, vec3d.z + (double)direction.getStepZ() * 0.15, itemStack);
+                serverWorld.addFreshEntity(pod);
+
                 itemStack.shrink(1);
             }
 
@@ -44,23 +44,22 @@ public class PopperPodItem extends Item implements ProjectileItem {
         }
     }
 
-    public InteractionResult use(Level world, Player user, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         if (user.isFallFlying()) {
             ItemStack itemStack = user.getItemInHand(hand);
             if (world instanceof ServerLevel) {
                 ServerLevel serverWorld = (ServerLevel)world;
-                if (user.dropAllLeashConnections((Player)null)) {
-                    world.playSound((Entity)null, user, SoundEvents.LEAD_BREAK, SoundSource.NEUTRAL, 1.0F, 1.0F);
-                }
 
-                Projectile.spawnProjectile(new PopperPodEntity(world, itemStack, user), serverWorld, itemStack);
+                PopperPodEntity pod = new PopperPodEntity(world, itemStack, user);
+                serverWorld.addFreshEntity(pod);
+
                 itemStack.consume(1, user);
                 user.awardStat(Stats.ITEM_USED.get(this));
             }
 
-            return InteractionResult.SUCCESS;
+            return InteractionResultHolder.sidedSuccess(user.getItemInHand(hand), world.isClientSide());
         } else {
-            return InteractionResult.PASS;
+            return InteractionResultHolder.pass(user.getItemInHand(hand));
         }
     }
 

@@ -8,9 +8,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.SupportType;
-import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -23,9 +22,9 @@ import com.yelf42.cropcritters.area_affectors.TypedBlockArea;
 
 import java.util.Collection;
 
-public class TrimmedSoulRoseBlock extends VegetationBlock {
+public class TrimmedSoulRoseBlock extends BushBlock {
     public static final MapCodec<TrimmedSoulRoseBlock> CODEC = simpleCodec(TrimmedSoulRoseBlock::new);
-    private static final VoxelShape SHAPE = Block.column(8.0F, 0.0F, 8.0F);
+    private static final VoxelShape SHAPE = ModBlocks.column(8.0F, 0.0F, 8.0F);
 
     public MapCodec<? extends TrimmedSoulRoseBlock> codec() {
         return CODEC;

@@ -1,5 +1,8 @@
 package com.yelf42.cropcritters.mixin;
 
+import com.yelf42.cropcritters.CropCritters;
+import com.yelf42.cropcritters.events.WeedGrowNotifier;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -19,16 +22,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.yelf42.cropcritters.area_affectors.AffectorPositions;
 import com.yelf42.cropcritters.registry.ModBlocks;
 
+import java.util.function.Supplier;
+
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin extends Level {
 
-    public ServerLevelMixin(WritableLevelData properties, ResourceKey<Level> registryRef, RegistryAccess registryManager, Holder<DimensionType> dimensionEntry, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
-        super(properties, registryRef, registryManager, dimensionEntry, isClient, debugWorld, seed, maxChainedNeighborUpdates);
+    public ServerLevelMixin(WritableLevelData properties, ResourceKey<Level> registryRef, RegistryAccess registryManager, Holder<DimensionType> dimensionEntry, Supplier<ProfilerFiller> profiler, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
+        super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 
-    @Inject(method = "updatePOIOnBlockStateChange", at = @At("HEAD"))
+    @Inject(method = "onBlockStateChange", at = @At("HEAD"))
     public void injectAreaAffectorCheck(BlockPos pos, BlockState oldState, BlockState newState, CallbackInfo ci) {
         AffectorPositions.onBlockStateChange(ServerLevel.class.cast(this), pos, oldState, newState);
+
+        if (oldState.is(CropCritters.WEEDS)) WeedGrowNotifier.notifyRemoval(ServerLevel.class.cast(this), pos);
+        if (newState.is(CropCritters.WEEDS)) WeedGrowNotifier.notifyEvent(ServerLevel.class.cast(this), pos);
     }
 
     @Inject(method = "tickPrecipitation", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;shouldSnow(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z", shift = At.Shift.AFTER))

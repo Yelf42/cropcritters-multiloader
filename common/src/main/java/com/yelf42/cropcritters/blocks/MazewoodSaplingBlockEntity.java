@@ -1,16 +1,15 @@
 package com.yelf42.cropcritters.blocks;
 
-import com.mojang.serialization.Codec;
 import com.yelf42.cropcritters.registry.ModBlockEntities;
 import com.yelf42.cropcritters.registry.ModBlocks;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -46,23 +45,27 @@ public class MazewoodSaplingBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(ValueOutput view) {
-        super.saveAdditional(view);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
 
-        ValueOutput.TypedOutputList<Long> appender = view.list("GrowInto", Codec.LONG);
+        long[] growIntoArray = new long[growInto.size()];
+        int i = 0;
         for (Long pos : growInto) {
-            appender.add(pos);
+            growIntoArray[i++] = pos;
         }
+        tag.putLongArray("GrowInto", growIntoArray);
     }
 
     @Override
-    protected void loadAdditional(ValueInput view) {
-        super.loadAdditional(view);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
 
         growInto.clear();
-        ValueInput.TypedInputList<Long> listView = view.listOrEmpty("GrowInto", Codec.LONG);
-        for (Long posLong : listView) {
-            growInto.add(posLong);
+        if (tag.contains("GrowInto", 12)) {
+            long[] growIntoArray = tag.getLongArray("GrowInto");
+            for (long posLong : growIntoArray) {
+                growInto.add(posLong);
+            }
         }
     }
 
@@ -107,7 +110,7 @@ public class MazewoodSaplingBlockEntity extends BlockEntity {
         return (checkBelowState.is(BlockTags.DIRT))
                 && (checkState.isAir()
                 || (!(checkState.getBlock() instanceof MazewoodSaplingBlock)
-                    && (checkState.getBlock() instanceof VegetationBlock)));
+                    && (checkState.getBlock() instanceof BushBlock)));
     }
 
     public void tickRandom(RandomSource random) {

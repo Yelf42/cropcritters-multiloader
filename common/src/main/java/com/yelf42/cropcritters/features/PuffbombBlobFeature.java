@@ -1,19 +1,15 @@
 package com.yelf42.cropcritters.features;
 
 import com.mojang.serialization.Codec;
-import com.yelf42.cropcritters.CropCritters;
-import com.yelf42.cropcritters.blocks.PuffbombPlantBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
@@ -42,7 +38,7 @@ public class PuffbombBlobFeature extends Feature<NoneFeatureConfiguration> {
 
         // Stop worldgen on leaves etc
         BlockState soil = world.getBlockState(centerPos.below());
-        if ((!soil.is(BlockTags.MUSHROOM_GROW_BLOCK) && !soil.is(BlockTags.DIRT)) && (!soil.isSolidRender())) return false;
+        if ((!soil.is(BlockTags.MUSHROOM_GROW_BLOCK) && !soil.is(BlockTags.DIRT)) && (!soil.isSolidRender(world, centerPos.below()))) return false;
 
         // Seed center block
         BlockState toPlace = ModBlocks.PUFFBOMB_MUSHROOM_BLOCK.defaultBlockState();
@@ -90,6 +86,6 @@ public class PuffbombBlobFeature extends Feature<NoneFeatureConfiguration> {
 
     private static boolean isReplaceable(WorldGenLevel world, BlockPos pos) {
         if (world.isStateAtPosition(pos, BlockBehaviour.BlockStateBase::canBeReplaced)) return true;
-        return (world.getBlockState(pos).getBlock() instanceof VegetationBlock);
+        return (world.getBlockState(pos).getBlock() instanceof BushBlock);
     }
 }

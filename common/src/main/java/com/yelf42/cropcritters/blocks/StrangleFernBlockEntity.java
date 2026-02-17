@@ -1,14 +1,13 @@
 package com.yelf42.cropcritters.blocks;
 
 import com.yelf42.cropcritters.registry.ModBlockEntities;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.core.BlockPos;
 
 public class StrangleFernBlockEntity extends BlockEntity {
@@ -20,15 +19,23 @@ public class StrangleFernBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(ValueInput view) {
-        super.loadAdditional(view);
-        infestedState = view.read("InfestedState", BlockState.CODEC).orElse(Blocks.DEAD_BUSH.defaultBlockState());
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (tag.contains("InfestedState")) {
+            infestedState = BlockState.CODEC.parse(NbtOps.INSTANCE, tag.get("InfestedState"))
+                    .resultOrPartial(e -> {})
+                    .orElse(Blocks.DEAD_BUSH.defaultBlockState());
+        } else {
+            infestedState = Blocks.DEAD_BUSH.defaultBlockState();
+        }
     }
 
     @Override
-    protected void saveAdditional(ValueOutput view) {
-        super.saveAdditional(view);
-        view.store("InfestedState", BlockState.CODEC, infestedState);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        BlockState.CODEC.encodeStart(NbtOps.INSTANCE, infestedState)
+                .resultOrPartial(e -> {})
+                .ifPresent(nbt -> tag.put("InfestedState", nbt));
     }
 
     public BlockState getInfestedState() {

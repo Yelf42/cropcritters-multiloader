@@ -5,6 +5,8 @@ import com.yelf42.cropcritters.registry.*;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -43,12 +45,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.ScheduledTickAccess;
 import org.jetbrains.annotations.Nullable;
 
-// TODO emissive glow
 public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final MapCodec<SoulPotBlock> CODEC = simpleCodec(SoulPotBlock::new);
     public static final BooleanProperty CRACKED;
@@ -65,12 +64,12 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
         this.registerDefaultState((((this.stateDefinition.any())).setValue(WATERLOGGED, false)).setValue(CRACKED, false).setValue(LEVEL, 0));
     }
 
-    protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
         if (state.getValue(WATERLOGGED)) {
-            tickView.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+            world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
 
-        return super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
@@ -127,11 +126,11 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
 
 
 
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof SoulPotBlockEntity soulPotBlockEntity) {
             if (world.isClientSide() || !stack.is(ModItems.LOST_SOUL)) {
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             } else {
                 ItemStack itemStack = soulPotBlockEntity.getTheItem();
                 if (!stack.isEmpty() && (itemStack.isEmpty() || ItemStack.isSameItemSameComponents(itemStack, stack) && itemStack.getCount() < itemStack.getMaxStackSize())) {
@@ -155,13 +154,13 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
                     soulPotBlockEntity.setChanged();
                     world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                     world.setBlock(pos, state.setValue(LEVEL, Math.clamp(soulPotBlockEntity.count(), 0, 12)), 3);
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 } else {
-                    return InteractionResult.TRY_WITH_EMPTY_HAND;
+                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
                 }
             }
         } else {
-            return InteractionResult.PASS;
+            return ItemInteractionResult .PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
     }
 
@@ -193,8 +192,9 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
         return new SoulPotBlockEntity(pos, state);
     }
 
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean moved) {
-        Containers.updateNeighboursAfterDestroy(state, world, pos);
+    protected void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        Containers.dropContentsOnDestroy(state, newState, world, pos);
+        super.onRemove(state, world, pos, newState, moved);
     }
 
     public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
@@ -239,6 +239,6 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
         LEVEL = IntegerProperty.create("level", 0, 12);
         CRACKED = BlockStateProperties.CRACKED;
         WATERLOGGED = BlockStateProperties.WATERLOGGED;
-        SHAPE = Block.column(14.0F, 0.0F, 16.0F);
+        SHAPE = ModBlocks.column(14.0F, 0.0F, 16.0F);
     }
 }

@@ -5,7 +5,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -57,12 +56,12 @@ public class WitheringSpiteweed extends SpreadingWeedBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler) {
+    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         if (entity instanceof LivingEntity livingEntity
                 && !(livingEntity.getType().is(CropCritters.WEED_IMMUNE))) {
             Vec3 vec3d = new Vec3(0.9, 0.9F, 0.9);
             livingEntity.makeStuckInBlock(state, vec3d);
-            if (world instanceof ServerLevel serverWorld && !livingEntity.isInvulnerableTo(serverWorld, world.damageSources().wither())) {
+            if (world instanceof ServerLevel && !livingEntity.isInvulnerableTo(world.damageSources().wither())) {
                 livingEntity.addEffect(new MobEffectInstance(MobEffects.WITHER, 40));
             }
         }

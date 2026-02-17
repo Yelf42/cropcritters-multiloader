@@ -29,7 +29,6 @@ public class ModDispenserBehaviours {
                         BlockPos blockPos = pointer.pos().relative(facing);
                         BlockState state = world.getBlockState(blockPos);
                         if (!StrangeFertilizerItem.tryReviveCoral(stack, world, blockPos, state)
-                                && !StrangeFertilizerItem.useOnBush(stack, world, blockPos)
                                 && !StrangeFertilizerItem.growCrop(stack, world, blockPos)
                                 && !StrangeFertilizerItem.useOnGround(stack, world, blockPos, blockPos, facing)) {
                             this.setSuccess(false);

@@ -3,7 +3,6 @@ package com.yelf42.cropcritters.registry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.TooltipFlag;
@@ -28,7 +27,7 @@ public class ModComponents {
         });
 
         @Override
-        public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltip, TooltipFlag type, DataComponentGetter components) {
+        public void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> tooltip, TooltipFlag tooltipFlag) {
             for (ResourceLocation seedType : seedTypes) {
                 tooltip.accept(Component.literal(" - ").append(Component.translatable("block." + seedType.getNamespace() + "." + seedType.getPath()).withStyle(ChatFormatting.GRAY)));
             }
@@ -44,7 +43,7 @@ public class ModComponents {
         });
 
         @Override
-        public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltip, TooltipFlag type, DataComponentGetter components) {
+        public void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> tooltip, TooltipFlag tooltipFlag) {
             if (poisonStacks > 0) tooltip.accept(Component.translatable("item.cropcritters.tooltip.poisonous_seed_ball").append(CropCritters.INT_TO_ROMAN[poisonStacks]).withStyle(ChatFormatting.GREEN));
         }
     }

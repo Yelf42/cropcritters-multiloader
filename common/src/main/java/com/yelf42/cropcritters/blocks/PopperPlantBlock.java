@@ -2,12 +2,11 @@ package com.yelf42.cropcritters.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModBlocks;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -22,15 +21,14 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import com.yelf42.cropcritters.entity.PopperPodEntity;
-import com.yelf42.cropcritters.events.WeedGrowNotifier;
 import com.yelf42.cropcritters.registry.ModItems;
 
-public class PopperPlantBlock extends VegetationBlock implements BonemealableBlock {
+public class PopperPlantBlock extends BushBlock implements BonemealableBlock {
 
     public static final MapCodec<PopperPlantBlock> CODEC = simpleCodec(PopperPlantBlock::new);
     public static final int MAX_AGE = 3;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
-    private static final VoxelShape SHAPE = Block.column((double)8.0F, (double)0.0F, (double)13.0F);
+    private static final VoxelShape SHAPE = ModBlocks.column((double)8.0F, (double)0.0F, (double)13.0F);
 
     public PopperPlantBlock(Properties settings) {
         super(settings);
@@ -38,13 +36,14 @@ public class PopperPlantBlock extends VegetationBlock implements BonemealableBlo
     }
 
     @Override
-    protected MapCodec<? extends VegetationBlock> codec() {
+    protected MapCodec<? extends BushBlock> codec() {
         return CODEC;
     }
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return SHAPE.move(state.getOffset(pos));
+        Vec3 vec3 = state.getOffset(world, pos);
+        return SHAPE.move(vec3.x, vec3.y, vec3.z);
     }
 
     public int getMaxAge() {
@@ -95,20 +94,10 @@ public class PopperPlantBlock extends VegetationBlock implements BonemealableBlo
 
     private void spawnPopperPod(ServerLevel world, BlockState state, BlockPos pos) {
         ItemStack itemStack = new ItemStack(ModItems.POPPER_POD);
-        Vec3 center = pos.getCenter().add(state.getOffset(pos));
-        Projectile.spawnProjectile(new PopperPodEntity(world, center.x, center.y, center.z, itemStack), world, itemStack);
-    }
-
-    @Override
-    protected void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
-        WeedGrowNotifier.notifyEvent(world, pos);
-        super.onPlace(state, world, pos, oldState, notify);
-    }
-
-    @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean moved) {
-        WeedGrowNotifier.notifyRemoval(world, pos);
-        super.affectNeighborsAfterRemoval(state, world, pos, moved);
+        Vec3 center = pos.getCenter().add(state.getOffset(world, pos));
+        PopperPodEntity pod = new PopperPodEntity(world, center.x, center.y, center.z, itemStack);
+        world.addFreshEntity(pod);
+        ///Projectile.spawnProjectile(new PopperPodEntity(world, center.x, center.y, center.z, itemStack), world, itemStack);
     }
 
     @Override

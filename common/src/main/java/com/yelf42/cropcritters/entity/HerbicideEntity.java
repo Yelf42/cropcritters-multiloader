@@ -25,11 +25,11 @@ public class HerbicideEntity extends ThrowableItemProjectile {
     }
 
     public HerbicideEntity(double x, double y, double z, Level world, ItemStack stack) {
-        super(ModEntities.HERBICIDE_PROJECTILE, x, y, z, world, stack);
+        super(ModEntities.HERBICIDE_PROJECTILE, x, y, z, world);
     }
 
-    public HerbicideEntity(ServerLevel serverWorld, LivingEntity livingEntity, ItemStack itemStack) {
-        super(ModEntities.HERBICIDE_PROJECTILE, livingEntity, serverWorld, itemStack);
+    public HerbicideEntity(ServerLevel serverWorld, LivingEntity livingEntity) {
+        super(ModEntities.HERBICIDE_PROJECTILE, livingEntity, serverWorld);
     }
 
     @Override

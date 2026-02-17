@@ -28,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import com.yelf42.cropcritters.blocks.SoulRoseBlock;
-import com.yelf42.cropcritters.blocks.TallBushBlock;
 import com.yelf42.cropcritters.registry.ModSounds;
 
 import java.util.Map;
@@ -83,11 +82,6 @@ public class StrangeFertilizerItem extends BoneMealItem {
             return InteractionResult.SUCCESS;
         }
 
-        // Grow bush into tall bush
-        if (useOnBush(context.getItemInHand(), world, blockPos)) {
-            return InteractionResult.SUCCESS;
-        }
-
         // Use on fertilizable things
         if (growCrop(context.getItemInHand(), world, blockPos)) {
             if (!world.isClientSide()) {
@@ -107,7 +101,7 @@ public class StrangeFertilizerItem extends BoneMealItem {
         }
 
         // Trimmed Soul Rose
-        if (blockState.is(ModBlocks.SOUL_ROSE) && blockState.getValueOrElse(SoulRoseBlock.LEVEL, 0) > 1) {
+        if (blockState.is(ModBlocks.SOUL_ROSE) && blockState.getOptionalValue(SoulRoseBlock.LEVEL).orElse(0) > 1) {
             if (!world.isClientSide()) {
                 if (playerEntity != null) playerEntity.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
                 world.levelEvent(1505, blockPos, 15);
@@ -118,16 +112,6 @@ public class StrangeFertilizerItem extends BoneMealItem {
         }
 
         return InteractionResult.PASS;
-    }
-
-    public static boolean useOnBush(ItemStack stack, Level world, BlockPos blockPos) {
-        BlockState state = world.getBlockState(blockPos);
-        if (state.is(Blocks.BUSH) && world.getBlockState(blockPos.above()).isAir()) {
-            TallBushBlock.placeAt(world, ModBlocks.TALL_BUSH.defaultBlockState(), blockPos, 2);
-            stack.shrink(1);
-            return true;
-        }
-        return false;
     }
 
     public static boolean useOnGround(ItemStack stack, Level world, BlockPos blockPos, BlockPos underwaterPos, @Nullable Direction facing) {
@@ -248,7 +232,7 @@ public class StrangeFertilizerItem extends BoneMealItem {
                 }
 
                 if (!toPlace.is(CropCritters.IGNORE_STRANGE_FERTILIZERS) && toPlace.canSurvive(world, blockPos2)) {
-                    if (toPlace.getBlock() instanceof DoublePlantBlock || toPlace.getBlock() instanceof TallBushBlock) {
+                    if (toPlace.getBlock() instanceof DoublePlantBlock) {
                         if (world.getBlockState(blockPos2.above()).is(Blocks.AIR)) {
                             DoublePlantBlock.placeAt(world, toPlace, blockPos2, 3);
                             successfulPlacements++;

@@ -19,9 +19,9 @@ public class AffectorsHelper {
 
     // Converts block state to affector type
     public static @Nullable AffectorType getTypeFromBlockState(BlockState state) {
-        if (state.is(ModBlocks.SOUL_ROSE) && state.getValueOrElse(SoulRoseBlock.HALF, DoubleBlockHalf.UPPER) == DoubleBlockHalf.LOWER) {
-            int level = state.getValueOrElse(SoulRoseBlock.LEVEL, 0);
-            SoulRoseType type = state.getValueOrElse(SoulRoseBlock.TYPE, SoulRoseType.NONE);
+        if (state.is(ModBlocks.SOUL_ROSE) && state.getOptionalValue(SoulRoseBlock.HALF).orElse(DoubleBlockHalf.UPPER) == DoubleBlockHalf.LOWER) {
+            int level = state.getOptionalValue(SoulRoseBlock.LEVEL).orElse(0);
+            SoulRoseType type = state.getOptionalValue(SoulRoseBlock.TYPE).orElse(SoulRoseType.NONE);
             return switch (level) {
                 case 1 -> switch (type) {
                     case GOLD -> AffectorType.SOUL_ROSE_GOLD_1;

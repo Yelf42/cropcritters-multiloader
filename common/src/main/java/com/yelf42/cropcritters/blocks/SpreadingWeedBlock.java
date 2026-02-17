@@ -3,10 +3,11 @@ package com.yelf42.cropcritters.blocks;
 import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -21,19 +22,19 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.ScheduledTickAccess;
 import com.yelf42.cropcritters.config.WeedHelper;
 import com.yelf42.cropcritters.events.WeedGrowNotifier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
-public class SpreadingWeedBlock extends VegetationBlock implements BonemealableBlock {
+public class SpreadingWeedBlock extends BushBlock implements BonemealableBlock {
     public static final MapCodec<SpreadingWeedBlock> CODEC = simpleCodec(SpreadingWeedBlock::new);
     public static final int MAX_AGE = 1;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_1;
-    private static final VoxelShape[] SHAPES_BY_AGE = Block.boxes(2, age -> Block.column(8 + age * 4, 0.0, 8 + age * 4));
+    private static final VoxelShape[] SHAPES_BY_AGE = ModBlocks.boxes(2, age -> ModBlocks.column(8 + age * 4, 0.0, 8 + age * 4));
     public static final BooleanProperty CAN_SPREAD = BooleanProperty.create("can_spread");
 
     public SpreadingWeedBlock(Properties settings) {
@@ -69,9 +70,10 @@ public class SpreadingWeedBlock extends VegetationBlock implements BonemealableB
         return this.getAge(state) >= this.getMaxAge();
     }
 
+
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
-        return super.updateShape(state.setValue(CAN_SPREAD, state.getValue(CAN_SPREAD) || !neighborState.is(this)), world, tickView, pos, direction, neighborPos, neighborState, random);
+    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+        return super.updateShape(state.setValue(CAN_SPREAD, state.getValue(CAN_SPREAD) || !facingState.is(this)), facing, facingState, world, currentPos, facingPos);
     }
 
     @Override
@@ -131,18 +133,6 @@ public class SpreadingWeedBlock extends VegetationBlock implements BonemealableB
     }
 
     @Override
-    protected void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
-        WeedGrowNotifier.notifyEvent(world, pos);
-        super.onPlace(state, world, pos, oldState, notify);
-    }
-
-    @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean moved) {
-        WeedGrowNotifier.notifyRemoval(world, pos);
-        super.affectNeighborsAfterRemoval(state, world, pos, moved);
-    }
-
-    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AGE);
         builder.add(CAN_SPREAD);
@@ -150,7 +140,7 @@ public class SpreadingWeedBlock extends VegetationBlock implements BonemealableB
 
     @Override
     public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
-        return !isMature(state) || BonemealableBlock.hasSpreadableNeighbourPos(world, pos, state);
+        return !isMature(state) || hasSpreadableNeighbourPos(world, pos, state);
     }
 
     @Override
@@ -163,7 +153,21 @@ public class SpreadingWeedBlock extends VegetationBlock implements BonemealableB
         if (!isMature(state)) {
             world.setBlock(pos, this.withAge(this.getMaxAge()), Block.UPDATE_CLIENTS);
         } else {
-            BonemealableBlock.findSpreadableNeighbourPos(world, pos, state).ifPresent((posx) -> setToWeed(world,posx));
+            getSpreadableNeighbourPos(world, pos, state).ifPresent((posx) -> setToWeed(world,posx));
         }
+    }
+
+    public static boolean hasSpreadableNeighbourPos(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+        return getSpreadableNeighbourPos(levelReader, blockPos, blockState).isPresent();
+    }
+    public static Optional<BlockPos> getSpreadableNeighbourPos(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+        for(Direction direction : Direction.Plane.HORIZONTAL.stream().toList()) {
+            BlockPos blockPos2 = blockPos.relative(direction);
+            if (levelReader.isEmptyBlock(blockPos2) && blockState.canSurvive(levelReader, blockPos2)) {
+                return Optional.of(blockPos2);
+            }
+        }
+
+        return Optional.empty();
     }
 }

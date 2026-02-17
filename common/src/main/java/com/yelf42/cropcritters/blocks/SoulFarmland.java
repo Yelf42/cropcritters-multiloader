@@ -29,7 +29,7 @@ public class SoulFarmland extends FarmBlock {
     }
 
     @Override
-    public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, double fallDistance) {
+    public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
         if (world instanceof ServerLevel serverWorld) {
             if ((double)world.random.nextFloat() < fallDistance - (double)0.5F
                     && entity instanceof LivingEntity

@@ -2,6 +2,8 @@ package com.yelf42.cropcritters.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModBlockEntities;
+import com.yelf42.cropcritters.registry.ModBlocks;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -17,13 +19,11 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import org.jetbrains.annotations.Nullable;
 
 public class SoulRoseBlock extends BaseEntityBlock {
@@ -32,9 +32,9 @@ public class SoulRoseBlock extends BaseEntityBlock {
     public static final IntegerProperty LEVEL = IntegerProperty.create("level", 0, 3);
     public static final EnumProperty<SoulRoseType> TYPE = EnumProperty.create("type", SoulRoseType.class);
 
-    private static final VoxelShape SMALL_0_SHAPE = Block.column((double)6.0F, (double)0.0F, (double)11.0F);
-    private static final VoxelShape SMALL_1_SHAPE = Block.column((double)10.0F, (double)0.0F, (double)16.0F);
-    private static final VoxelShape LARGE_SHAPE = Block.column((double)14.0F, (double)0.0F, (double)16.0F);
+    private static final VoxelShape SMALL_0_SHAPE = ModBlocks.column((double)6.0F, (double)0.0F, (double)11.0F);
+    private static final VoxelShape SMALL_1_SHAPE = ModBlocks.column((double)10.0F, (double)0.0F, (double)16.0F);
+    private static final VoxelShape LARGE_SHAPE = ModBlocks.column((double)14.0F, (double)0.0F, (double)16.0F);
 
     public SoulRoseBlock(Properties settings) {
         super(settings);
@@ -48,7 +48,7 @@ public class SoulRoseBlock extends BaseEntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        if (state.getValueOrElse(HALF, DoubleBlockHalf.UPPER) == DoubleBlockHalf.LOWER) {
+        if (state.getOptionalValue(HALF).orElse(DoubleBlockHalf.UPPER) == DoubleBlockHalf.LOWER) {
             return new SoulRoseBlockEntity(pos, state);
         }
         return null;
@@ -61,7 +61,7 @@ public class SoulRoseBlock extends BaseEntityBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return switch(state.getValueOrElse(LEVEL, 0)) {
+        return switch(state.getOptionalValue(LEVEL).orElse(0)) {
             case 0 -> SMALL_0_SHAPE;
             case 1 -> SMALL_1_SHAPE;
             default -> LARGE_SHAPE;
@@ -76,20 +76,20 @@ public class SoulRoseBlock extends BaseEntityBlock {
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockPos blockPos = ctx.getClickedPos();
         Level world = ctx.getLevel();
-        return blockPos.getY() < world.getMaxY() && world.getBlockState(blockPos.above()).canBeReplaced(ctx) ? super.getStateForPlacement(ctx) : null;
+        return blockPos.getY() < world.getMaxBuildHeight() - 1 && world.getBlockState(blockPos.above()).canBeReplaced(ctx) ? super.getStateForPlacement(ctx) : null;
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
         if (isDoubleTallAtLevel(state.getValue(LEVEL))) {
             DoubleBlockHalf doubleBlockHalf = state.getValue(HALF);
-            if (direction.getAxis() != Direction.Axis.Y || doubleBlockHalf == DoubleBlockHalf.LOWER != (direction == Direction.UP) || neighborState.is(this) && neighborState.getValue(HALF) != doubleBlockHalf) {
-                return doubleBlockHalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+            if (facing.getAxis() != Direction.Axis.Y || doubleBlockHalf == DoubleBlockHalf.LOWER != (facing == Direction.UP) || facingState.is(this) && facingState.getValue(HALF) != doubleBlockHalf) {
+                return doubleBlockHalf == DoubleBlockHalf.LOWER && facing == Direction.DOWN && !state.canSurvive(world, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, facing, facingState, world, currentPos, facingPos);
             } else {
                 return Blocks.AIR.defaultBlockState();
             }
         } else {
-            return state.canSurvive(world, pos) ? state : Blocks.AIR.defaultBlockState();
+            return state.canSurvive(world, currentPos) ? state : Blocks.AIR.defaultBlockState();
         }
     }
 

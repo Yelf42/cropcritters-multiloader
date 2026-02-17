@@ -3,8 +3,8 @@ package com.yelf42.cropcritters.config;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.MultifaceBlock;
-import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.util.Tuple;
@@ -26,7 +26,7 @@ public class WeedHelper {
     public static boolean canWeedsReplace(BlockState state) {
         if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)) return false;
         return state.is(Blocks.AIR)
-                || (state.getBlock() instanceof VegetationBlock && !state.is(CropCritters.WEEDS) && !state.is(CropCritters.IMMUNE_PLANTS));
+                || (state.getBlock() instanceof BushBlock && !state.is(CropCritters.WEEDS) && !state.is(CropCritters.IMMUNE_PLANTS));
     }
 
     // List of weeds not in the weighted lists:

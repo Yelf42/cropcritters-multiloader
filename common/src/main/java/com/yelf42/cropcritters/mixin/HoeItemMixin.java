@@ -26,7 +26,7 @@ public abstract class HoeItemMixin {
         BlockState state = world.getBlockState(pos);
 
         if (ModEventHandlers.handleHoeUse(world, pos, state)) {
-            context.getItemInHand().hurtAndBreak(1, player, context.getHand());
+            context.getItemInHand().hurtAndBreak(1, player, player.getEquipmentSlotForItem(context.getItemInHand()));
             cir.setReturnValue(InteractionResult.SUCCESS);
         }
     }

@@ -2,16 +2,18 @@ package com.yelf42.cropcritters.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModBlocks;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.MultifaceBlock;
-import net.minecraft.world.level.block.MultifaceSpreadeableBlock;
 import net.minecraft.world.level.block.MultifaceSpreader;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
@@ -21,15 +23,12 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import com.yelf42.cropcritters.config.WeedHelper;
 
-public class LiverwortBlock extends MultifaceSpreadeableBlock implements BonemealableBlock {
+
+public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock {
     public static final MapCodec<LiverwortBlock> CODEC = simpleCodec(LiverwortBlock::new);
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private final MultifaceSpreader grower = new MultifaceSpreader(new LiverwortGrowChecker(this));
 
     public static final BooleanProperty CAN_SPREAD = BooleanProperty.create("can_spread");
@@ -40,6 +39,7 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
 
     public LiverwortBlock(Properties settings) {
         super(settings);
+        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, Boolean.valueOf(false)));
     }
 
     @Override
@@ -70,8 +70,16 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
-        return super.updateShape(state.setValue(CAN_SPREAD, state.getValue(CAN_SPREAD) || !neighborState.is(ModBlocks.LIVERWORT)), world, tickView, pos, direction, neighborPos, neighborState, random);
+    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+        if (state.getValue(WATERLOGGED)) {
+            world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+        }
+        return super.updateShape(state.setValue(CAN_SPREAD, state.getValue(CAN_SPREAD) || !facingState.is(ModBlocks.LIVERWORT)), facing, facingState, world, currentPos, facingPos);
+    }
+
+    @Override
+    protected FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
@@ -101,7 +109,7 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
             return;
         }
 
-        if (!state.getValueOrElse(CAN_SPREAD, false)) {
+        if (state.getOptionalValue(CAN_SPREAD).isEmpty()) {
             if (world.isRaining() && random.nextInt(6) == 1) world.setBlockAndUpdate(pos, state.setValue(CAN_SPREAD, true));
             return;
         }
@@ -134,7 +142,7 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
 
         // Moist farmland
         BlockState soil = world.getBlockState(pos.below());
-        if (soil.is(ModBlocks.SOUL_FARMLAND) || (soil.is(Blocks.FARMLAND) && soil.getValueOrElse(FarmBlock.MOISTURE, 0) > 5)) {
+        if (soil.is(ModBlocks.SOUL_FARMLAND) || (soil.is(Blocks.FARMLAND) && soil.getOptionalValue(FarmBlock.MOISTURE).orElse(0) > 5)) {
             if (isValidBonemealTarget(world, pos, state)) this.grower.spreadFromRandomFaceTowardRandomDirection(state, world, pos, random);
             return;
         }
@@ -166,8 +174,9 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(CAN_SPREAD);
         super.createBlockStateDefinition(builder);
+        builder.add(WATERLOGGED);
+        builder.add(CAN_SPREAD);
     }
 
     public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
@@ -182,7 +191,8 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
         this.grower.spreadFromRandomFaceTowardRandomDirection(state, world, pos, random);
     }
 
-    protected boolean propagatesSkylightDown(BlockState state) {
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return state.getFluidState().isEmpty();
     }
 

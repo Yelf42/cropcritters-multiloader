@@ -26,9 +26,9 @@ public abstract class ShearsDispenserBehaviourMixin {
     @Inject(method = "tryShearBeehive", at = @At("TAIL"), cancellable = true)
     private static void shearPopperPlant(ServerLevel world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         BlockState blockState = world.getBlockState(pos);
-        if (blockState.is(ModBlocks.POPPER_PLANT) && (blockState.getValueOrElse(PopperPlantBlock.AGE, 0) == PopperPlantBlock.MAX_AGE)) {
+        if (blockState.is(ModBlocks.POPPER_PLANT) && (blockState.getOptionalValue(PopperPlantBlock.AGE).orElse(0) == PopperPlantBlock.MAX_AGE)) {
             world.gameEvent((Entity)null, GameEvent.SHEAR, pos);
-            world.playSound(null, pos, SoundEvents.SHEARS_SNIP, SoundSource.PLAYERS, 1.0F, 1.0F);
+            world.playSound(null, pos, SoundEvents.BEEHIVE_SHEAR, SoundSource.PLAYERS, 1.0F, 1.0F);
 
             Vec3 center = pos.getCenter();
             ItemStack itemStack = new ItemStack(ModItems.POPPER_POD);

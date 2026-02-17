@@ -45,7 +45,7 @@ public abstract class NetherWartBlockMixin {
     private void injectIntoRandomTicksTail(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo ci) {
         // Grow faster on soul farmland
         BlockState soilCheck = world.getBlockState(pos.below());
-        int wartAge = state.getValueOrElse(AGE, 0);
+        int wartAge = state.getOptionalValue(AGE).orElse(0);
         if (wartAge < NetherWartBlock.MAX_AGE) {
             if (soilCheck.is(ModBlocks.SOUL_FARMLAND) && (random.nextInt(7) == 0)) {
                 state = state.setValue(AGE, wartAge + 1);

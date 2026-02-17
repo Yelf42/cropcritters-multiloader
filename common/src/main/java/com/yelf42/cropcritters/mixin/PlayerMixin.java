@@ -5,7 +5,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.registries.Registries;
@@ -41,13 +40,13 @@ public abstract class PlayerMixin {
             }
 
             // Silk Touch
-            Optional<Holder.Reference<Enchantment>> e = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(Enchantments.SILK_TOUCH.location());
+            Optional<Holder.Reference<Enchantment>> e = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(Enchantments.SILK_TOUCH);
             if (e.isPresent()) {
                 dropChance += (EnchantmentHelper.getItemEnchantmentLevel(e.get(), stack) > 0) ? 2 * ConfigManager.CONFIG.lostSoulDropChance : 0;
             }
 
             // Looting
-            Optional<Holder.Reference<Enchantment>> e2 = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(Enchantments.LOOTING.location());
+            Optional<Holder.Reference<Enchantment>> e2 = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(Enchantments.LOOTING);
             if (e2.isPresent()) {
                 dropChance += (ConfigManager.CONFIG.lostSoulDropChance / 2) * EnchantmentHelper.getItemEnchantmentLevel(e2.get(), stack);
             }

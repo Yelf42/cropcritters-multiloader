@@ -1,6 +1,8 @@
 package com.yelf42.cropcritters.blocks;
 
 import com.mojang.serialization.MapCodec;
+import com.yelf42.cropcritters.registry.ModBlocks;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -8,7 +10,6 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.tags.BlockTags;
@@ -25,10 +26,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModEffects;
-import com.yelf42.cropcritters.events.WeedGrowNotifier;
 import org.jetbrains.annotations.Nullable;
 
 public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
@@ -49,7 +48,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return Block.column(12, -1, 5 * Math.min(this.getAge(state), 2) + 4);
+        return ModBlocks.column(12, -1, 5 * Math.min(this.getAge(state), 2) + 4);
     }
 
     protected IntegerProperty getAgeProperty() {
@@ -61,7 +60,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     }
 
     public int getAge(BlockState state) {
-        return (Integer)state.getValue(this.getAgeProperty());
+        return state.getValue(this.getAgeProperty());
     }
 
     public final boolean isMature(BlockState state) {
@@ -83,8 +82,8 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
-        return !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
+        return !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, facing, facingState, world, pos, facingPos);
     }
 
     @Override
@@ -118,7 +117,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (level instanceof ServerLevel
                 && isMature(state)
                 && entity instanceof LivingEntity livingEntity) {
@@ -129,19 +128,12 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
 
     @Override
     protected void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
-        WeedGrowNotifier.notifyEvent(world, pos);
         StrangleFernBlockEntity sfbe = (StrangleFernBlockEntity) world.getBlockEntity(pos);
         if (sfbe != null && !oldState.is(this)) {
             if (!canInfest(oldState)) oldState = Blocks.SHORT_GRASS.defaultBlockState();
             sfbe.setInfestedState(oldState);
         }
         super.onPlace(state, world, pos, oldState, notify);
-    }
-
-    @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean moved) {
-        WeedGrowNotifier.notifyRemoval(world, pos);
-        super.affectNeighborsAfterRemoval(state, world, pos, moved);
     }
 
     @Override

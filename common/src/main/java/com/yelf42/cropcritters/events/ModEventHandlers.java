@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
@@ -48,10 +47,7 @@ public class ModEventHandlers {
     public static boolean handleShearsUse(Player player, Level world, ItemStack stack, BlockPos pos, BlockState state) {
         if (world.isClientSide()) {
             return (state.is(ModBlocks.STRANGLE_FERN)
-                    || (state.is(ModBlocks.POPPER_PLANT) && state.getValueOrElse(PopperPlantBlock.AGE, 0) == PopperPlantBlock.MAX_AGE)
-                    || (state.is(Blocks.BUSH))
-                    || (state.is(ModBlocks.TALL_BUSH))
-                    || (state.is(ModBlocks.ORNAMENTAL_BUSH)));
+                    || (state.is(ModBlocks.POPPER_PLANT) && state.getOptionalValue(PopperPlantBlock.AGE).orElse(0) == PopperPlantBlock.MAX_AGE));
         }
 
         // Snip Strangle Fern
@@ -62,49 +58,21 @@ public class ModEventHandlers {
                 infested = sfbe.getInfestedState();
             }
             world.setBlock(pos, infested, Block.UPDATE_ALL);
-            if (!player.isCreative()) stack.hurtWithoutBreaking(1, player);
-            world.playSound(null, pos, SoundEvents.SHEARS_SNIP, SoundSource.PLAYERS, 1.0F, 1.0F);
+            if (!player.isCreative()) stack.hurtAndBreak(1, player, player.getEquipmentSlotForItem(stack));
+            world.playSound(null, pos, SoundEvents.BEEHIVE_SHEAR, SoundSource.PLAYERS, 1.0F, 1.0F);
             return true;
         }
 
         // Harvest Popper Pod
-        if (state.is(ModBlocks.POPPER_PLANT) && state.getValueOrElse(PopperPlantBlock.AGE, 0) == PopperPlantBlock.MAX_AGE) {
+        if (state.is(ModBlocks.POPPER_PLANT) && state.getOptionalValue(PopperPlantBlock.AGE).orElse(0) == PopperPlantBlock.MAX_AGE) {
             Vec3 center = pos.getCenter();
             ItemStack itemStack = new ItemStack(ModItems.POPPER_POD);
             ItemEntity itemEntity = new ItemEntity(world, center.x, center.y, center.z, itemStack);
             itemEntity.setDefaultPickUpDelay();
             ((ServerLevel) world).addFreshEntity(itemEntity);
             world.setBlockAndUpdate(pos, state.setValue(PopperPlantBlock.AGE, 0));
-            if (!player.isCreative()) stack.hurtWithoutBreaking(1, player);
-            world.playSound(null, pos, SoundEvents.SHEARS_SNIP, SoundSource.PLAYERS, 1.0F, 1.0F);
-            return true;
-        }
-
-        // Trim Bush
-        if (state.is(Blocks.BUSH)) {
-            world.setBlock(pos, Blocks.DEAD_BUSH.defaultBlockState(), Block.UPDATE_ALL);
-            if (!player.isCreative()) stack.hurtWithoutBreaking(1, player);
-            world.playSound(null, pos, SoundEvents.SHEARS_SNIP, SoundSource.PLAYERS, 1.0F, 1.0F);
-            return true;
-        }
-
-        // Trim Tall Bush
-        if (state.is(ModBlocks.TALL_BUSH)) {
-            BlockPos targetPos = (world.getBlockState(pos.below()).is(ModBlocks.TALL_BUSH)) ? pos.below() : pos;
-            world.setBlock(targetPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-            world.setBlock(targetPos.above(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-            DoublePlantBlock.placeAt(world, ModBlocks.ORNAMENTAL_BUSH.defaultBlockState(), targetPos, 3);
-            if (!player.isCreative()) stack.hurtWithoutBreaking(1, player);
-            world.playSound(null, pos, SoundEvents.SHEARS_SNIP, SoundSource.PLAYERS, 1.0F, 1.0F);
-            return true;
-        }
-
-        // Trim Ornamental Bush
-        if (state.is(ModBlocks.ORNAMENTAL_BUSH)) {
-            BlockPos targetPos = (world.getBlockState(pos.below()).is(ModBlocks.ORNAMENTAL_BUSH)) ? pos.below() : pos;
-            world.setBlock(targetPos, Blocks.DEAD_BUSH.defaultBlockState(), Block.UPDATE_ALL);
-            if (!player.isCreative()) stack.hurtWithoutBreaking(1, player);
-            world.playSound(null, pos, SoundEvents.SHEARS_SNIP, SoundSource.PLAYERS, 1.0F, 1.0F);
+            if (!player.isCreative()) stack.hurtAndBreak(1, player, player.getEquipmentSlotForItem(stack));
+            world.playSound(null, pos, SoundEvents.BEEHIVE_SHEAR, SoundSource.PLAYERS, 1.0F, 1.0F);
             return true;
         }
 

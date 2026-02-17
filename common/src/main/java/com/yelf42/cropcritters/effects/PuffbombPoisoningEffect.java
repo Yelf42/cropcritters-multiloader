@@ -7,9 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.random.WeightedList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -33,7 +31,8 @@ public class PuffbombPoisoningEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(ServerLevel world, LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+        Level world = entity.level();
         int duration = entity.getEffect(ModEffects.PUFFBOMB_POISONING).getDuration();
         if (duration <= 20) {
             BlockPos pos = BlockPos.containing(entity.position());
