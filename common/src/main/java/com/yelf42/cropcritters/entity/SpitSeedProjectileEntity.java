@@ -71,6 +71,7 @@ public class SpitSeedProjectileEntity extends ThrowableItemProjectile {
     protected void onInsideBlock(BlockState state) {
         Level world = this.level();
         if (!world.isClientSide()) {
+            if (!state.isSolid()) return;
             world.broadcastEntityEvent(this, (byte)3);
             this.discard();
         }

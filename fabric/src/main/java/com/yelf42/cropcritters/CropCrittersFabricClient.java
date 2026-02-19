@@ -1,7 +1,6 @@
 package com.yelf42.cropcritters;
 
 import com.yelf42.cropcritters.client.particle.*;
-import com.yelf42.cropcritters.client.renderer.blockentity.SoulPotBlockEntityRenderer;
 import com.yelf42.cropcritters.client.renderer.blockentity.StrangleFernBlockEntityRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.AbstractCritterRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.PopperPodEntityRenderer;
@@ -55,7 +54,6 @@ public class CropCrittersFabricClient implements ClientModInitializer {
                 ModBlocks.MAZEWOOD_SAPLING.asItem(), ModBlocks.MAZEWOOD.asItem()
         );
 
-        BlockEntityRenderers.register(ModBlockEntities.SOUL_POT, SoulPotBlockEntityRenderer::new);
         BlockEntityRenderers.register(ModBlockEntities.STRANGLE_FERN, StrangleFernBlockEntityRenderer::new);
 
         // Entities
@@ -83,6 +81,7 @@ public class CropCrittersFabricClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(ModParticles.SOUL_SIPHON, SoulSiphonParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.SOUL_HEART, HeartParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.SOUL_GLOW, SoulGlowParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.LOST_SOUL_GLOW, SoulGlowParticle.LostSoulFactory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.SOUL_GLINT, SuspendedTownParticle.HappyVillagerProvider::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.SOUL_GLINT_PLUME, SoulGlintPlumeParticle.Factory::new);
 

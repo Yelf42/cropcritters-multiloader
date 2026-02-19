@@ -1,7 +1,6 @@
 package com.yelf42.cropcritters;
 
 import com.yelf42.cropcritters.client.particle.*;
-import com.yelf42.cropcritters.client.renderer.blockentity.SoulPotBlockEntityRenderer;
 import com.yelf42.cropcritters.client.renderer.blockentity.StrangleFernBlockEntityRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.AbstractCritterRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.PopperPodEntityRenderer;
@@ -68,7 +67,6 @@ public class CropCrittersNeoforgeClient {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         // Block entity renderers
         event.registerBlockEntityRenderer(ModBlockEntities.STRANGLE_FERN, StrangleFernBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(ModBlockEntities.SOUL_POT, SoulPotBlockEntityRenderer::new);
 
         // Entity renderers
         event.registerEntityRenderer(ModEntities.WHEAT_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("wheat_critter"), true));
@@ -98,6 +96,7 @@ public class CropCrittersNeoforgeClient {
         event.registerSpriteSet(ModParticles.SOUL_SIPHON, SoulSiphonParticle.Factory::new);
         event.registerSpriteSet(ModParticles.SOUL_HEART, HeartParticle.Provider::new);
         event.registerSpriteSet(ModParticles.SOUL_GLOW, SoulGlowParticle.Factory::new);
+        event.registerSpriteSet(ModParticles.LOST_SOUL_GLOW, SoulGlowParticle.LostSoulFactory::new);
         event.registerSpriteSet(ModParticles.SOUL_GLINT, SuspendedTownParticle.HappyVillagerProvider::new);
         event.registerSpriteSet(ModParticles.SOUL_GLINT_PLUME, SoulGlintPlumeParticle.Factory::new);
     }

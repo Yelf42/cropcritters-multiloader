@@ -20,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.yelf42.cropcritters.blocks.MazewoodSaplingBlockEntity;
 import com.yelf42.cropcritters.registry.ModBlocks;
-import com.yelf42.cropcritters.events.WeedGrowNotifier;
 
 import java.util.ArrayList;
 
@@ -68,18 +67,12 @@ public abstract class LightningBoltMixin {
             BlockState toCheck = world.getBlockState(posCrop);
             if (toCheck.getBlock() instanceof CropBlock || toCheck.getBlock() instanceof StemBlock) {
                 world.setBlock(posCrop, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
-                if (compareBlockPosXZ(posCrop, pos) && MazewoodSaplingBlockEntity.isWall(pos)) {
+                if (random.nextInt(2) == 0 && MazewoodSaplingBlockEntity.isWall(posCrop)) {
                     world.setBlock(posCrop, ModBlocks.MAZEWOOD_SAPLING.defaultBlockState(), Block.UPDATE_CLIENTS);
-                    WeedGrowNotifier.notifyEvent(world, posCrop);
                 }
             }
         }
 
-    }
-
-    @Unique
-    private boolean compareBlockPosXZ(BlockPos a, BlockPos b) {
-        return a.getX() == b.getX() && a.getZ() == b.getZ();
     }
 
 }

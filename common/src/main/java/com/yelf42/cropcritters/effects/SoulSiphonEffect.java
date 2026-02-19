@@ -7,6 +7,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -25,19 +26,23 @@ public class SoulSiphonEffect extends MobEffect {
         super(statusEffectCategory, i, ModParticles.SOUL_SIPHON);
     }
 
-    public void onMobRemoved(ServerLevel world, LivingEntity entity, int amplifier, Entity.RemovalReason reason) {
+    @Override
+    public void onMobRemoved(LivingEntity entity, int amplifier, Entity.RemovalReason reason) {
         if (reason == Entity.RemovalReason.KILLED && entity.getType().is(EntityTypeTags.UNDEAD)) {
-            Vec3 entityPos = entity.position();
-            BlockPos pos = new BlockPos((int)entityPos.x, (int) Math.floor(entityPos.y + 0.5F), (int)entityPos.z);
-            AffectorPositions affectorPositions = CropCritters.getAffectorPositions(world);
-            Collection<? extends TypedBlockArea> affectorsInSection = affectorPositions.getAffectorsInSection(pos);
-            if (!affectorsInSection.isEmpty()) {
-                for (TypedBlockArea typedBlockArea : affectorsInSection) {
-                    AffectorType type = typedBlockArea.type();
-                    if (type == AffectorType.SOUL_ROSE_GOLD_3 || type == AffectorType.SOUL_ROSE_GOLD_2 || type == AffectorType.SOUL_ROSE_GOLD_1) {
-                        if (typedBlockArea.blockArea().isPositionInside(pos)) {
-                            growCropsAndCritters(world, pos, amplifier);
-                            return;
+            Level world = entity.level();
+            if (world instanceof ServerLevel serverLevel) {
+                Vec3 entityPos = entity.position();
+                BlockPos pos = new BlockPos((int)entityPos.x, (int) Math.floor(entityPos.y + 0.5F), (int)entityPos.z);
+                AffectorPositions affectorPositions = CropCritters.getAffectorPositions(serverLevel);
+                Collection<? extends TypedBlockArea> affectorsInSection = affectorPositions.getAffectorsInSection(pos);
+                if (!affectorsInSection.isEmpty()) {
+                    for (TypedBlockArea typedBlockArea : affectorsInSection) {
+                        AffectorType type = typedBlockArea.type();
+                        if (type == AffectorType.SOUL_ROSE_GOLD_3 || type == AffectorType.SOUL_ROSE_GOLD_2 || type == AffectorType.SOUL_ROSE_GOLD_1) {
+                            if (typedBlockArea.blockArea().isPositionInside(pos)) {
+                                growCropsAndCritters(serverLevel, pos, amplifier);
+                                return;
+                            }
                         }
                     }
                 }

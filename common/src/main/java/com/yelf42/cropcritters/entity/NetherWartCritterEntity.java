@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.yelf42.cropcritters.CropCritters;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -34,7 +35,7 @@ import java.util.function.Predicate;
 
 public class NetherWartCritterEntity extends AbstractCropCritterEntity {
 
-    private static final ColorParticleOption PARTICLE_EFFECT = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, FastColor.ABGR32.color(1, 16073282));
+    private static final ColorParticleOption PARTICLE_EFFECT = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, FastColor.ABGR32.color(255, 16073282));
     private static final int GO_CRAZY = 400;
     private static final EntityDataAccessor<Integer> LIFESPAN = SynchedEntityData.defineId(NetherWartCritterEntity.class, EntityDataSerializers.INT);
 
@@ -125,7 +126,7 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
 
     @Override
     protected void tryTame(Player player) {
-        if (!isShaking()) super.tryTame(null);
+        if (!isShaking()) super.tryTame(player);
     }
 
     @Override
@@ -135,7 +136,7 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
             if (!this.isTrusting()) this.entityData.set(LIFESPAN, this.entityData.get(LIFESPAN) - 1);
             if (this.entityData.get(LIFESPAN) <= 0) explode();
         } else if (this.isShaking()) {
-            if (this.level().random.nextInt(10) != 0) return;
+            if (this.level().random.nextInt(8) != 0) return;
             double x = this.getX() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
             double y = this.getY() + this.getBbHeight() * 0.5;
             double z = this.getZ() + (this.random.nextDouble() - 0.5) * this.getBbWidth();

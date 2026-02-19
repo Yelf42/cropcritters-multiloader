@@ -22,8 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SoulPotBlockEntity extends BlockEntity implements RandomizableContainer, ContainerSingleItem.BlockContainerSingleItem {
-    public long lastWobbleTime;
-    public @Nullable WobbleType lastWobbleType;
     private ItemStack stack;
     protected @Nullable ResourceKey<LootTable> lootTableId;
     protected long lootTableSeed;
@@ -115,6 +113,7 @@ public class SoulPotBlockEntity extends BlockEntity implements RandomizableConta
         this.setChanged();
         if (this.level != null && !this.level.isClientSide()) {
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(SoulPotBlock.LEVEL, Math.clamp(this.count() / 2, 0, 12)), 3);
         }
 
         return itemStack;
@@ -127,6 +126,7 @@ public class SoulPotBlockEntity extends BlockEntity implements RandomizableConta
         this.setChanged();
         if (this.level != null && !this.level.isClientSide()) {
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(SoulPotBlock.LEVEL, Math.clamp(this.count() / 2, 0, 12)), 3);
         }
     }
 
@@ -137,6 +137,7 @@ public class SoulPotBlockEntity extends BlockEntity implements RandomizableConta
         this.setChanged();
         if (this.level != null && !this.level.isClientSide()) {
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(SoulPotBlock.LEVEL, Math.clamp(this.count() / 2, 0, 12)), 3);
         }
     }
 
@@ -149,34 +150,7 @@ public class SoulPotBlockEntity extends BlockEntity implements RandomizableConta
         return this;
     }
 
-    public void wobble(WobbleType wobbleType) {
-        if (this.level != null && !this.level.isClientSide()) {
-            this.level.blockEvent(this.getBlockPos(), this.getBlockState().getBlock(), 1, wobbleType.ordinal());
-        }
-    }
-
-    public boolean triggerEvent(int type, int data) {
-        if (this.level != null && type == 1 && data >= 0 && data < WobbleType.values().length) {
-            this.lastWobbleTime = this.level.getGameTime();
-            this.lastWobbleType = WobbleType.values()[data];
-            return true;
-        } else {
-            return super.triggerEvent(type, data);
-        }
-    }
-
     public long count() {
         return stack.getCount();
-    }
-
-    public static enum WobbleType {
-        POSITIVE(7),
-        NEGATIVE(10);
-
-        public final int lengthInTicks;
-
-        private WobbleType(final int lengthInTicks) {
-            this.lengthInTicks = lengthInTicks;
-        }
     }
 }

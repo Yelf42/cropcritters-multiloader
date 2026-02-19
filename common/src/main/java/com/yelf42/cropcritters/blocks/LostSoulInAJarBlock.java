@@ -47,13 +47,11 @@ public class LostSoulInAJarBlock extends LanternBlock {
 
     @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
-        if (random.nextDouble() <= 1.0) {
-            double d = (double)pos.getX() + random.nextDouble() * (double)10.0F - (double)5.0F;
-            double e = (double)pos.getY() - random.nextDouble() * (double)4.0F;
-            double f = (double)pos.getZ() + random.nextDouble() * (double)10.0F - (double)5.0F;
-            //world.addParticleClient(ParticleTypes.GLOW, d, world.getTopY(Heightmap.Type.WORLD_SURFACE, (int)d, (int)f), f, 0.0F, 1.0F, 0.0F);
-            world.addParticle(ModParticles.SOUL_GLOW, d, e, f, 0.0F, 1.0F, 0.0F);
-        }
+        double d = (double)pos.getX() + random.nextDouble() * (double)10.0F - (double)5.0F;
+        double e = (double)pos.getY() - random.nextDouble() * (double)3.0F;
+        double f = (double)pos.getZ() + random.nextDouble() * (double)10.0F - (double)5.0F;
+        //world.addParticleClient(ParticleTypes.GLOW, d, world.getTopY(Heightmap.Type.WORLD_SURFACE, (int)d, (int)f), f, 0.0F, 1.0F, 0.0F);
+        world.addParticle(ModParticles.LOST_SOUL_GLOW, d, e, f, 0.0F, 1.0F, 0.0F);
     }
 
     public void ring(Level world, BlockPos pos, RandomSource random) {

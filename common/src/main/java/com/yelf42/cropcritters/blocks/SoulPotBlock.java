@@ -135,7 +135,6 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
             } else {
                 ItemStack itemStack = soulPotBlockEntity.getTheItem();
                 if (!stack.isEmpty() && (itemStack.isEmpty() || ItemStack.isSameItemSameComponents(itemStack, stack) && itemStack.getCount() < itemStack.getMaxStackSize())) {
-                    soulPotBlockEntity.wobble(SoulPotBlockEntity.WobbleType.POSITIVE);
                     player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                     ItemStack itemStack2 = stack.consumeAndReturn(1, player);
                     float f;
@@ -154,7 +153,6 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
 
                     soulPotBlockEntity.setChanged();
                     world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                    world.setBlock(pos, state.setValue(LEVEL, Math.clamp(soulPotBlockEntity.count(), 0, 12)), 3);
                     return ItemInteractionResult.SUCCESS;
                 } else {
                     return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
@@ -167,9 +165,8 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
 
     protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
         BlockEntity var7 = world.getBlockEntity(pos);
-        if (var7 instanceof SoulPotBlockEntity soulPotBlockEntity) {
+        if (var7 instanceof SoulPotBlockEntity) {
             world.playSound(null, pos, SoundEvents.DECORATED_POT_INSERT_FAIL, SoundSource.BLOCKS, 1.0F, 1.0F);
-            soulPotBlockEntity.wobble(SoulPotBlockEntity.WobbleType.NEGATIVE);
             world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             return InteractionResult.SUCCESS;
         } else {

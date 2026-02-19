@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.events;
 
+import com.yelf42.cropcritters.CropCritters;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
@@ -18,6 +19,7 @@ public class WeedGrowNotifier {
 
         long currentTime = world.getGameTime();
         Iterator<Map.Entry<BlockPos, Long>> it = positions.entrySet().iterator();
+        CropCritters.LOGGER.info(String.valueOf(positions.size()));
         while (it.hasNext()) {
             var entry = it.next();
             if (currentTime - entry.getValue() > MAX_AGE_TICKS) {

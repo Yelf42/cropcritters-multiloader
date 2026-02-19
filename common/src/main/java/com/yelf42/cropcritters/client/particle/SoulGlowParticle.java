@@ -58,4 +58,25 @@ public class SoulGlowParticle extends TextureSheetParticle {
         }
     }
 
+    public static class LostSoulFactory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteProvider;
+
+        public LostSoulFactory(SpriteSet spriteProvider) {
+            this.spriteProvider = spriteProvider;
+        }
+
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            SoulGlowParticle glowParticle = new SoulGlowParticle(level, x,y,z, (double)0.5F - RANDOM.nextDouble(), ySpeed, (double)0.5F - RANDOM.nextDouble(), this.spriteProvider);
+
+            glowParticle.yd *= (double)0.2F;
+            if (xSpeed == (double)0.0F && zSpeed == (double)0.0F) {
+                glowParticle.xd *= (double)0.1F;
+                glowParticle.zd *= (double)0.1F;
+            }
+
+            glowParticle.setLifetime((int)((double)16.0F / (RANDOM.nextDouble() * 0.8 + 0.2)));
+            return glowParticle;
+        }
+    }
+
 }

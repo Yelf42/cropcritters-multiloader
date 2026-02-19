@@ -93,12 +93,14 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
     public void completeTargetGoal() {
         if (this.targetPos == null) return;
         triggerAnim("plant_controller", "plant");
-        Vec3 dir = this.getLookAngle();
+        float bodyRad = this.yBodyRot * ((float) Math.PI / 180F);
+        Vec3 dir = new Vec3(-Math.sin(bodyRad), 0, Math.cos(bodyRad));
         Level world = this.level();
+        float dist = (float) this.position().distanceTo(this.targetPos.getCenter());
         if (world instanceof ServerLevel serverWorld) {
             ItemStack itemStack = new ItemStack(ModItems.SEED_BALL);
             SeedBallProjectileEntity spitSeed = new SeedBallProjectileEntity(serverWorld, this, itemStack);
-            spitSeed.shoot(dir.x, 1.8F, dir.z, 0.4F, 0.0F);
+            spitSeed.shoot(dir.x, 1.8F, dir.z, 0.4F * (dist / 5.0F), 0.0F);
             this.level().addFreshEntity(spitSeed);
         }
         this.playSound(ModSounds.ENTITY_CRITTER_SPIT, 2.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
@@ -109,7 +111,7 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
         if (this.isInvulnerableTo(source)) {
             return false;
         } else {
-            this.targetWorkGoal.cancel();
+            if (this.targetWorkGoal != null) this.targetWorkGoal.cancel();
             return super.hurt(source, amount);
         }
     }
@@ -135,9 +137,9 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
         double e = target.getEyeY() - 0.4F;
         double f = target.getZ() - this.getZ();
         double g = Math.sqrt(d * d + f * f) * (double)0.2F;
-        Level var12 = this.level();
-        if (var12 instanceof ServerLevel serverWorld) {
-            ItemStack itemStack = new ItemStack(Items.MELON_SEEDS);
+        Level world = this.level();
+        if (world instanceof ServerLevel serverWorld) {
+            ItemStack itemStack = new ItemStack(Items.PUMPKIN_SEEDS);
             SpitSeedProjectileEntity spitSeed = new SpitSeedProjectileEntity(serverWorld, this, itemStack);
             spitSeed.shoot(d, e + g - this.getY(), f, 1.2F, 3.0F);
             this.level().addFreshEntity(spitSeed);
@@ -192,7 +194,7 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
                     long2LongOpenHashMap.put(blockPos.asLong(), l);
                 } else if (isAttractive(blockPos)) {
                     Path path = PumpkinCritterEntity.this.navigation.createPath(blockPos, 0);
-                    if (path != null && path.canReach() && !blockPos.closerToCenterThan(PumpkinCritterEntity.this.position(), 3)) {
+                    if (path != null && path.canReach() && !blockPos.closerToCenterThan(PumpkinCritterEntity.this.position(), 1)) {
                         return Optional.of(blockPos);
                     }
 

@@ -35,6 +35,7 @@ public abstract class ServerLevelMixin extends Level {
     public void injectAreaAffectorCheck(BlockPos pos, BlockState oldState, BlockState newState, CallbackInfo ci) {
         AffectorPositions.onBlockStateChange(ServerLevel.class.cast(this), pos, oldState, newState);
 
+        if (oldState.is(newState.getBlock())) return;
         if (oldState.is(CropCritters.WEEDS)) WeedGrowNotifier.notifyRemoval(ServerLevel.class.cast(this), pos);
         if (newState.is(CropCritters.WEEDS)) WeedGrowNotifier.notifyEvent(ServerLevel.class.cast(this), pos);
     }

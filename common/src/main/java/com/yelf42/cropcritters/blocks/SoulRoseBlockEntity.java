@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.blocks;
 
+import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModBlockEntities;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.world.level.block.Block;
@@ -84,16 +85,15 @@ public class SoulRoseBlockEntity extends BlockEntity {
 
         // Particles for being active
         if (world.getGameTime() % 20 == 0L) {
-            if (world.isDay()) return;
+            if (!world.dimensionType().hasFixedTime() && world.getDayTime() % 24000 < 12000) return;
             if (world.dimensionType().hasFixedTime() && !world.getBiome(pos).is(Biomes.SOUL_SAND_VALLEY)) return;
-
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             RandomSource random = world.random;
             int i = pos.getX();
             int j = pos.getY();
             int k = pos.getZ();
 
-            for(int l = 0; l < 2 * level; ++l) {
+            for(int l = 0; l < level; ++l) {
                 double angle = random.nextDouble() * Math.PI * 2.0F;
                 double radius = random.nextDouble() * levelToRadius(level) - 1.0F;
                 mutable.set(i + radius * Math.sin(angle), j - random.nextInt(2), k + radius * Math.cos(angle));

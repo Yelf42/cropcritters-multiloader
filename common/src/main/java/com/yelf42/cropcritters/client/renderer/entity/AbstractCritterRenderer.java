@@ -2,6 +2,10 @@ package com.yelf42.cropcritters.client.renderer.entity;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.entity.AbstractCropCritterEntity;
@@ -28,7 +32,20 @@ public class AbstractCritterRenderer
         );
 
         if (id.getPath().equals("cocoa_critter")) {
-            addRenderLayer(new BlockAndItemGeoLayer<>(this));
+            addRenderLayer(new BlockAndItemGeoLayer<>(this) {
+                @Override
+                protected @Nullable ItemStack getStackForBone(GeoBone bone, AbstractCropCritterEntity animatable) {
+                    if ((bone.getName()).equals("RightHandItem")) {
+                        return animatable.getMainHandItem();
+                    }
+                    return null;
+                }
+
+                @Override
+                protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, AbstractCropCritterEntity animatable) {
+                    return ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
+                }
+            });
         }
     }
 

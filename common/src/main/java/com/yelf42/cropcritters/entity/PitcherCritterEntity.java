@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.yelf42.cropcritters.CropCritters;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.OcelotAttackGoal;
@@ -11,7 +12,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.damagesource.DamageSource;
@@ -29,6 +29,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
@@ -44,19 +45,21 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
     public static final RawAnimation EAT = RawAnimation.begin().thenPlay("attack.eat");
 
     private final Predicate<LivingEntity> CAN_EAT = (entity) -> {
-        if (this.consume > 0
-                || (entity.getBoundingBox().getXsize() >= this.getBoundingBox().getXsize())
+        if ((entity.getBoundingBox().getXsize() >= this.getBoundingBox().getXsize())
                 || (entity.getBoundingBox().getYsize() >= this.getBoundingBox().getYsize())
                 || entity.isInvulnerable()
-                || entity.hasCustomName()
-                || entity instanceof Pufferfish)
+                || entity instanceof Pufferfish) {
             return false;
+        }
+
         if (this.isTrusting()) {
-            boolean extraChecks = (entity instanceof TamableAnimal tameableEntity && !tameableEntity.isTame());
+            boolean extraChecks = (entity instanceof TamableAnimal tameableEntity && tameableEntity.isTame());
             extraChecks |= entity instanceof Bee;
             extraChecks |= entity instanceof Allay;
-            return extraChecks;
+            extraChecks |= entity.hasCustomName();
+            return !extraChecks;
         }
+
         return true;
     };
 
@@ -81,7 +84,7 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
         net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, (stack) -> stack.is(ModItems.LOST_SOUL), false);
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, temptGoal);
-        this.goalSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 0, true, true, CAN_EAT));
+        this.targetSelector.addGoal(4, new EatTargetGoal());
         this.goalSelector.addGoal(4, new OcelotAttackGoal(this));
         this.goalSelector.addGoal(12, new RandomStrollGoal(this, 0.8));
         this.goalSelector.addGoal(20, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -181,5 +184,21 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
     public void die(DamageSource damageSource) {
         if (this.consumptionTarget != null) this.consumptionTarget.discard();
         super.die(damageSource);
+    }
+
+    class EatTargetGoal extends NearestAttackableTargetGoal<LivingEntity> {
+        EatTargetGoal() {
+            super(PitcherCritterEntity.this, LivingEntity.class, 0, true, true, CAN_EAT);
+        }
+
+        @Override
+        public boolean canUse() {
+            if (this.randomInterval > 0 && this.mob.getRandom().nextInt(this.randomInterval) != 0) {
+                return false;
+            } else {
+                this.findTarget();
+                return (this.target != null && CAN_EAT.test(this.target));
+            }
+        }
     }
 }

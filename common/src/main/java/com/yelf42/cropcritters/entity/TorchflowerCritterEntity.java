@@ -75,6 +75,7 @@ public class TorchflowerCritterEntity extends AbstractCropCritterEntity {
         super.customServerAiStep();
         Level world = this.level();
         BlockPos pos = this.blockPosition().above();
+        if (pos.getCenter().distanceTo(this.position()) < 0.8) pos = pos.above();
         if (world.getBlockState(pos).isAir()) {
             world.setBlockAndUpdate(pos, ModBlocks.TORCHFLOWER_SPARK.defaultBlockState());
             world.scheduleTick(pos, ModBlocks.TORCHFLOWER_SPARK, 200, TickPriority.EXTREMELY_LOW);

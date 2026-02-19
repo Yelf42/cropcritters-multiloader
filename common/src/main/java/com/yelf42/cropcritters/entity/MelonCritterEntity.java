@@ -91,7 +91,7 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
         if (this.isInvulnerableTo(source)) {
             return false;
         } else {
-            this.targetWorkGoal.cancel();
+            if (this.targetWorkGoal != null) this.targetWorkGoal.cancel();
             this.wateringDuration = -1;
             return super.hurt(source, amount);
         }

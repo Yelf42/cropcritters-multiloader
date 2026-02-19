@@ -28,6 +28,8 @@ public class ModParticles {
 
     public static final SimpleParticleType SOUL_GLOW = registerSimple("soul_glow_particle");
 
+    public static final SimpleParticleType LOST_SOUL_GLOW = registerSimple("lost_soul_glow_particle");
+
     public static final SimpleParticleType SOUL_GLINT = registerSimple("soul_glint_particle");
 
     public static final SimpleParticleType SOUL_GLINT_PLUME = registerSimple("soul_glint_plume_particle");

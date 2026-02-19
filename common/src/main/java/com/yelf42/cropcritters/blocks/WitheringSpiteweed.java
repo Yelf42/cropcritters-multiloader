@@ -25,8 +25,6 @@ public class WitheringSpiteweed extends SpreadingWeedBlock {
     @Override
     protected boolean mayPlaceOn(BlockState floor, BlockGetter world, BlockPos pos) {
         return super.mayPlaceOn(floor, world, pos)
-                || floor.is(Blocks.SOUL_SOIL)
-                || floor.is(Blocks.SOUL_SAND)
                 || floor.is(Blocks.BLACKSTONE)
                 || floor.is(Blocks.CRIMSON_NYLIUM)
                 || floor.is(Blocks.WARPED_NYLIUM)
@@ -37,6 +35,7 @@ public class WitheringSpiteweed extends SpreadingWeedBlock {
     protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         BlockState soilCheck = world.getBlockState(pos.below());
         if (!soilCheck.is(Blocks.BLACKSTONE) && (soilCheck.is(Blocks.SOUL_SAND) || soilCheck.is(Blocks.SOUL_SOIL) || soilCheck.is(ModBlocks.SOUL_FARMLAND))) {
+            pushEntitiesUp(soilCheck, Blocks.BLACKSTONE.defaultBlockState(), world, pos);
             world.setBlock(pos.below(), Blocks.BLACKSTONE.defaultBlockState(), Block.UPDATE_CLIENTS);
         }
         super.randomTick(state, world, pos, random);
@@ -51,6 +50,7 @@ public class WitheringSpiteweed extends SpreadingWeedBlock {
         super.setToWeed(world, pos);
         BlockState soilCheck = world.getBlockState(pos.below());
         if (soilCheck.is(Blocks.SOUL_SAND) || soilCheck.is(Blocks.SOUL_SOIL) || soilCheck.is(ModBlocks.SOUL_FARMLAND)) {
+            pushEntitiesUp(soilCheck, Blocks.BLACKSTONE.defaultBlockState(), world, pos);
             world.setBlock(pos.below(), Blocks.BLACKSTONE.defaultBlockState(), Block.UPDATE_CLIENTS);
         }
     }

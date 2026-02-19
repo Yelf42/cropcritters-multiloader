@@ -128,7 +128,6 @@ public class SpreadingWeedBlock extends BushBlock implements BonemealableBlock {
     public void setToWeed(Level world, BlockPos pos) {
         BlockState blockState = this.defaultBlockState();
         world.setBlockAndUpdate(pos, blockState);
-        WeedGrowNotifier.notifyEvent(world, pos);
         world.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(null, blockState));
     }
 

@@ -145,7 +145,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
 
     @Override
     protected boolean canWork() {
-        return this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty();
+        return this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty() && this.isTrusting();
     }
 
     @Override
@@ -372,7 +372,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
         }
 
         public boolean canUse() {
-            if (!CocoaCritterEntity.this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty()) return false;
+            if (!CocoaCritterEntity.this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty() || !CocoaCritterEntity.this.isTrusting()) return false;
             if (CocoaCritterEntity.this.getRandom().nextInt(reducedTickDelay(10)) != 0) {
                 return false;
             } else {

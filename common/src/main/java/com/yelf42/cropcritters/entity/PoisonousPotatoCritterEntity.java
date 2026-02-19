@@ -40,7 +40,7 @@ import static net.minecraft.world.level.block.Block.pushEntitiesUp;
 
 public class PoisonousPotatoCritterEntity extends AbstractCropCritterEntity implements Enemy {
 
-    private static final ColorParticleOption PARTICLE_EFFECT = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, FastColor.ABGR32.color(1, 8889187));
+    private static final ColorParticleOption PARTICLE_EFFECT = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, FastColor.ABGR32.color(255, 8889187));
 
     private static final Predicate<Entity> POISON_PREDICATE = (entity) -> {
         if (entity instanceof Player playerEntity) return !playerEntity.isCreative();

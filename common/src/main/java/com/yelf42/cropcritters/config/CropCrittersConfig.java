@@ -1,8 +1,8 @@
 package com.yelf42.cropcritters.config;
 
 public class CropCrittersConfig {
-    public int regularWeedChance = 2;
-    public int netherWeedChance = 3;
+    public int regularWeedChance = 3;
+    public int netherWeedChance = 4;
     public boolean monoculturePenalize = true;
     public int lostSoulDropChance = 6;
 

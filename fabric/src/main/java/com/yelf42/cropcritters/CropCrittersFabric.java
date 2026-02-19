@@ -1,15 +1,23 @@
 package com.yelf42.cropcritters;
 
+import com.yelf42.cropcritters.area_affectors.AffectorPositions;
+import com.yelf42.cropcritters.area_affectors.TypedBlockArea;
 import com.yelf42.cropcritters.entity.*;
 import com.yelf42.cropcritters.registry.*;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.security.Permissions;
+import java.util.Collection;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class CropCrittersFabric implements ModInitializer {
     
@@ -42,6 +50,21 @@ public class CropCrittersFabric implements ModInitializer {
         BiomeModifiers.register();
 
         CropCritters.init();
+
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            dispatcher.register(Commands.literal("test_soul_rose")
+                    .requires(source -> source.hasPermission(4))
+                    .executes(context -> {
+                        context.getSource().sendSuccess(() -> {
+                            if (context.getSource().getPlayer() == null) return Component.literal("TestSoulRose: Player calls only");
+                            AffectorPositions affectorPositions = CropCritters.getAffectorPositions(context.getSource().getLevel());
+                            Collection<? extends TypedBlockArea> affectorsInSection = affectorPositions.getAffectorsInSection(context.getSource().getPlayer().getOnPos());
+                            return Component.literal(affectorsInSection.stream().map(typedArea -> "Type: " + typedArea.type()).collect(Collectors.joining("\n")));
+                        }, false);
+                        return 1;
+                    })
+            );
+        });
     }
 
     public static <T> void bind(Registry<T> registry, Consumer<BiConsumer<T, ResourceLocation>> source) {

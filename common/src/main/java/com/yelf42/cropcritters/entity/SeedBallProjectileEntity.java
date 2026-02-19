@@ -37,12 +37,14 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
         super(entityType, world);
     }
 
-    public SeedBallProjectileEntity(double x, double y, double z, Level world, ItemStack stack) {
+    public SeedBallProjectileEntity(double x, double y, double z, Level world, ItemStack itemStack) {
         super(ModEntities.SEED_BALL_PROJECTILE, x, y, z, world);
+        this.setItem(itemStack);
     }
 
     public SeedBallProjectileEntity(ServerLevel serverWorld, LivingEntity livingEntity, ItemStack itemStack) {
         super(ModEntities.SEED_BALL_PROJECTILE, livingEntity, serverWorld);
+        this.setItem(itemStack);
     }
 
     @Override
@@ -85,10 +87,6 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
         Level world = this.level();
         if (!world.isClientSide()) {
             if (!state.isSolid()) return;
-            if (!state.is(BlockTags.DIRT)) {
-                this.discard();
-                return;
-            }
 
             List<ResourceLocation> crops = this.getItem().getOrDefault(ModComponents.SEED_TYPES, new ModComponents.SeedTypesComponent(DefaultSeedTypes)).seedTypes();
             if (crops.isEmpty()) {
