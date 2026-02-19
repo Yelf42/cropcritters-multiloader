@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "cropcritters:mazewood"
+    {
+      "item": "cropcritters:mazewood"
+    }
   ],
   "result": {
     "count": 2,

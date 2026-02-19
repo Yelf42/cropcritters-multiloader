@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -19,12 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.ARGB;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DoublePlantBlock;
-import net.minecraft.world.level.block.NetherWartBlock;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.BlockGetter;
@@ -38,7 +34,7 @@ import java.util.function.Predicate;
 
 public class NetherWartCritterEntity extends AbstractCropCritterEntity {
 
-    private static final ColorParticleOption PARTICLE_EFFECT = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, ARGB.color(1F, 16073282));
+    private static final ColorParticleOption PARTICLE_EFFECT = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, FastColor.ABGR32.color(1, 16073282));
     private static final int GO_CRAZY = 400;
     private static final EntityDataAccessor<Integer> LIFESPAN = SynchedEntityData.defineId(NetherWartCritterEntity.class, EntityDataSerializers.INT);
 
@@ -61,8 +57,7 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
                 .add(Attributes.MAX_HEALTH, 6)
                 .add(Attributes.MOVEMENT_SPEED, 0.25)
                 .add(Attributes.ATTACK_DAMAGE, 1)
-                .add(Attributes.FOLLOW_RANGE, 10)
-                .add(Attributes.TEMPT_RANGE, 10);
+                .add(Attributes.FOLLOW_RANGE, 10);
     }
 
     @Override
@@ -83,7 +78,7 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
     public boolean isAttractive(BlockPos pos) {
         BlockState target = this.level().getBlockState(pos);
         BlockState above = this.level().getBlockState(pos.above());
-        return this.getTargetBlockFilter().test(target) && (above.isAir() || (above.getBlock() instanceof VegetationBlock && !above.hasProperty(DoublePlantBlock.HALF) && !(above.getBlock() instanceof NetherWartBlock)));
+        return this.getTargetBlockFilter().test(target) && (above.isAir() || (above.getBlock() instanceof BushBlock && !above.hasProperty(DoublePlantBlock.HALF) && !(above.getBlock() instanceof NetherWartBlock)));
     }
 
     @Override
@@ -160,14 +155,14 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
                             serverWorld.setBlock(pos, Blocks.SOUL_SAND.defaultBlockState(), Block.UPDATE_CLIENTS);
                         }
                         if (serverWorld.getBlockState(pos).is(ModBlocks.WITHERING_SPITEWEED)) {
-                            this.level().levelEvent(this, 2001, this.targetPos, Block.getId(this.level().getBlockState(this.targetPos)));
+                            this.level().levelEvent(null, 2001, this.targetPos, Block.getId(this.level().getBlockState(this.targetPos)));
                             serverWorld.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
                         }
                     }
                 }
             }
             this.dead = true;
-            this.triggerOnDeathMobEffects(serverWorld, RemovalReason.KILLED);
+            this.triggerOnDeathMobEffects(RemovalReason.KILLED);
             this.discard();
         }
     }

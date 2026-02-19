@@ -1,6 +1,8 @@
 package com.yelf42.cropcritters.entity;
 
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -28,8 +30,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.util.Tuple;
@@ -38,8 +38,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.manager.AnimatableManager;
-import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
@@ -81,15 +81,19 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput view) {
-        super.addAdditionalSaveData(view);
-        view.storeNullable("hopper_pos", BlockPos.CODEC, this.hopperPos);
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+
+        if (this.hopperPos != null) {
+            tag.put("hopper_pos", NbtUtils.writeBlockPos(this.hopperPos));
+        }
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput view) {
-        super.readAdditionalSaveData(view);
-        this.hopperPos = (BlockPos)view.read("hopper_pos", BlockPos.CODEC).orElse(null);
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+
+        this.hopperPos = NbtUtils.readBlockPos(tag, "hopper_pos").orElse(null);
     }
 
 
@@ -115,8 +119,8 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(
-                DefaultAnimations.genericWalkIdleController(),
-                new AnimationController<>("Hold", test -> {
+                DefaultAnimations.genericWalkIdleController(this),
+                new AnimationController<>(this, "Hold", test -> {
                     if ((this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty())) {
                         //test.controller().reset();
                         return PlayState.STOP;
@@ -131,7 +135,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
     @Override
     protected Predicate<BlockState> getTargetBlockFilter() {
         return (blockState -> ((blockState.getBlock() instanceof CropBlock cropBlock && cropBlock.isMaxAge(blockState)))
-                || (blockState.getBlock() instanceof NetherWartBlock && blockState.getValueOrElse(NetherWartBlock.AGE, 0) >= NetherWartBlock.MAX_AGE));
+                || (blockState.getBlock() instanceof NetherWartBlock && blockState.getOptionalValue(NetherWartBlock.AGE).orElse(0) >= NetherWartBlock.MAX_AGE));
     }
 
     @Override
@@ -182,7 +186,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
             Block.popResource(world, this.targetPos, stack);
         });
 
-        world.levelEvent(this, 2001, this.targetPos, Block.getId(state));
+        world.levelEvent(null, 2001, this.targetPos, Block.getId(state));
         world.setBlock(this.targetPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
     }
 
@@ -205,7 +209,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
     protected void dropAllDeathLoot(ServerLevel world, DamageSource damageSource) {
         ItemStack itemStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
         if (!itemStack.isEmpty()) {
-            this.spawnAtLocation(world, itemStack);
+            this.spawnAtLocation(itemStack);
             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         }
 
@@ -253,7 +257,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
     }
 
     @Override
-    protected void pickUpItem(ServerLevel world, ItemEntity itemEntity) {
+    protected void pickUpItem(ItemEntity itemEntity) {
         ItemStack itemStack = itemEntity.getItem();
         if (this.canHoldItem(itemStack)) {
             int i = itemStack.getCount();

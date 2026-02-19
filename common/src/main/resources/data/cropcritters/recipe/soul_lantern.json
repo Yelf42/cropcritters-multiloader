@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": "cropcritters:lost_soul",
-    "X": "minecraft:iron_nugget"
+    "#": {
+      "item": "cropcritters:lost_soul"
+    },
+    "X": {
+      "item": "minecraft:iron_nugget"
+    }
   },
   "pattern": [
     "XXX",

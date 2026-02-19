@@ -1,34 +1,33 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
     [
-      "cropcritters:crawl_thistle",
-      "cropcritters:crimson_thornweed",
-      "cropcritters:waftgrass",
-      "cropcritters:strangle_fern",
-      "cropcritters:liverwort"
+      { "item": "cropcritters:crawl_thistle" },
+      { "item": "cropcritters:crimson_thornweed" },
+      { "item": "cropcritters:waftgrass" },
+      { "item": "cropcritters:strangle_fern" },
+      { "item": "cropcritters:liverwort" }
     ],
     [
-      "cropcritters:crawl_thistle",
-      "cropcritters:crimson_thornweed",
-      "cropcritters:waftgrass",
-      "cropcritters:strangle_fern",
-      "cropcritters:liverwort"
+      { "item": "cropcritters:crawl_thistle" },
+      { "item": "cropcritters:crimson_thornweed" },
+      { "item": "cropcritters:waftgrass" },
+      { "item": "cropcritters:strangle_fern" },
+      { "item": "cropcritters:liverwort" }
     ],
     [
-      "cropcritters:crawl_thistle",
-      "cropcritters:crimson_thornweed",
-      "cropcritters:waftgrass",
-      "cropcritters:strangle_fern",
-      "cropcritters:liverwort"
+      { "item": "cropcritters:crawl_thistle" },
+      { "item": "cropcritters:crimson_thornweed" },
+      { "item": "cropcritters:waftgrass" },
+      { "item": "cropcritters:strangle_fern" },
+      { "item": "cropcritters:liverwort" }
     ],
-    "minecraft:redstone",
-    "minecraft:quartz",
-    "minecraft:glass_bottle"
+    { "item": "minecraft:redstone" },
+    { "item": "minecraft:quartz" },
+    { "item": "minecraft:glass_bottle" }
   ],
   "result": {
-    "count": 3,
-    "id": "cropcritters:herbicide"
+    "id": "cropcritters:herbicide",
+    "count": 3
   }
 }

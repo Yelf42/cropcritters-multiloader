@@ -38,11 +38,11 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
     }
 
     public SeedBallProjectileEntity(double x, double y, double z, Level world, ItemStack stack) {
-        super(ModEntities.SEED_BALL_PROJECTILE, x, y, z, world, stack);
+        super(ModEntities.SEED_BALL_PROJECTILE, x, y, z, world);
     }
 
     public SeedBallProjectileEntity(ServerLevel serverWorld, LivingEntity livingEntity, ItemStack itemStack) {
-        super(ModEntities.SEED_BALL_PROJECTILE, livingEntity, serverWorld, itemStack);
+        super(ModEntities.SEED_BALL_PROJECTILE, livingEntity, serverWorld);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
 
             Iterable<BlockPos> iterable = BlockPos.withinManhattan(this.blockPosition(), 2, 3, 2);
             for(BlockPos blockPos : iterable) {
-                BlockState blockState = BuiltInRegistries.BLOCK.getValue(crops.get(this.random.nextInt(crops.size()))).defaultBlockState();
+                BlockState blockState = BuiltInRegistries.BLOCK.get(crops.get(this.random.nextInt(crops.size()))).defaultBlockState();
                 if ((world.random.nextInt(2) == 0 || blockPos == this.blockPosition()) && blockState.canSurvive(world, blockPos) && world.getBlockState(blockPos).isAir()) {
                     world.setBlockAndUpdate(blockPos, blockState);
                 }

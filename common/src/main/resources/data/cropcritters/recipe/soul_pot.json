@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": "minecraft:soul_soil",
-    "B": "minecraft:brick"
+    "#": {
+      "item": "minecraft:soul_soil"
+    },
+    "B": {
+      "item": "minecraft:brick"
+    }
   },
   "pattern": [
     " B ",

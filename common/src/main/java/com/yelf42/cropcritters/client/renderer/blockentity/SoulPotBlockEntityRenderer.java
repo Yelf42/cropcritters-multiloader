@@ -8,14 +8,13 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.util.Mth;
 import com.mojang.math.Axis;
-import net.minecraft.world.phys.Vec3;
 import com.yelf42.cropcritters.blocks.SoulPotBlockEntity;
 
 public class SoulPotBlockEntityRenderer implements BlockEntityRenderer<SoulPotBlockEntity> {
 
     public SoulPotBlockEntityRenderer(BlockEntityRendererProvider.Context context) {}
 
-    public void render(SoulPotBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, Vec3 cameraPos) {
+    public void render(SoulPotBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         poseStack.pushPose();
         poseStack.translate((double)0.5F, (double)0.0F, (double)0.5F);
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));

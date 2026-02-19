@@ -297,8 +297,8 @@
   "entity_critter_evil_sting": {
     "subtitle" : "sounds.cropcritters.entity_critter_evil_sting",
     "sounds" : [
-      "mob/pufferfish/sting1",
-      "mob/pufferfish/sting2"
+      "entity/pufferfish/sting1",
+      "entity/pufferfish/sting2"
     ]
   },
   "entity_critter_hurt": {
@@ -331,9 +331,9 @@
   },
   "entity_critter_large": {
     "sounds" : [
-      "mob/glow_squid/death1",
-      "mob/glow_squid/death2",
-      "mob/glow_squid/death3"
+      "entity/glow_squid/death1",
+      "entity/glow_squid/death2",
+      "entity/glow_squid/death3"
     ]
   },
   "entity_critter_till": {
@@ -371,7 +371,7 @@
   "entity_critter_spit": {
     "subtitle" : "sounds.cropcritters.entity_critter_spit",
     "sounds" : [
-      "ui/hud/hud_bubble"
+      "cropcritters:hud_bubble"
     ]
   },
   "entity_critter_water": {
@@ -407,7 +407,7 @@
   "popper_pod_pop": {
     "subtitle" : "sounds.cropcritters.popper_pod_pop",
     "sounds" : [
-      "ui/hud/hud_bubble"
+      "cropcritters:hud_bubble"
     ]
   },
   "popper_pod_launch": {

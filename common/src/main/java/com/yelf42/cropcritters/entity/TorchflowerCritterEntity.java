@@ -17,7 +17,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.util.Tuple;
@@ -72,8 +71,9 @@ public class TorchflowerCritterEntity extends AbstractCropCritterEntity {
     }
 
     @Override
-    protected void customServerAiStep(ServerLevel world) {
-        super.customServerAiStep(world);
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        Level world = this.level();
         BlockPos pos = this.blockPosition().above();
         if (world.getBlockState(pos).isAir()) {
             world.setBlockAndUpdate(pos, ModBlocks.TORCHFLOWER_SPARK.defaultBlockState());

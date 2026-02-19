@@ -1,9 +1,9 @@
 package com.yelf42.cropcritters.entity;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.item.Item;
@@ -40,7 +40,7 @@ public class CarrotCritterEntity extends AbstractCropCritterEntity {
         BlockState farmland = (target.is(Blocks.DIRT) || target.is(Blocks.GRASS_BLOCK)) ? Blocks.FARMLAND.defaultBlockState() : (target.is(Blocks.SOUL_SAND) || target.is(Blocks.SOUL_SOIL)) ? ModBlocks.SOUL_FARMLAND.defaultBlockState() : null;
         if (farmland == null) return;
         this.level().setBlock(this.targetPos, farmland, Block.UPDATE_ALL_IMMEDIATE);
-        this.level().levelEvent(this, 2001, this.targetPos, Block.getId(this.level().getBlockState(this.targetPos)));
+        this.level().levelEvent(null, 2001, this.targetPos, Block.getId(this.level().getBlockState(this.targetPos)));
     }
 
     @Override
@@ -62,6 +62,6 @@ public class CarrotCritterEntity extends AbstractCropCritterEntity {
     public boolean isAttractive(BlockPos pos) {
         BlockState target = this.level().getBlockState(pos);
         BlockState above = this.level().getBlockState(pos.above());
-        return this.getTargetBlockFilter().test(target) && (above.isAir() || above.getBlock() instanceof VegetationBlock);
+        return this.getTargetBlockFilter().test(target) && (above.isAir() || above.getBlock() instanceof BushBlock);
     }
 }

@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
@@ -26,7 +27,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -40,7 +40,7 @@ import static net.minecraft.world.level.block.Block.pushEntitiesUp;
 
 public class PoisonousPotatoCritterEntity extends AbstractCropCritterEntity implements Enemy {
 
-    private static final ColorParticleOption PARTICLE_EFFECT = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, ARGB.color(1F, 8889187));
+    private static final ColorParticleOption PARTICLE_EFFECT = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, FastColor.ABGR32.color(1, 8889187));
 
     private static final Predicate<Entity> POISON_PREDICATE = (entity) -> {
         if (entity instanceof Player playerEntity) return !playerEntity.isCreative();
@@ -166,7 +166,7 @@ public class PoisonousPotatoCritterEntity extends AbstractCropCritterEntity impl
     }
 
     private void sting(ServerLevel world, LivingEntity target) {
-        if (target.hurtServer(world, this.damageSources().mobAttack(this), (float)(1))) {
+        if (target.hurt(this.damageSources().mobAttack(this), (float)(1))) {
             target.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 3, 0), this);
             this.playSound(ModSounds.ENTITY_CRITTER_EVIL_STING, 1.0F, 1.0F);
         }

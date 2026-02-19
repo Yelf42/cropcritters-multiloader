@@ -26,7 +26,7 @@ public class WheatCritterEntity extends AbstractCropCritterEntity {
     @Override
     protected Predicate<BlockState> getTargetBlockFilter() {
         return (blockState -> (blockState.is(CropCritters.WEEDS) && !blockState.is(ModBlocks.STRANGLE_FERN))
-                || (blockState.is(ModBlocks.STRANGLE_FERN) && blockState.getValueOrElse(StrangleFern.AGE, 0) > 1)
+                || (blockState.is(ModBlocks.STRANGLE_FERN) && blockState.getOptionalValue(StrangleFern.AGE).orElse(0) > 1)
                 || blockState.is(Blocks.DEAD_BUSH));
     }
 
@@ -37,7 +37,7 @@ public class WheatCritterEntity extends AbstractCropCritterEntity {
     public void completeTargetGoal() {
         if (this.targetPos == null) return;
         this.playSound(ModSounds.ENTITY_CRITTER_SHEAR, 1.0F, 1.0F);
-        this.level().levelEvent(this, 2001, this.targetPos, Block.getId(this.level().getBlockState(this.targetPos)));
+        this.level().levelEvent(null, 2001, this.targetPos, Block.getId(this.level().getBlockState(this.targetPos)));
         this.level().setBlock(this.targetPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
     }
 

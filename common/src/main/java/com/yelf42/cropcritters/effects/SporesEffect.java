@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.effects;
 
+import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModEffects;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,6 +41,10 @@ public class SporesEffect extends MobEffect {
     }
 
     private void reduceDuration(LivingEntity entity) {
+        if (entity.getEffect(ModEffects.SPORES) == null) {
+            CropCritters.LOGGER.info("WARNING: Spores entity is null");
+            return;
+        }
         int duration = entity.getEffect(ModEffects.SPORES).getDuration();
         entity.removeEffect(ModEffects.SPORES);
         if (duration > 1300) {

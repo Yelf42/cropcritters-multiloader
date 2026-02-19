@@ -11,7 +11,7 @@ import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.particle.SuspendedTownParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.entity.player.Player;
@@ -28,24 +28,22 @@ public class CropCrittersNeoforgeClient {
     @SubscribeEvent
     public static void registerBlocks(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.LOST_SOUL_IN_A_JAR, ChunkSectionLayer.TRANSLUCENT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.CRAWL_THISTLE, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.CRIMSON_THORNWEED, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.WAFTGRASS, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.PUFFBOMB_MUSHROOM, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.LIVERWORT, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.WITHERING_SPITEWEED, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.POPPER_PLANT, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.BONE_TRAP, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOUL_ROSE, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.TRIMMED_SOUL_ROSE, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTTED_SOUL_ROSE, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.TALL_BUSH, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.ORNAMENTAL_BUSH, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.MAZEWOOD, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.MAZEWOOD_SAPLING, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.STRANGLE_FERN, ChunkSectionLayer.CUTOUT);
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOUL_POT, ChunkSectionLayer.CUTOUT);
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.LOST_SOUL_IN_A_JAR, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.CRAWL_THISTLE, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.CRIMSON_THORNWEED, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.WAFTGRASS, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.PUFFBOMB_MUSHROOM, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.LIVERWORT, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.WITHERING_SPITEWEED, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.POPPER_PLANT, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.BONE_TRAP, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOUL_ROSE, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.TRIMMED_SOUL_ROSE, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTTED_SOUL_ROSE, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.MAZEWOOD, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.MAZEWOOD_SAPLING, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.STRANGLE_FERN, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOUL_POT, RenderType.cutout());
         });
     }
 
@@ -55,8 +53,14 @@ public class CropCrittersNeoforgeClient {
                         world != null && pos != null
                                 ? BiomeColors.getAverageGrassColor(world, pos)
                                 : 0x91BD59,
-                ModBlocks.TALL_BUSH, ModBlocks.ORNAMENTAL_BUSH,
                 ModBlocks.MAZEWOOD, ModBlocks.MAZEWOOD_SAPLING, ModBlocks.STRANGLE_FERN
+        );
+    }
+
+    @SubscribeEvent
+    public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
+        event.register((state, i) -> 0x91BD59,
+                ModBlocks.MAZEWOOD, ModBlocks.MAZEWOOD_SAPLING
         );
     }
 
@@ -67,17 +71,17 @@ public class CropCrittersNeoforgeClient {
         event.registerBlockEntityRenderer(ModBlockEntities.SOUL_POT, SoulPotBlockEntityRenderer::new);
 
         // Entity renderers
-        event.registerEntityRenderer(ModEntities.WHEAT_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("wheat_critter"), true));
-        event.registerEntityRenderer(ModEntities.MELON_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("melon_critter"), true));
-        event.registerEntityRenderer(ModEntities.PUMPKIN_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("pumpkin_critter"), false));
-        event.registerEntityRenderer(ModEntities.POTATO_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("potato_critter"), true));
-        event.registerEntityRenderer(ModEntities.CARROT_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("carrot_critter"), true));
-        event.registerEntityRenderer(ModEntities.BEETROOT_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("beetroot_critter"), true));
-        event.registerEntityRenderer(ModEntities.NETHER_WART_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("nether_wart_critter"), true));
-        event.registerEntityRenderer(ModEntities.POISONOUS_POTATO_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("poisonous_potato_critter"), true));
-        event.registerEntityRenderer(ModEntities.TORCHFLOWER_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("torchflower_critter"), true));
-        event.registerEntityRenderer(ModEntities.PITCHER_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("pitcher_critter"), false));
-        event.registerEntityRenderer(ModEntities.COCOA_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("cocoa_critter"), false));
+        event.registerEntityRenderer(ModEntities.WHEAT_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("wheat_critter"), true));
+        event.registerEntityRenderer(ModEntities.MELON_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("melon_critter"), true));
+        event.registerEntityRenderer(ModEntities.PUMPKIN_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("pumpkin_critter"), false));
+        event.registerEntityRenderer(ModEntities.POTATO_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("potato_critter"), true));
+        event.registerEntityRenderer(ModEntities.CARROT_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("carrot_critter"), true));
+        event.registerEntityRenderer(ModEntities.BEETROOT_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("beetroot_critter"), true));
+        event.registerEntityRenderer(ModEntities.NETHER_WART_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("nether_wart_critter"), true));
+        event.registerEntityRenderer(ModEntities.POISONOUS_POTATO_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("poisonous_potato_critter"), true));
+        event.registerEntityRenderer(ModEntities.TORCHFLOWER_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("torchflower_critter"), true));
+        event.registerEntityRenderer(ModEntities.PITCHER_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("pitcher_critter"), false));
+        event.registerEntityRenderer(ModEntities.COCOA_CRITTER, context -> new AbstractCritterRenderer(context, CropCritters.identifier("cocoa_critter"), false));
 
         // Projectile renderers
         event.registerEntityRenderer(ModEntities.SEED_BALL_PROJECTILE, ThrownItemRenderer::new);

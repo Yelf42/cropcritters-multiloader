@@ -3,9 +3,6 @@
   "values": [
     "#minecraft:saplings",
     "#minecraft:flowers",
-    "minecraft:firefly_bush",
-    "cropcritters:tall_bush",
-    "cropcritters:ornamental_bush",
     "cropcritters:strangle_fern",
     "cropcritters:popper_plant"
   ]

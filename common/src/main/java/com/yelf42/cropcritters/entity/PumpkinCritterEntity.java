@@ -21,7 +21,6 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -31,8 +30,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.animatable.manager.AnimatableManager;
-import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
@@ -72,14 +71,13 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
                 .add(Attributes.MAX_HEALTH, 16)
                 .add(Attributes.MOVEMENT_SPEED, 0.2)
                 .add(Attributes.ATTACK_DAMAGE, 1)
-                .add(Attributes.FOLLOW_RANGE, 10)
-                .add(Attributes.TEMPT_RANGE, 10);
+                .add(Attributes.FOLLOW_RANGE, 10);
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(DefaultAnimations.genericWalkIdleController(),
-                new AnimationController<>("plant_controller", animTest -> PlayState.STOP)
+        controllerRegistrar.add(DefaultAnimations.genericWalkIdleController(this),
+                new AnimationController<>(this,"plant_controller", animTest -> PlayState.STOP)
                         .triggerableAnim("plant", LOB_SEEDS));
     }
 
@@ -99,18 +97,20 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
         Level world = this.level();
         if (world instanceof ServerLevel serverWorld) {
             ItemStack itemStack = new ItemStack(ModItems.SEED_BALL);
-            Projectile.spawnProjectile(new SeedBallProjectileEntity(serverWorld, this, itemStack), serverWorld, itemStack, (entity) -> entity.shoot(dir.x, 1.8F, dir.z, 0.4F, 0.0F));
+            SeedBallProjectileEntity spitSeed = new SeedBallProjectileEntity(serverWorld, this, itemStack);
+            spitSeed.shoot(dir.x, 1.8F, dir.z, 0.4F, 0.0F);
+            this.level().addFreshEntity(spitSeed);
         }
         this.playSound(ModSounds.ENTITY_CRITTER_SPIT, 2.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
     }
 
     @Override
-    public boolean hurtServer(ServerLevel world, DamageSource source, float amount) {
-        if (this.isInvulnerableTo(world, source)) {
+    public boolean hurt(DamageSource source, float amount) {
+        if (this.isInvulnerableTo(source)) {
             return false;
         } else {
             this.targetWorkGoal.cancel();
-            return super.hurtServer(world, source, amount);
+            return super.hurt(source, amount);
         }
     }
 
@@ -137,8 +137,10 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
         double g = Math.sqrt(d * d + f * f) * (double)0.2F;
         Level var12 = this.level();
         if (var12 instanceof ServerLevel serverWorld) {
-            ItemStack itemStack = new ItemStack(Items.PUMPKIN_SEEDS);
-            Projectile.spawnProjectile(new SpitSeedProjectileEntity(serverWorld, this, itemStack), serverWorld, itemStack, (entity) -> entity.shoot(d, e + g - entity.getY(), f, 1.2F, 3.0F));
+            ItemStack itemStack = new ItemStack(Items.MELON_SEEDS);
+            SpitSeedProjectileEntity spitSeed = new SpitSeedProjectileEntity(serverWorld, this, itemStack);
+            spitSeed.shoot(d, e + g - this.getY(), f, 1.2F, 3.0F);
+            this.level().addFreshEntity(spitSeed);
         }
         this.playSound(ModSounds.ENTITY_CRITTER_SPIT, 2.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
     }
@@ -206,13 +208,12 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
     class MelonActiveTargetGoal extends NearestAttackableTargetGoal<LivingEntity> {
 
         public MelonActiveTargetGoal() {
-            super(PumpkinCritterEntity.this, LivingEntity.class, 10, true, false, (entity, serverWorld) -> (!(entity.getType().is(CropCritters.CROP_CRITTERS))));
+            super(PumpkinCritterEntity.this, LivingEntity.class, 10, true, false, (entity) -> (!(entity.getType().is(CropCritters.CROP_CRITTERS))));
         }
 
         @Override
         protected void findTarget() {
-            ServerLevel serverWorld = getServerLevel(this.mob);
-            this.target = serverWorld.getNearestEntity(this.mob.level().getEntitiesOfClass(this.targetType, this.getTargetSearchArea(this.getFollowDistance()), (livingEntity) -> true), this.getAndUpdateTargetPredicate(), this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+            this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(this.targetType, this.getTargetSearchArea(this.getFollowDistance()), (livingEntity) -> true), this.getAndUpdateTargetPredicate(), this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
         }
 
         private TargetingConditions getAndUpdateTargetPredicate() {

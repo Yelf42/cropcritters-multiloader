@@ -71,7 +71,7 @@ public class ModItems {
     }
 
     public static Item registerSpawnEgg(String name, EntityType<? extends Mob> entityType) {
-        return registerItem(vanillaItemId(name), (properties -> new SpawnEggItem(entityType, 0, 0, properties)));
+        return registerItem(vanillaItemId(name), (properties -> new SpawnEggItem(entityType, 0xFFFFFF, 0xFFFFFF, properties)));
     }
 
     public static Item registerItem(ResourceKey<Item> key, Function<Item.Properties, Item> factory) {

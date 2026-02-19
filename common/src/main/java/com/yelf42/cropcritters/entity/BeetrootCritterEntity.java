@@ -33,7 +33,7 @@ public class BeetrootCritterEntity extends AbstractCropCritterEntity {
         if (this.targetPos == null) return;
         this.playSound(ModSounds.ENTITY_CRITTER_TILL, 1.0F, 1.0F);
         this.level().setBlock(this.targetPos, Blocks.DIRT.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
-        this.level().levelEvent(this, 2001, this.targetPos, Block.getId(this.level().getBlockState(this.targetPos)));
+        this.level().levelEvent(null, 2001, this.targetPos, Block.getId(this.level().getBlockState(this.targetPos)));
     }
 
     @Override

@@ -204,7 +204,7 @@ public class ModBlocks {
                     .sound(SoundType.FUNGUS)
                     .pushReaction(PushReaction.DESTROY),
             new Item.Properties().food((new FoodProperties.Builder())
-                            .effect(ModEffects.EATEN_PUFFBOMB_POISONING, 1.0F)
+                            .effect(ModEffects.EATEN_PUFFBOMB_POISONING.get(), 1.0F)
                             .build())
     );
 
@@ -240,7 +240,7 @@ public class ModBlocks {
                     .noCollission()
                     .strength(0.9f)
                     .sound(SoundType.TWISTING_VINES)
-                    .lightLevel((state) -> 3)
+                    .emissiveRendering(((blockState, blockGetter, blockPos) -> true))
                     .pushReaction(PushReaction.DESTROY),
             new Item.Properties().rarity(Rarity.RARE)
     );
@@ -253,7 +253,7 @@ public class ModBlocks {
                     .noCollission()
                     .instabreak()
                     .sound(SoundType.TWISTING_VINES)
-                    .lightLevel((state) -> 3)
+                    .emissiveRendering(((blockState, blockGetter, blockPos) -> true))
                     .pushReaction(PushReaction.DESTROY),
             new Item.Properties().rarity(Rarity.RARE)
     );
@@ -262,7 +262,7 @@ public class ModBlocks {
             "potted_soul_rose",
             BlockBehaviour.Properties.of()
                     .instabreak()
-                    .lightLevel((state) -> 3)
+                    .emissiveRendering(((blockState, blockGetter, blockPos) -> true))
                     .noOcclusion()
                     .pushReaction(PushReaction.DESTROY),
             SOUL_ROSE
@@ -289,6 +289,7 @@ public class ModBlocks {
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.TERRACOTTA_RED)
                     .strength(0.0F, 0.0F)
+                    .lightLevel(state -> state.getValue(SoulPotBlock.LEVEL))
                     .pushReaction(PushReaction.DESTROY)
                     .noOcclusion(),
             true

@@ -1,6 +1,8 @@
 package com.yelf42.cropcritters.entity;
 
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -34,8 +36,6 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.util.Tuple;
@@ -45,8 +45,8 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animatable.manager.AnimatableManager;
-import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
@@ -103,17 +103,24 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput view) {
-        super.addAdditionalSaveData(view);
-        view.putBoolean("Trusting", this.isTrusting());
-        view.putInt("TicksUntilCanWork", this.ticksUntilCanWork);
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putBoolean("Trusting", this.isTrusting());
+        tag.putInt("TicksUntilCanWork", this.ticksUntilCanWork);
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput view) {
-        super.readAdditionalSaveData(view);
-        this.setTrusting(view.getBooleanOr("Trusting", false));
-        this.ticksUntilCanWork = view.getIntOr("TicksUntilCanWork", resetTicksUntilCanWork());
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+
+        this.setTrusting(tag.getBoolean("Trusting"));
+
+        if (tag.contains("TicksUntilCanWork", Tag.TAG_INT)) {
+            this.ticksUntilCanWork = tag.getInt("TicksUntilCanWork");
+        } else {
+            this.ticksUntilCanWork = resetTicksUntilCanWork();
+        }
+
         this.targetPos = null;
     }
 
@@ -124,14 +131,14 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(
-                new AnimationController<>("Sit", test -> {
+                new AnimationController<>(this, "Sit", test -> {
                     if ((this.entityData.get(DATA_FLAGS_ID) & 0x01) != 0) {
                         return (test.setAndContinue(SIT));
                     }
                     //test.controller().reset();
                     return PlayState.STOP;
                 }),
-                DefaultAnimations.genericWalkIdleController()
+                DefaultAnimations.genericWalkIdleController(this)
         );
     }
 
@@ -158,8 +165,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
                 .add(Attributes.MAX_HEALTH, 8)
                 .add(Attributes.MOVEMENT_SPEED, 0.3)
                 .add(Attributes.ATTACK_DAMAGE, 1)
-                .add(Attributes.FOLLOW_RANGE, 10)
-                .add(Attributes.TEMPT_RANGE, 10);
+                .add(Attributes.FOLLOW_RANGE, 10);
     }
 
     @Override
@@ -242,14 +248,16 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     }
 */
 
+
+
     @Override
-    public boolean hurtServer(ServerLevel world, DamageSource source, float amount) {
-        if (this.isInvulnerableTo(world, source) || source.is(DamageTypes.CACTUS) || source.is(DamageTypes.SWEET_BERRY_BUSH)) {
+    public boolean hurt(DamageSource source, float amount) {
+        if (this.isInvulnerableTo(source) || source.is(DamageTypes.CACTUS) || source.is(DamageTypes.SWEET_BERRY_BUSH)) {
             return false;
         } else {
             if (this.targetWorkGoal != null) this.targetWorkGoal.cancel();
             if (source.getEntity() instanceof Player && source.getWeaponItem() != null && source.getWeaponItem().is(ItemTags.HOES)) amount *= 3;
-            return super.hurtServer(world, source, amount);
+            return super.hurt(source, amount);
         }
     }
 
@@ -262,13 +270,13 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
             if (withHoe) quantity = world.random.nextInt(loot.getB()) + 1;
         }
         ItemStack toDrop = new ItemStack(loot.getA(), quantity);
-        this.spawnAtLocation(world, toDrop);
-        this.dropExperience(world, damageSource.getEntity());
+        this.spawnAtLocation(toDrop);
+        this.dropExperience(damageSource.getEntity());
     }
 
     @Override
-    protected int getBaseExperienceReward(ServerLevel world) {
-        return super.getBaseExperienceReward(world) + (this.isTrusting() ? 3 : 0);
+    protected int getBaseExperienceReward() {
+        return super.getBaseExperienceReward() + (this.isTrusting() ? 3 : 0);
     }
 
     @Override

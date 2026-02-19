@@ -43,7 +43,7 @@ public class ModEntities {
         var entity = EntityType.Builder.of(factory, MobCategory.MISC)
                 .sized(0.25f, 0.25f)
                 .clientTrackingRange(10)
-                .build(vanillaEntityId(name));
+                .build(name);
         REGISTERED_ENTITIES.put(name, entity);
         return entity;
     }
@@ -53,7 +53,7 @@ public class ModEntities {
                 .sized(width, height)
                 .eyeHeight(eyeHeight)
                 .clientTrackingRange(10)
-                .build(vanillaEntityId(name));
+                .build(name);
         REGISTERED_ENTITIES.put(name, entity);
         return entity;
     }

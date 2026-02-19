@@ -26,6 +26,9 @@ public class CropCrittersNeoforge {
 
         CropCrittersNeoforge.eventBus = eventBus;
 
+        NeoForgePlatformHelper.register(eventBus);
+        ModEffects.init();
+
         bind(Registries.PARTICLE_TYPE, ModParticles::register);
 
         bind(Registries.BLOCK, ModBlocks::registerBlocks);
@@ -39,8 +42,6 @@ public class CropCrittersNeoforge {
 
         bind(Registries.DATA_COMPONENT_TYPE, ModComponents::register);
 
-        bind(Registries.MOB_EFFECT, ModEffects::register);
-
         bind(Registries.FEATURE, ModFeatures::registerFeatures);
 
         bind(Registries.ENTITY_TYPE, ModEntities::register);
@@ -53,8 +54,8 @@ public class CropCrittersNeoforge {
             eventBus.addListener(CropCrittersNeoforgeClient::registerEntityRenderers);
             eventBus.addListener(CropCrittersNeoforgeClient::registerBlocks);
             eventBus.addListener(CropCrittersNeoforgeClient::registerBlockColors);
+            eventBus.addListener(CropCrittersNeoforgeClient::registerItemColors);
         }
-        NeoForgePlatformHelper.register(eventBus);
 
         ModDispenserBehaviours.registerDispenserBehavior();
         eventBus.addListener(this::setupDispenserBehaviors);

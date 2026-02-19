@@ -1,11 +1,18 @@
 package com.yelf42.cropcritters.platform;
 
+import com.mojang.datafixers.DSL;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.area_affectors.AffectorPositions;
 import com.yelf42.cropcritters.platform.services.IPlatformHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,7 +23,6 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import net.minecraft.world.item.CreativeModeTab.Builder;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
@@ -51,7 +57,7 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public <T extends BlockEntity> BlockEntityType<T> blockEntityType(BiFunction<BlockPos, BlockState, T> function, Block... validBlocks) {
-        return new BlockEntityType<>(function::apply, Set.of(validBlocks));
+        return BlockEntityType.Builder.of(function::apply, validBlocks).build(DSL.remainderType());
     }
 
     @Override
@@ -64,6 +70,11 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
         return net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get();
     }
 
+    public static void register(IEventBus modBus) {
+        ATTACHMENT_TYPES.register(modBus);
+        MOB_EFFECTS.register(modBus);
+    }
+
     // AFFECTORS
 
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
@@ -72,13 +83,9 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
             ATTACHMENT_TYPES.register(
                     "affector_positions",
                     () -> AttachmentType.builder(() -> AffectorPositions.EMPTY)
-                            .serialize(AffectorPositions.CODEC.fieldOf("data"))
+                            .serialize(AffectorPositions.CODEC)
                             .build()
             );
-
-    public static void register(IEventBus modBus) {
-        ATTACHMENT_TYPES.register(modBus);
-    }
 
     @Override
     public AffectorPositions getAffectorPositions(ServerLevel world) {
@@ -88,5 +95,15 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public void setAffectorPositions(ServerLevel world, AffectorPositions positions) {
         world.setData(AFFECTOR_POSITIONS_ATTACHMENT_TYPE, positions);
+    }
+
+    // EFFECTS
+
+    private static final DeferredRegister<MobEffect> MOB_EFFECTS =
+            DeferredRegister.create(Registries.MOB_EFFECT, CropCritters.MOD_ID);
+
+    @Override
+    public Holder<MobEffect> registerEffectForHolder(ResourceLocation id, MobEffect t) {
+        return MOB_EFFECTS.register(id.getPath(), () -> t);
     }
 }

@@ -2,10 +2,14 @@ package com.yelf42.cropcritters.platform.services;
 
 import com.yelf42.cropcritters.area_affectors.AffectorPositions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -57,4 +61,5 @@ public interface IPlatformHelper {
     AffectorPositions getAffectorPositions(ServerLevel world);
     void setAffectorPositions(ServerLevel world, AffectorPositions positions);
 
+    Holder<MobEffect> registerEffectForHolder(ResourceLocation id, MobEffect t);
 }

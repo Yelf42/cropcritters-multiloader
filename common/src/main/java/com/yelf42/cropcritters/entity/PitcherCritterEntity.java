@@ -29,8 +29,8 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.animatable.manager.AnimatableManager;
-import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
@@ -43,7 +43,7 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
 
     public static final RawAnimation EAT = RawAnimation.begin().thenPlay("attack.eat");
 
-    private final TargetingConditions.Selector CAN_EAT = (entity, world) -> {
+    private final Predicate<LivingEntity> CAN_EAT = (entity) -> {
         if (this.consume > 0
                 || (entity.getBoundingBox().getXsize() >= this.getBoundingBox().getXsize())
                 || (entity.getBoundingBox().getYsize() >= this.getBoundingBox().getYsize())
@@ -71,8 +71,8 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(DefaultAnimations.genericWalkIdleController(),
-                new AnimationController<>("eat_controller", animTest -> PlayState.STOP)
+        controllerRegistrar.add(DefaultAnimations.genericWalkIdleController(this),
+                new AnimationController<>(this,"eat_controller", animTest -> PlayState.STOP)
                 .triggerableAnim("eat", EAT));
     }
 
@@ -81,7 +81,7 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
         net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, (stack) -> stack.is(ModItems.LOST_SOUL), false);
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, temptGoal);
-        this.goalSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 0, true, true, (entity, world) -> CAN_EAT.test(entity, world)));
+        this.goalSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 0, true, true, CAN_EAT));
         this.goalSelector.addGoal(4, new OcelotAttackGoal(this));
         this.goalSelector.addGoal(12, new RandomStrollGoal(this, 0.8));
         this.goalSelector.addGoal(20, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -93,8 +93,7 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
                 .add(Attributes.MAX_HEALTH, 16)
                 .add(Attributes.MOVEMENT_SPEED, 0.4)
                 .add(Attributes.ATTACK_DAMAGE, 1)
-                .add(Attributes.FOLLOW_RANGE, 10)
-                .add(Attributes.TEMPT_RANGE, 10);
+                .add(Attributes.FOLLOW_RANGE, 10);
     }
 
     @Override
@@ -142,9 +141,9 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
     }
 
     @Override
-    public boolean doHurtTarget(ServerLevel world, Entity target) {
+    public boolean doHurtTarget(Entity target) {
         if (this.consume > 0) return false;
-        if (!CAN_EAT.test((LivingEntity) target, world)) {
+        if (!CAN_EAT.test((LivingEntity) target)) {
             this.setTarget(null);
             return false;
         }

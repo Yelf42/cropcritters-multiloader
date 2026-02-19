@@ -5,6 +5,7 @@ import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerLevel;
@@ -29,6 +30,11 @@ public class MazewoodSaplingBlock extends BaseEntityBlock implements Bonemealabl
     public MazewoodSaplingBlock(Properties settings) {
         super(settings);
         this.registerDefaultState(this.stateDefinition.any().setValue(this.getSpreadProperty(), ConfigManager.CONFIG.mazewoodSpread));
+    }
+
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override

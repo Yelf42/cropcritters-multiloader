@@ -22,7 +22,7 @@ public class SpitSeedProjectileEntity extends ThrowableItemProjectile {
     }
 
     public SpitSeedProjectileEntity(ServerLevel serverWorld, LivingEntity livingEntity, ItemStack itemStack) {
-        super(ModEntities.SPIT_SEED_PROJECTILE, livingEntity, serverWorld, itemStack);
+        super(ModEntities.SPIT_SEED_PROJECTILE, livingEntity, serverWorld);
         //this.spatItem = itemStack.getItem();
     }
 

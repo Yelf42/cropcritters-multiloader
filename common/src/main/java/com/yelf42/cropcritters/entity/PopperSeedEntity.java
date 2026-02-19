@@ -5,7 +5,6 @@ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
@@ -20,7 +19,7 @@ public class PopperSeedEntity extends ThrowableItemProjectile {
     }
 
     public PopperSeedEntity(Vec3 pos, Level world) {
-        super(ModEntities.POPPER_SEED_PROJECTILE, pos.x, pos.y, pos.z, world, new ItemStack(ModBlocks.POPPER_PLANT));
+        super(ModEntities.POPPER_SEED_PROJECTILE, pos.x, pos.y, pos.z, world);
     }
 
     @Override

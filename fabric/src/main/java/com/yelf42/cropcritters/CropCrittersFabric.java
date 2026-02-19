@@ -16,6 +16,8 @@ public class CropCrittersFabric implements ModInitializer {
     @Override
     public void onInitialize() {
 
+        ModEffects.init();
+
         bind(BuiltInRegistries.PARTICLE_TYPE, ModParticles::register);
 
         bind(BuiltInRegistries.BLOCK, ModBlocks::registerBlocks);
@@ -28,8 +30,6 @@ public class CropCrittersFabric implements ModInitializer {
         bind(BuiltInRegistries.RECIPE_SERIALIZER, ModItems::registerRecipes);
 
         bind(BuiltInRegistries.DATA_COMPONENT_TYPE, ModComponents::register);
-
-        bind(BuiltInRegistries.MOB_EFFECT, ModEffects::register);
 
         bind(BuiltInRegistries.FEATURE, ModFeatures::registerFeatures);
 

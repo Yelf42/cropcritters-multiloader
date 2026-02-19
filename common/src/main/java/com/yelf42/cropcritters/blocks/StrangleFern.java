@@ -3,11 +3,7 @@ package com.yelf42.cropcritters.blocks;
 import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,6 +35,11 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     public StrangleFern(Properties settings) {
         super(settings);
         this.registerDefaultState(this.stateDefinition.any().setValue(this.getAgeProperty(), 0));
+    }
+
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
@@ -121,7 +122,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
         if (level instanceof ServerLevel
                 && isMature(state)
                 && entity instanceof LivingEntity livingEntity) {
-            livingEntity.addEffect(ModEffects.NATURAL_SPORES);
+            livingEntity.addEffect(ModEffects.NATURAL_SPORES.get());
             level.setBlock(pos, state.setValue(AGE, this.getMaxAge() - 1), 3);
         }
     }

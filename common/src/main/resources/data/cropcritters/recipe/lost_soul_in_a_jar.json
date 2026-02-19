@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": "cropcritters:lost_soul",
-    "X": "minecraft:copper_ingot",
-    "B": "minecraft:bell",
-    "G": "minecraft:glass"
+    "#": {
+      "item": "cropcritters:lost_soul"
+    },
+    "X": {
+      "item": "minecraft:copper_ingot"
+    },
+    "B": {
+      "item": "minecraft:bell"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    }
   },
   "pattern": [
     " X ",

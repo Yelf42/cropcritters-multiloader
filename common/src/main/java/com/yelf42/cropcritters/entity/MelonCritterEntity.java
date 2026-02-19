@@ -1,6 +1,7 @@
 package com.yelf42.cropcritters.entity;
 
 import com.yelf42.cropcritters.registry.ModPackets;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -69,8 +70,7 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
                 .add(Attributes.MAX_HEALTH, 16)
                 .add(Attributes.MOVEMENT_SPEED, 0.2)
                 .add(Attributes.ATTACK_DAMAGE, 1)
-                .add(Attributes.FOLLOW_RANGE, 10)
-                .add(Attributes.TEMPT_RANGE, 10);
+                .add(Attributes.FOLLOW_RANGE, 10);
     }
 
     @Override
@@ -87,13 +87,13 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
     }
 
     @Override
-    public boolean hurtServer(ServerLevel world, DamageSource source, float amount) {
-        if (this.isInvulnerableTo(world, source)) {
+    public boolean hurt(DamageSource source, float amount) {
+        if (this.isInvulnerableTo(source)) {
             return false;
         } else {
             this.targetWorkGoal.cancel();
             this.wateringDuration = -1;
-            return super.hurtServer(world, source, amount);
+            return super.hurt(source, amount);
         }
     }
 
@@ -133,7 +133,9 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
         Level var12 = this.level();
         if (var12 instanceof ServerLevel serverWorld) {
             ItemStack itemStack = new ItemStack(Items.MELON_SEEDS);
-            Projectile.spawnProjectile(new SpitSeedProjectileEntity(serverWorld, this, itemStack), serverWorld, itemStack, (entity) -> entity.shoot(d, e + g - entity.getY(), f, 1.2F, 3.0F));
+            SpitSeedProjectileEntity spitSeed = new SpitSeedProjectileEntity(serverWorld, this, itemStack);
+            spitSeed.shoot(d, e + g - this.getY(), f, 1.2F, 3.0F);
+            this.level().addFreshEntity(spitSeed);
         }
         this.playSound(ModSounds.ENTITY_CRITTER_SPIT, 2.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
     }
@@ -203,7 +205,8 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
         }
 
         private void findWateringTargets() {
-            Vec3 facing = MelonCritterEntity.this.getNearestViewDirection().getUnitVec3().normalize();
+            Direction dir = MelonCritterEntity.this.getNearestViewDirection();
+            Vec3 facing = new Vec3(dir.getStepX(), dir.getStepY(), dir.getStepZ());
             BlockPos start = MelonCritterEntity.this.blockPosition();
             float stepSize = 0.3F;
             for (int i = 0; i < 10; i++) {
@@ -218,13 +221,12 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
     class MelonActiveTargetGoal extends NearestAttackableTargetGoal<LivingEntity> {
 
         public MelonActiveTargetGoal() {
-            super(MelonCritterEntity.this, LivingEntity.class, 10, true, false, (entity, serverWorld) -> (!(entity.getType().is(CropCritters.CROP_CRITTERS))));
+            super(MelonCritterEntity.this, LivingEntity.class, 10, true, false, (entity) -> (!(entity.getType().is(CropCritters.CROP_CRITTERS))));
         }
 
         @Override
         protected void findTarget() {
-            ServerLevel serverWorld = getServerLevel(this.mob);
-            this.target = serverWorld.getNearestEntity(this.mob.level().getEntitiesOfClass(this.targetType, this.getTargetSearchArea(this.getFollowDistance()), (livingEntity) -> true), this.getAndUpdateTargetPredicate(), this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+            this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(this.targetType, this.getTargetSearchArea(this.getFollowDistance()), (livingEntity) -> true), this.getAndUpdateTargetPredicate(), this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
         }
 
         private TargetingConditions getAndUpdateTargetPredicate() {

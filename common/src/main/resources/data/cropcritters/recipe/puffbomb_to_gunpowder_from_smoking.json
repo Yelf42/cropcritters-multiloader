@@ -3,7 +3,9 @@
   "category": "misc",
   "cookingtime": 100,
   "experience": 0.35,
-  "ingredient": "cropcritters:puffbomb_mushroom",
+  "ingredient": {
+    "item": "cropcritters:puffbomb_mushroom"
+  },
   "result": {
     "id": "minecraft:gunpowder"
   }
