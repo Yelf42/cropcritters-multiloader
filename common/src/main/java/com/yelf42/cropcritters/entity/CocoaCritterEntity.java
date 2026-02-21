@@ -345,7 +345,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
         }
 
         protected Optional<BlockPos> getTargetBlock() {
-            Iterable<BlockPos> iterable = BlockPos.withinManhattan(CocoaCritterEntity.this.blockPosition(), 12, 2, 12);
+            Iterable<BlockPos> iterable = BlockPos.withinManhattan(CocoaCritterEntity.this.blockPosition(), 24, 2, 24);
             Long2LongOpenHashMap long2LongOpenHashMap = new Long2LongOpenHashMap();
 
             for(BlockPos blockPos : iterable) {
