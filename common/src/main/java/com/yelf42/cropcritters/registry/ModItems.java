@@ -114,6 +114,8 @@ public class ModItems {
         consumer.accept(SEED_BALL_RECIPE, ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_ball"));
         consumer.accept(SEED_BAR_RECIPE, ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_bar"));
     }
+
+    // TODO implement
 //    public static void initialize() {
 //
 //
