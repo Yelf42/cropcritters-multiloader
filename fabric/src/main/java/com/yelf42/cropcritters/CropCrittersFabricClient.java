@@ -109,10 +109,6 @@ public class CropCrittersFabricClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(ModParticles.SOUL_GLINT, SuspendedTownParticle.HappyVillagerProvider::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.SOUL_GLINT_PLUME, SoulGlintPlumeParticle.Factory::new);
 
-        // Packets
-        PayloadTypeRegistry.playS2C().register(ModPackets.WaterSprayS2CPayload.ID, ModPackets.WaterSprayS2CPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(ModPackets.ParticleRingS2CPayload.ID, ModPackets.ParticleRingS2CPayload.CODEC);
-
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.WaterSprayS2CPayload.ID, (payload, context) -> {
             ClientLevel world = context.client().level;
             if (world == null) return;

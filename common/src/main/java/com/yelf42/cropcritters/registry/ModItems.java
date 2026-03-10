@@ -114,19 +114,5 @@ public class ModItems {
         consumer.accept(SEED_BALL_RECIPE, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_ball"));
         consumer.accept(SEED_BAR_RECIPE, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_bar"));
     }
-//    public static void initialize() {
-//
-//
-//        // Compostable
-//        CompostingChanceRegistry.INSTANCE.add(ModItems.STRANGE_FERTILIZER, 1.0f);
-//        CompostingChanceRegistry.INSTANCE.add(ModItems.SEED_BALL, 0.8f);
-//        CompostingChanceRegistry.INSTANCE.add(ModItems.SEED_BAR, 0.8f);
-//        CompostingChanceRegistry.INSTANCE.add(ModItems.PUFFBOMB_SLICE, 0.4f);
-//
-//        // Fuel
-//        FuelRegistryEvents.BUILD.register((builder, context) -> {
-//            builder.add(ModItems.LOST_SOUL, 80 * 20);
-//        });
-//
-//    }
+
 }

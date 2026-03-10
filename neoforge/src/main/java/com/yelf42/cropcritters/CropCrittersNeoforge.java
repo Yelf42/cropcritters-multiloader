@@ -25,6 +25,8 @@ import net.neoforged.neoforge.common.world.BiomeGenerationSettingsBuilder;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -64,7 +66,6 @@ public class CropCrittersNeoforge {
 
         // Client
         if (dist.isClient()) {
-            eventBus.addListener(CropCrittersNeoforgeClient::register);
             eventBus.addListener(CropCrittersNeoforgeClient::registerParticleFactories);
             eventBus.addListener(CropCrittersNeoforgeClient::registerEntityRenderers);
             eventBus.addListener(CropCrittersNeoforgeClient::registerBlocks);
@@ -77,6 +78,8 @@ public class CropCrittersNeoforge {
         eventBus.addListener(this::setupDispenserBehaviors);
 
         BiomeModifiers.register(eventBus);
+
+        eventBus.addListener(this::registerPayloadHandlers);
 
         CropCritters.init();
 
@@ -106,6 +109,22 @@ public class CropCrittersNeoforge {
         event.put(ModEntities.TORCHFLOWER_CRITTER, TorchflowerCritterEntity.createAttributes().build());
         event.put(ModEntities.PITCHER_CRITTER, PitcherCritterEntity.createAttributes().build());
         event.put(ModEntities.COCOA_CRITTER, CocoaCritterEntity.createAttributes().build());
+    }
+
+    public void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar(CropCritters.MOD_ID);
+
+        registrar.playToClient(
+                ModPackets.WaterSprayS2CPayload.ID,
+                ModPackets.WaterSprayS2CPayload.CODEC,
+                CropCrittersNeoforgeClient.ClientPayloadHandler::handleWaterSpray
+        );
+
+        registrar.playToClient(
+                ModPackets.ParticleRingS2CPayload.ID,
+                ModPackets.ParticleRingS2CPayload.CODEC,
+                CropCrittersNeoforgeClient.ClientPayloadHandler::handleRing
+        );
     }
 
 }
