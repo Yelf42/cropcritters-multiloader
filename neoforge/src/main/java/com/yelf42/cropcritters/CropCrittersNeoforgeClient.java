@@ -101,23 +101,6 @@ public class CropCrittersNeoforgeClient {
         event.registerSpriteSet(ModParticles.SOUL_GLINT_PLUME, SoulGlintPlumeParticle.Factory::new);
     }
 
-    @SubscribeEvent
-    public static void register(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar(CropCritters.MOD_ID);
-
-        registrar.playToClient(
-                ModPackets.WaterSprayS2CPayload.ID,
-                ModPackets.WaterSprayS2CPayload.CODEC,
-                ClientPayloadHandler::handleWaterSpray
-        );
-
-        registrar.playToClient(
-                ModPackets.ParticleRingS2CPayload.ID,
-                ModPackets.ParticleRingS2CPayload.CODEC,
-                ClientPayloadHandler::handleRing
-        );
-    }
-
     public static class ClientPayloadHandler {
         public static void handleWaterSpray(ModPackets.WaterSprayS2CPayload data, IPayloadContext context) {
             context.enqueueWork(() -> {

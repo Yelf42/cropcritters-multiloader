@@ -54,20 +54,8 @@ public class ModItems {
         return ResourceKey.create(Registries.ITEM, CropCritters.identifier(name));
     }
 
-    public static Item registerItem(String name, Function<Item.Properties, Item> factory) {
-        return registerItem(vanillaItemId(name), factory, new Item.Properties());
-    }
-
     public static Item registerItem(String name, Function<Item.Properties, Item> factory, Item.Properties properties) {
         return registerItem(vanillaItemId(name), factory, properties);
-    }
-
-    public static Item registerItem(String name, Item.Properties properties) {
-        return registerItem(vanillaItemId(name), Item::new, properties);
-    }
-
-    public static Item registerItem(String name) {
-        return registerItem(vanillaItemId(name), Item::new, new Item.Properties());
     }
 
     public static Item registerSpawnEgg(String name, EntityType<? extends Mob> entityType) {
@@ -114,21 +102,4 @@ public class ModItems {
         consumer.accept(SEED_BALL_RECIPE, ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_ball"));
         consumer.accept(SEED_BAR_RECIPE, ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_bar"));
     }
-
-    // TODO implement
-//    public static void initialize() {
-//
-//
-//        // Compostable
-//        CompostingChanceRegistry.INSTANCE.add(ModItems.STRANGE_FERTILIZER, 1.0f);
-//        CompostingChanceRegistry.INSTANCE.add(ModItems.SEED_BALL, 0.8f);
-//        CompostingChanceRegistry.INSTANCE.add(ModItems.SEED_BAR, 0.8f);
-//        CompostingChanceRegistry.INSTANCE.add(ModItems.PUFFBOMB_SLICE, 0.4f);
-//
-//        // Fuel
-//        FuelRegistryEvents.BUILD.register((builder, context) -> {
-//            builder.add(ModItems.LOST_SOUL, 80 * 20);
-//        });
-//
-//    }
 }
