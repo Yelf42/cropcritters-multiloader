@@ -125,7 +125,7 @@ public final class AffectorPositions {
                     CropCritters.setAffectorPositions(serverWorld, affectorPositions.add(blockPos, type));
                 });
             });
-            print(serverWorld, false);
+            //print(serverWorld, false);
         }
     }
 

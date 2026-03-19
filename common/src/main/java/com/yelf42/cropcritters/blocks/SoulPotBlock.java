@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -55,6 +56,7 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
     public static final EnumProperty<Direction> FACING;
     public static final BooleanProperty CRACKED;
     public static final BooleanProperty WATERLOGGED;
+    public static final IntegerProperty LEVEL;
     private static final VoxelShape SHAPE;
 
     public MapCodec<SoulPotBlock> codec() {
@@ -63,7 +65,7 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
 
     public SoulPotBlock(Properties settings) {
         super(settings);
-        this.registerDefaultState((((this.stateDefinition.any()).setValue(FACING, Direction.NORTH)).setValue(WATERLOGGED, false)).setValue(CRACKED, false));
+        this.registerDefaultState((((this.stateDefinition.any()).setValue(FACING, Direction.NORTH)).setValue(WATERLOGGED, false)).setValue(CRACKED, false).setValue(LEVEL, 0));
     }
 
     protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
@@ -76,7 +78,7 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
 
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
-        return ((this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection())).setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER)).setValue(CRACKED, false);
+        return ((this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection())).setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER)).setValue(CRACKED, false).setValue(LEVEL, 0);
     }
 
     @Override
@@ -136,7 +138,6 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
             } else {
                 ItemStack itemStack = soulPotBlockEntity.getTheItem();
                 if (!stack.isEmpty() && (itemStack.isEmpty() || ItemStack.isSameItemSameComponents(itemStack, stack) && itemStack.getCount() < itemStack.getMaxStackSize())) {
-                    soulPotBlockEntity.wobble(SoulPotBlockEntity.WobbleType.POSITIVE);
                     player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                     ItemStack itemStack2 = stack.consumeAndReturn(1, player);
                     float f;
@@ -169,7 +170,6 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
         BlockEntity var7 = world.getBlockEntity(pos);
         if (var7 instanceof SoulPotBlockEntity soulPotBlockEntity) {
             world.playSound(null, pos, SoundEvents.DECORATED_POT_INSERT_FAIL, SoundSource.BLOCKS, 1.0F, 1.0F);
-            soulPotBlockEntity.wobble(SoulPotBlockEntity.WobbleType.NEGATIVE);
             world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             return InteractionResult.SUCCESS;
         } else {
@@ -186,7 +186,7 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED, CRACKED);
+        builder.add(FACING, WATERLOGGED, CRACKED, LEVEL);
     }
 
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -247,6 +247,7 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
         FACING = BlockStateProperties.HORIZONTAL_FACING;
         CRACKED = BlockStateProperties.CRACKED;
         WATERLOGGED = BlockStateProperties.WATERLOGGED;
+        LEVEL = IntegerProperty.create("level", 0, 12);
         SHAPE = Block.column(14.0F, 0.0F, 16.0F);
     }
 }

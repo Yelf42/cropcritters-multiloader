@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "SGS",
+    "SSS"
+  ],
+  "key": {
+    "S": "minecraft:poisonous_potato",
+    "G": "minecraft:mud"
+  },
+  "result": {
+    "id": "cropcritters:seed_ball",
+    "count": 1,
+    "components": {
+      "cropcritters:poisonous_seed_ball": {
+        "poisonStacks": 8
+      }
+    }
+  }
+}

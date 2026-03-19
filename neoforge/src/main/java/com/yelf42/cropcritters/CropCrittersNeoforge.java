@@ -70,7 +70,6 @@ public class CropCrittersNeoforge {
             eventBus.addListener(CropCrittersNeoforgeClient::registerEntityRenderers);
             eventBus.addListener(CropCrittersNeoforgeClient::registerBlocks);
             eventBus.addListener(CropCrittersNeoforgeClient::registerBlockColors);
-            eventBus.addListener(CropCrittersNeoforgeClient::registerModelLoaders);
         }
         NeoForgePlatformHelper.register(eventBus);
 

@@ -50,7 +50,7 @@ public class TorchflowerCritterEntity extends AbstractCropCritterEntity {
     }
 
     @Override
-    protected boolean isHealingItem(ItemStack itemStack) {return itemStack.is(Items.TORCHFLOWER);}
+    protected boolean isHealingItem(ItemStack itemStack) {return itemStack.is(Items.TORCHFLOWER) || itemStack.is(Items.TORCHFLOWER_SEEDS);}
 
     @Override
     protected int resetTicksUntilCanWork() {return 0;}

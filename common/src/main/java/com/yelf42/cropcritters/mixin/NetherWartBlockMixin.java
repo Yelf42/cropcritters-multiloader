@@ -36,7 +36,7 @@ public abstract class NetherWartBlockMixin {
 
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
     private void injectIntoRandomTicksHead(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo ci) {
-        if (random.nextInt(100) < ConfigManager.CONFIG.goldSoulRoseSlowdown && AffectorsHelper.copperSoulRoseCheck(world, pos)) ci.cancel();
+        if (random.nextInt(100) < ConfigManager.CONFIG.copperSoulRoseSlowdown && AffectorsHelper.copperSoulRoseCheck(world, pos)) ci.cancel();
     }
 
     // Inject into randomTicks to turn into weed if mature

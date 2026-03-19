@@ -1,9 +1,6 @@
 package com.yelf42.cropcritters;
 
-import com.mojang.serialization.JsonOps;
 import com.yelf42.cropcritters.client.particle.*;
-import com.yelf42.cropcritters.client.renderer.blockentity.SoulPotBlockEntityRenderer;
-import com.yelf42.cropcritters.client.renderer.blockentity.SoulPotModelRenderer;
 import com.yelf42.cropcritters.client.renderer.blockentity.StrangleFernBlockEntityRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.AbstractCritterRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.PopperPodEntityRenderer;
@@ -21,9 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class CropCrittersNeoforgeClient {
 
@@ -47,15 +42,8 @@ public class CropCrittersNeoforgeClient {
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.MAZEWOOD, ChunkSectionLayer.CUTOUT);
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.MAZEWOOD_SAPLING, ChunkSectionLayer.CUTOUT);
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.STRANGLE_FERN, ChunkSectionLayer.CUTOUT);
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOUL_POT, ChunkSectionLayer.CUTOUT);
         });
-    }
-
-    @SubscribeEvent
-    public static void registerModelLoaders(RegisterSpecialModelRendererEvent event) {
-        event.register(
-                CropCritters.identifier("soul_pot"),
-                SoulPotModelRenderer.Unbaked.CODEC
-        );
     }
 
     @SubscribeEvent
@@ -73,7 +61,6 @@ public class CropCrittersNeoforgeClient {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         // Block entity renderers
         event.registerBlockEntityRenderer(ModBlockEntities.STRANGLE_FERN, StrangleFernBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(ModBlockEntities.SOUL_POT, SoulPotBlockEntityRenderer::new);
 
         // Entity renderers
         event.registerEntityRenderer(ModEntities.WHEAT_CRITTER, context -> new AbstractCritterRenderer<>(context, CropCritters.identifier("wheat_critter"), true));

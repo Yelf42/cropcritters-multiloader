@@ -82,10 +82,6 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
 
     @Override
     protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        // Don't grow if unsuitable temperatures
-        float temp = world.getBiome(pos).value().getBaseTemperature();
-        if (temp > 0.81 || temp < 0.79) return;
-
         // Dry out in sunlight
         long time = world.getDayTime() % 24000;
         if (state.getFluidState().isEmpty()
@@ -96,13 +92,17 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
             return;
         }
 
+        // Don't grow if unsuitable temperatures
+        float temp = world.getBiome(pos).value().getBaseTemperature();
+        if (temp > 0.81 || temp < 0.79) return;
+
         // Dry out in nether (any dimension where water evaporates)
         if (world.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, pos)) {
             world.blockEvent(pos, this, 0, 0);
             return;
         }
 
-        if (!state.getValueOrElse(CAN_SPREAD, false)) {
+        if (state.getOptionalValue(CAN_SPREAD).isEmpty()) {
             if (world.isRaining() && random.nextInt(6) == 1) world.setBlockAndUpdate(pos, state.setValue(CAN_SPREAD, true));
             return;
         }
@@ -124,19 +124,6 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
         // Rain growth
         if (world.isRainingAt(pos) || world.isRainingAt(pos.relative(Direction.getRandom(random)))) {
             if (random.nextInt(2) == 0 && isValidBonemealTarget(world, pos, state)) this.grower.spreadFromRandomFaceTowardRandomDirection(state, world, pos, random);
-            return;
-        }
-
-        // Waterlogged growth
-        if (!state.getFluidState().isEmpty() && world.getBrightness(LightLayer.SKY, pos) >= 14) {
-            if (random.nextInt(4) == 0 && isValidBonemealTarget(world, pos, state)) this.grower.spreadFromRandomFaceTowardRandomDirection(state, world, pos, random);
-            return;
-        }
-
-        // Moist farmland
-        BlockState soil = world.getBlockState(pos.below());
-        if (soil.is(ModBlocks.SOUL_FARMLAND) || (soil.is(Blocks.FARMLAND) && soil.getValueOrElse(FarmBlock.MOISTURE, 0) > 5)) {
-            if (isValidBonemealTarget(world, pos, state)) this.grower.spreadFromRandomFaceTowardRandomDirection(state, world, pos, random);
             return;
         }
 

@@ -43,20 +43,22 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
 
     public static final RawAnimation EAT = RawAnimation.begin().thenPlay("attack.eat");
 
-    private final TargetingConditions.Selector CAN_EAT = (entity, world) -> {
-        if (this.consume > 0
-                || (entity.getBoundingBox().getXsize() >= this.getBoundingBox().getXsize())
+    private final Predicate<LivingEntity> CAN_EAT = (entity) -> {
+        if ((entity.getBoundingBox().getXsize() >= this.getBoundingBox().getXsize())
                 || (entity.getBoundingBox().getYsize() >= this.getBoundingBox().getYsize())
                 || entity.isInvulnerable()
-                || entity.hasCustomName()
-                || entity instanceof Pufferfish)
+                || entity instanceof Pufferfish) {
             return false;
+        }
+
         if (this.isTrusting()) {
-            boolean extraChecks = (entity instanceof TamableAnimal tameableEntity && !tameableEntity.isTame());
+            boolean extraChecks = (entity instanceof TamableAnimal tameableEntity && tameableEntity.isTame());
             extraChecks |= entity instanceof Bee;
             extraChecks |= entity instanceof Allay;
-            return extraChecks;
+            extraChecks |= entity.hasCustomName();
+            return !extraChecks;
         }
+
         return true;
     };
 
@@ -81,7 +83,7 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
         net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, (stack) -> stack.is(ModItems.LOST_SOUL), false);
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, temptGoal);
-        this.goalSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 0, true, true, (entity, world) -> CAN_EAT.test(entity, world)));
+        this.goalSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 0, true, true, (entity, world) -> CAN_EAT.test(entity)));
         this.goalSelector.addGoal(4, new OcelotAttackGoal(this));
         this.goalSelector.addGoal(12, new RandomStrollGoal(this, 0.8));
         this.goalSelector.addGoal(20, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -144,7 +146,7 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
     @Override
     public boolean doHurtTarget(ServerLevel world, Entity target) {
         if (this.consume > 0) return false;
-        if (!CAN_EAT.test((LivingEntity) target, world)) {
+        if (!CAN_EAT.test((LivingEntity) target)) {
             this.setTarget(null);
             return false;
         }

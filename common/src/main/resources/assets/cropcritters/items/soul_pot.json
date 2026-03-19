@@ -1,9 +1,6 @@
 {
   "model": {
-    "type": "minecraft:special",
-    "base": "minecraft:item/decorated_pot",
-    "model": {
-      "type": "cropcritters:soul_pot"
-    }
+    "type": "minecraft:model",
+    "model": "cropcritters:block/soul_pot/soul_pot0"
   }
 }

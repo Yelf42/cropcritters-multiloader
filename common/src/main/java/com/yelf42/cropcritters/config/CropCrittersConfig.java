@@ -20,7 +20,7 @@ public class CropCrittersConfig {
     public boolean puffbombGeneration = true;
     public boolean liverwortGeneration = true;
 
-    public int goldSoulRoseSlowdown = 25;
+    public int copperSoulRoseSlowdown = 25;
 
     public static CropCrittersConfig getDefaults() {
         return new CropCrittersConfig();

@@ -53,8 +53,14 @@ public class ConfigManager {
                     case "strangleFernGeneration" -> CONFIG.strangleFernGeneration = Boolean.parseBoolean(value);
                     case "puffbombGeneration" -> CONFIG.puffbombGeneration = Boolean.parseBoolean(value);
                     case "liverwortGeneration" -> CONFIG.liverwortGeneration = Boolean.parseBoolean(value);
-                    case "goldSoulRoseSlowdown" -> CONFIG.goldSoulRoseSlowdown = Math.clamp(Integer.parseInt(value), 0, 100);
-
+                    case "copperSoulRoseSlowdown" -> CONFIG.copperSoulRoseSlowdown = Math.clamp(Integer.parseInt(value), 0, 100);
+                    default -> {
+                        CropCritters.LOGGER.error("Error detected in crop-critters-config.toml, resetting config");
+                        CONFIG = new CropCrittersConfig();
+                        Files.deleteIfExists(CONFIG_PATH);
+                        save();
+                        return;
+                    }
                 }
             }
         } catch (IOException e) {
@@ -99,8 +105,8 @@ public class ConfigManager {
             writer.write("puffbombGeneration = " + CONFIG.puffbombGeneration + "\n");
             writer.write("liverwortGeneration = " + CONFIG.liverwortGeneration + "\n");
             writer.write("# \n");
-            writer.write("# Gold Soul Rose crop growth rate slowdown (percentage): \n");
-            writer.write("goldSoulRoseSlowdown" + CONFIG.goldSoulRoseSlowdown + "\n");
+            writer.write("# Copper Soul Rose crop growth rate slowdown (percentage): \n");
+            writer.write("copperSoulRoseSlowdown" + CONFIG.copperSoulRoseSlowdown + "\n");
         } catch (IOException e) {
             System.err.println("Failed to save config: " + e.getMessage());
         }

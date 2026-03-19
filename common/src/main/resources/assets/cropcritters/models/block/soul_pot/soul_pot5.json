@@ -1,0 +1,7 @@
+{
+  "parent": "cropcritters:block/soul_pot/soul_pot_parent",
+  "textures": {
+    "pattern": "cropcritters:block/soul_pot/soul_pot_cover_05",
+    "glow": "cropcritters:block/soul_pot/soul_pot_inside_05"
+  }
+}

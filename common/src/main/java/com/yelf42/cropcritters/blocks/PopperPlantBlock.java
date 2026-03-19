@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
@@ -30,11 +31,12 @@ public class PopperPlantBlock extends VegetationBlock implements BonemealableBlo
     public static final MapCodec<PopperPlantBlock> CODEC = simpleCodec(PopperPlantBlock::new);
     public static final int MAX_AGE = 3;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
+    public static final BooleanProperty CAN_SPREAD = BooleanProperty.create("can_spread");
     private static final VoxelShape SHAPE = Block.column((double)8.0F, (double)0.0F, (double)13.0F);
 
     public PopperPlantBlock(Properties settings) {
         super(settings);
-        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(CAN_SPREAD, true));
     }
 
     @Override
@@ -68,29 +70,24 @@ public class PopperPlantBlock extends VegetationBlock implements BonemealableBlo
     protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         int lightLevel = world.getBrightness(LightLayer.SKY, pos);
         float temp = world.getBiome(pos).value().getBaseTemperature();
-        long time = world.getDayTime() % 24000;
-        if (lightLevel < 14 || (time < 2000 || time > 9000) || (temp >= 1.0 || temp < 0.5)) return;
+        if (lightLevel < 12 || (temp >= 1.0 || temp < 0.5)) return;
 
-        if (!isMature(state)) {
-            world.setBlockAndUpdate(pos, state.setValue(AGE, this.getAge(state) + 1));
-        } else {
-            if (random.nextInt(10) == 0) popOff(state, world, pos);
+        switch(this.getAge(state)) {
+            case 0:
+                world.setBlockAndUpdate(pos, state.setValue(AGE, 1).setValue(CAN_SPREAD, random.nextInt(3) == 0));
+                break;
+            case 1:
+                if (state.getValue(CAN_SPREAD)) {
+                    world.setBlockAndUpdate(pos, state.setValue(AGE, 2));
+                }
+                break;
+            case 2:
+                world.setBlockAndUpdate(pos, state.setValue(AGE, 3));
+                break;
+            default:
+                world.setBlockAndUpdate(pos, state.setValue(AGE, 0).setValue(CAN_SPREAD, false));
+                spawnPopperPod(world, state, pos);
         }
-    }
-
-    private void popOff(BlockState state, ServerLevel world, BlockPos pos) {
-        world.setBlockAndUpdate(pos, state.setValue(AGE, 0));
-
-        Iterable<BlockPos> iterable = BlockPos.withinManhattan(pos, 12,1,12);
-        for(BlockPos blockPos : iterable) {
-            BlockState toCheck = world.getBlockState(blockPos);
-            if (toCheck.is(ModBlocks.POPPER_PLANT) && isMature(toCheck)) {
-                world.setBlockAndUpdate(blockPos, toCheck.setValue(AGE, 0));
-                spawnPopperPod(world, toCheck, blockPos);
-            }
-        }
-
-        spawnPopperPod(world, state, pos);
     }
 
     private void spawnPopperPod(ServerLevel world, BlockState state, BlockPos pos) {
@@ -113,7 +110,7 @@ public class PopperPlantBlock extends VegetationBlock implements BonemealableBlo
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(AGE);
+        builder.add(AGE, CAN_SPREAD);
     }
 
     @Override
@@ -129,9 +126,10 @@ public class PopperPlantBlock extends VegetationBlock implements BonemealableBlo
     @Override
     public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state) {
         if (!isMature(state)) {
-            world.setBlockAndUpdate(pos, state.setValue(AGE, this.getAge(state) + 1));
+            world.setBlockAndUpdate(pos, state.setValue(AGE, this.getAge(state) + 1).setValue(CAN_SPREAD, true));
         } else {
-            popOff(state, world, pos);
+            world.setBlockAndUpdate(pos, state.setValue(AGE, 0));
+            spawnPopperPod(world, state, pos);
         }
     }
 }

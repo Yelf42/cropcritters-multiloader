@@ -79,7 +79,7 @@ public abstract class CropBlockMixin {
     // Try to generate weed if on farmland (scale chance with age)
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
     private void stopGrowthAndSpawnSoulSandValleyCrittersOrWeeds(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo ci) {
-        if (random.nextInt(100) < ConfigManager.CONFIG.goldSoulRoseSlowdown && AffectorsHelper.copperSoulRoseCheck(world, pos)) {
+        if (random.nextInt(100) < ConfigManager.CONFIG.copperSoulRoseSlowdown && AffectorsHelper.copperSoulRoseCheck(world, pos)) {
             ci.cancel();
             return;
         }

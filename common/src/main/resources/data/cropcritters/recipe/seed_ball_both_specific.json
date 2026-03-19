@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "SGT",
+    "TTT"
+  ],
+  "key": {
+    "S": "minecraft:wheat_seeds",
+    "T": "minecraft:poisonous_potato",
+    "G": "minecraft:mud"
+  },
+  "result": {
+    "id": "cropcritters:seed_ball",
+    "count": 1,
+    "components": {
+      "cropcritters:seed_types": {
+        "seedTypes": [
+          "minecraft:wheat"
+        ]
+      },
+      "cropcritters:poisonous_seed_ball": {
+        "poisonStacks": 4
+      }
+    }
+  }
+}

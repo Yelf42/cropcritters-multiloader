@@ -32,9 +32,10 @@ public class SoulRoseBlock extends BaseEntityBlock {
     public static final IntegerProperty LEVEL = IntegerProperty.create("level", 0, 3);
     public static final EnumProperty<SoulRoseType> TYPE = EnumProperty.create("type", SoulRoseType.class);
 
-    private static final VoxelShape SMALL_0_SHAPE = Block.column((double)6.0F, (double)0.0F, (double)11.0F);
-    private static final VoxelShape SMALL_1_SHAPE = Block.column((double)10.0F, (double)0.0F, (double)16.0F);
-    private static final VoxelShape LARGE_SHAPE = Block.column((double)14.0F, (double)0.0F, (double)16.0F);
+    private static final VoxelShape SMALL_0_SHAPE = Block.column(6.0F, 0.0F, 11.0F);
+    private static final VoxelShape SMALL_1_SHAPE = Block.column(10.0F, 0.0F, 16.0F);
+    private static final VoxelShape LARGE_1_SHAPE = Block.column(14.0F, 0.0F, 12.0F);
+    private static final VoxelShape LARGE_2_SHAPE = Block.column(14.0F, 0.0F, 16.0F);
 
     public SoulRoseBlock(Properties settings) {
         super(settings);
@@ -61,10 +62,11 @@ public class SoulRoseBlock extends BaseEntityBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return switch(state.getValueOrElse(LEVEL, 0)) {
+        return switch(state.getOptionalValue(LEVEL).orElse(0)) {
             case 0 -> SMALL_0_SHAPE;
             case 1 -> SMALL_1_SHAPE;
-            default -> LARGE_SHAPE;
+            case 2 -> state.getOptionalValue(HALF).orElse(DoubleBlockHalf.LOWER) == DoubleBlockHalf.LOWER ? LARGE_2_SHAPE : LARGE_1_SHAPE;
+            default -> LARGE_2_SHAPE;
         };
     }
 

@@ -1,8 +1,6 @@
 package com.yelf42.cropcritters;
 
 import com.yelf42.cropcritters.client.particle.*;
-import com.yelf42.cropcritters.client.renderer.blockentity.SoulPotBlockEntityRenderer;
-import com.yelf42.cropcritters.client.renderer.blockentity.SoulPotModelRenderer;
 import com.yelf42.cropcritters.client.renderer.blockentity.StrangleFernBlockEntityRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.AbstractCritterRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.PopperPodEntityRenderer;
@@ -12,7 +10,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.particle.SuspendedTownParticle;
@@ -21,7 +18,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.client.renderer.special.SpecialModelRenderers;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
@@ -41,6 +37,7 @@ public class CropCrittersFabricClient implements ClientModInitializer {
         BlockRenderLayerMap.putBlock(ModBlocks.SOUL_ROSE, ChunkSectionLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(ModBlocks.TRIMMED_SOUL_ROSE, ChunkSectionLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(ModBlocks.POTTED_SOUL_ROSE, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.SOUL_POT, ChunkSectionLayer.CUTOUT);
 
         BlockRenderLayerMap.putBlock(ModBlocks.TALL_BUSH, ChunkSectionLayer.CUTOUT);
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
@@ -74,12 +71,6 @@ public class CropCrittersFabricClient implements ClientModInitializer {
                         ? BiomeColors.getAverageGrassColor(world, pos)
                         : 0x91BD59, ModBlocks.STRANGLE_FERN
         );
-
-        SpecialModelRenderers.ID_MAPPER.put(
-                CropCritters.identifier("soul_pot"),
-                SoulPotModelRenderer.Unbaked.CODEC
-        );
-        BlockEntityRenderers.register(ModBlockEntities.SOUL_POT, SoulPotBlockEntityRenderer::new);
 
         // Entities
         EntityRenderers.register(ModEntities.WHEAT_CRITTER, context -> new AbstractCritterRenderer<>(context, Identifier.fromNamespaceAndPath(CropCritters.MOD_ID, "wheat_critter"), true));
