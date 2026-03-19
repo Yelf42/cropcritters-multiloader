@@ -35,7 +35,8 @@ public class SoulRoseBlock extends BaseEntityBlock {
 
     private static final VoxelShape SMALL_0_SHAPE = ModBlocks.column((double)6.0F, (double)0.0F, (double)11.0F);
     private static final VoxelShape SMALL_1_SHAPE = ModBlocks.column((double)10.0F, (double)0.0F, (double)16.0F);
-    private static final VoxelShape LARGE_SHAPE = ModBlocks.column((double)14.0F, (double)0.0F, (double)16.0F);
+    private static final VoxelShape LARGE_1_SHAPE = ModBlocks.column((double)14.0F, (double)0.0F, (double)12.0F);
+    private static final VoxelShape LARGE_2_SHAPE = ModBlocks.column((double)14.0F, (double)0.0F, (double)16.0F);
 
     public SoulRoseBlock(Properties settings) {
         super(settings);
@@ -70,7 +71,8 @@ public class SoulRoseBlock extends BaseEntityBlock {
         return switch(state.getOptionalValue(LEVEL).orElse(0)) {
             case 0 -> SMALL_0_SHAPE;
             case 1 -> SMALL_1_SHAPE;
-            default -> LARGE_SHAPE;
+            case 2 -> state.getOptionalValue(HALF).orElse(DoubleBlockHalf.LOWER) == DoubleBlockHalf.LOWER ? LARGE_2_SHAPE : LARGE_1_SHAPE;
+            default -> LARGE_2_SHAPE;
         };
     }
 

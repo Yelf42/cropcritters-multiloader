@@ -39,13 +39,6 @@ public class SeedBallRecipe extends CustomRecipe {
             }
         }
 
-//        // 4 direction version
-//        if (!input.getStackInSlot(0,1).isIn(CropCritters.SEED_BALL_CROPS) && !input.getStackInSlot(0,1).isOf(Items.POISONOUS_POTATO)) return false;
-//        if (!input.getStackInSlot(1,0).isIn(CropCritters.SEED_BALL_CROPS) && !input.getStackInSlot(1,0).isOf(Items.POISONOUS_POTATO)) return false;
-//        if (!input.getStackInSlot(1,2).isIn(CropCritters.SEED_BALL_CROPS) && !input.getStackInSlot(1,2).isOf(Items.POISONOUS_POTATO)) return false;
-//        if (!input.getStackInSlot(2,1).isIn(CropCritters.SEED_BALL_CROPS) && !input.getStackInSlot(2,1).isOf(Items.POISONOUS_POTATO)) return false;
-//
-
         return true;
     }
 

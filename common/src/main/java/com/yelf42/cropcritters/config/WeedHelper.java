@@ -59,7 +59,7 @@ public class WeedHelper {
     }
 
     public static void generateWeed(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, boolean nether) {
-        // Cancel if in range of a gold Soul Rose
+        // Cancel if in range of a copper Soul Rose
         if (AffectorsHelper.copperSoulRoseCheck(world, pos)) return;
 
         // Count how many neighbours are the same type of crop

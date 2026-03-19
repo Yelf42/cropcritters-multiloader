@@ -7,9 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 public enum SoulRoseType implements StringRepresentable {
     NONE("none"),
-    GOLD("gold"),
-    COPPER("copper"),
-    IRON("iron");
+    GOLD("gold"),       // Inflict Soul Siphon
+    COPPER("copper"),   // Stop weeds, slows growth
+    IRON("iron");       // Increase crop yield
 
     private final String name;
 

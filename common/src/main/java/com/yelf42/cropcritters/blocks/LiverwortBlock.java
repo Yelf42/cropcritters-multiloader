@@ -89,10 +89,6 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
 
     @Override
     protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        // Don't grow if unsuitable temperatures
-        float temp = world.getBiome(pos).value().getBaseTemperature();
-        if (temp > 0.81 || temp < 0.79) return;
-
         // Dry out in sunlight
         long time = world.getDayTime() % 24000;
         if (state.getFluidState().isEmpty()
@@ -102,6 +98,10 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
             world.blockEvent(pos, this, 0, 0);
             return;
         }
+
+        // Don't grow if unsuitable temperatures
+        float temp = world.getBiome(pos).value().getBaseTemperature();
+        if (temp > 0.81 || temp < 0.79) return;
 
         // Dry out in nether (any dimension where water evaporates)
         if (world.dimensionType().ultraWarm()) {
@@ -131,19 +131,6 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
         // Rain growth
         if (world.isRainingAt(pos) || world.isRainingAt(pos.relative(Direction.getRandom(random)))) {
             if (random.nextInt(2) == 0 && isValidBonemealTarget(world, pos, state)) this.grower.spreadFromRandomFaceTowardRandomDirection(state, world, pos, random);
-            return;
-        }
-
-        // Waterlogged growth
-        if (!state.getFluidState().isEmpty() && world.getBrightness(LightLayer.SKY, pos) >= 14) {
-            if (random.nextInt(4) == 0 && isValidBonemealTarget(world, pos, state)) this.grower.spreadFromRandomFaceTowardRandomDirection(state, world, pos, random);
-            return;
-        }
-
-        // Moist farmland
-        BlockState soil = world.getBlockState(pos.below());
-        if (soil.is(ModBlocks.SOUL_FARMLAND) || (soil.is(Blocks.FARMLAND) && soil.getOptionalValue(FarmBlock.MOISTURE).orElse(0) > 5)) {
-            if (isValidBonemealTarget(world, pos, state)) this.grower.spreadFromRandomFaceTowardRandomDirection(state, world, pos, random);
             return;
         }
 

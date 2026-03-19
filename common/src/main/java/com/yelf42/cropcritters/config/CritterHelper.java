@@ -16,7 +16,6 @@ import com.yelf42.cropcritters.registry.ModEntities;
 
 import java.util.Optional;
 
-// TODO
 public class CritterHelper {
 
     public static Optional<AbstractCropCritterEntity> spawnCritterWithItem(ServerLevel world, BlockState state) {

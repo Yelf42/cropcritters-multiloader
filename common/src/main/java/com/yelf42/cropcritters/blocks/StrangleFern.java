@@ -12,6 +12,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
@@ -31,10 +32,11 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     public static final MapCodec<StrangleFern> CODEC = simpleCodec(StrangleFern::new);
     public static final int MAX_AGE = 3;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
+    public static final BooleanProperty CAN_SPREAD = BooleanProperty.create("can_spread");
 
     public StrangleFern(Properties settings) {
         super(settings);
-        this.registerDefaultState(this.stateDefinition.any().setValue(this.getAgeProperty(), 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(this.getAgeProperty(), 0).setValue(CAN_SPREAD, true));
     }
 
     @Override
@@ -110,10 +112,21 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     // Increase age, kill host if matured (maybe replace dead_bush with smth smaller)
     private void ageUp(BlockState state, ServerLevel world, BlockPos pos) {
         int newAge = this.getAge(state) + 1;
-        world.setBlock(pos, state.setValue(AGE, newAge), 3);
-        if (newAge == this.getMaxAge() && world.random.nextInt(3) == 0) {
-            StrangleFernBlockEntity sfbe = (StrangleFernBlockEntity) world.getBlockEntity(pos);
-            if (sfbe != null) sfbe.setInfestedState(Blocks.DEAD_BUSH.defaultBlockState());
+
+        if (newAge == this.getMaxAge()) {
+            if (world.random.nextInt(5) == 0) {
+                StrangleFernBlockEntity sfbe = (StrangleFernBlockEntity) world.getBlockEntity(pos);
+                if (sfbe != null) sfbe.setInfestedState(Blocks.DEAD_BUSH.defaultBlockState());
+            }
+            if (state.getValue(CAN_SPREAD)) {
+                if (world.random.nextInt(3) == 0) {
+                    world.setBlock(pos, state.setValue(AGE, newAge), 3);
+                } else {
+                    world.setBlock(pos, state.setValue(CAN_SPREAD, false), 3);
+                }
+            }
+        } else {
+            world.setBlock(pos, state.setValue(AGE, newAge), 3);
         }
     }
 
@@ -123,7 +136,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
                 && isMature(state)
                 && entity instanceof LivingEntity livingEntity) {
             livingEntity.addEffect(ModEffects.NATURAL_SPORES.get());
-            level.setBlock(pos, state.setValue(AGE, this.getMaxAge() - 1), 3);
+            level.setBlock(pos, state.setValue(AGE, this.getMaxAge() - 1).setValue(CAN_SPREAD, false), 3);
         }
     }
 
@@ -139,7 +152,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(AGE);
+        builder.add(AGE,CAN_SPREAD);
     }
 
     @Override
@@ -154,11 +167,11 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
 
     @Override
     public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState state) {
-        return (double)random.nextFloat() < 0.4;
+        return true;
     }
 
     @Override
     public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state) {
-        ageUp(state,world,pos);
+        world.setBlock(pos, state.setValue(CAN_SPREAD, true).setValue(AGE, this.getAge(state) + 1), 3);
     }
 }

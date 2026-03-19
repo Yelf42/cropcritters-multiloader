@@ -35,15 +35,12 @@ import java.util.Map;
 
 public class MazewoodBlock extends Block {
     public static final MapCodec<MazewoodBlock> CODEC = simpleCodec(MazewoodBlock::new);
-    public static final BooleanProperty UP;
-    public static final EnumProperty<MazewoodShape> EAST_WALL_SHAPE;
-    public static final EnumProperty<MazewoodShape> NORTH_WALL_SHAPE;
-    public static final EnumProperty<MazewoodShape> SOUTH_WALL_SHAPE;
-    public static final EnumProperty<MazewoodShape> WEST_WALL_SHAPE;
-    public static final Map<Direction, EnumProperty<MazewoodShape>> WALL_SHAPE_PROPERTIES_BY_DIRECTION;
+    public static final BooleanProperty EAST_WALL_SHAPE;
+    public static final BooleanProperty NORTH_WALL_SHAPE;
+    public static final BooleanProperty SOUTH_WALL_SHAPE;
+    public static final BooleanProperty WEST_WALL_SHAPE;
     private final Map<BlockState, VoxelShape> outlineShapeFunction;
     private final Map<BlockState, VoxelShape> collisionShapeFunction;
-    private static final Map<Direction, VoxelShape> WALL_SHAPES_FOR_TALL_TEST_BY_DIRECTION;
 
     public MapCodec<MazewoodBlock> codec() {
         return CODEC;
@@ -51,44 +48,38 @@ public class MazewoodBlock extends Block {
 
     public MazewoodBlock(Properties settings) {
         super(settings);
-        this.registerDefaultState((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)((BlockState)this.stateDefinition.any()).setValue(UP, true)).setValue(NORTH_WALL_SHAPE, MazewoodShape.NONE)).setValue(EAST_WALL_SHAPE, MazewoodShape.NONE)).setValue(SOUTH_WALL_SHAPE, MazewoodShape.NONE)).setValue(WEST_WALL_SHAPE, MazewoodShape.NONE)));
+        this.registerDefaultState(this.stateDefinition.any().setValue(NORTH_WALL_SHAPE, false).setValue(EAST_WALL_SHAPE, false).setValue(SOUTH_WALL_SHAPE, false).setValue(WEST_WALL_SHAPE, false));
         this.outlineShapeFunction = this.createShapeFunction(16.0F);
         this.collisionShapeFunction = this.createShapeFunction(24.0F);
     }
 
-    // TODO
     private Map<BlockState, VoxelShape> createShapeFunction(float tallHeight) {
-        VoxelShape voxelShape = ModBlocks.column((double)8.0F, (double)0.0F, (double)tallHeight);
+        VoxelShape voxelShape = ModBlocks.column(8.0F, 0.0F, tallHeight);
 
         Map<Direction, VoxelShape> map = new EnumMap<>(Direction.class);
-        VoxelShape northShape = ModBlocks.boxZ((double)8.0F, (double)0.0F, (double)tallHeight, (double)0.0F, (double)11.0F);
-        map.put(Direction.NORTH, northShape);
-        map.put(Direction.SOUTH, northShape); // Same as north, opposite side
-        map.put(Direction.EAST, Block.box(5.0D, 0.0D, 0.0D, 11.0D, tallHeight, 16.0D)); // Rotated 90°
-        map.put(Direction.WEST, Block.box(5.0D, 0.0D, 0.0D, 11.0D, tallHeight, 16.0D)); // Same as east
+        map.put(Direction.NORTH, Block.box(4.0D, 0.0D, 0.0D, 12.0D, tallHeight, 4.0D));
+        map.put(Direction.SOUTH, Block.box(4.0D, 0.0D, 12.0D, 12.0D, tallHeight, 16.0D));
+        map.put(Direction.EAST, Block.box(13.0D, 0.0D, 5.0D, 16.0D, tallHeight, 12.0D)); // Rotated 90°
+        map.put(Direction.WEST, Block.box(0.0D, 0.0D, 5.0D, 4.0D, tallHeight, 12.0D)); // Same as east
 
         return this.getShapeForEachState((state) -> {
-            VoxelShape voxelShape2 = state.getValue(UP) ? voxelShape : Shapes.empty();
+            VoxelShape voxelShape2 = voxelShape;
 
-            for(Map.Entry<Direction, EnumProperty<MazewoodShape>> entry : WALL_SHAPE_PROPERTIES_BY_DIRECTION.entrySet()) {
-                VoxelShape shapeToAdd = switch (state.getValue(entry.getValue())) {
-                    case NONE -> Shapes.empty();
-                    case TALL -> map.get(entry.getKey());
-                };
-
-                voxelShape2 = Shapes.or(voxelShape2, shapeToAdd);
-            }
+            if (state.getValue(NORTH_WALL_SHAPE)) voxelShape2 = Shapes.or(voxelShape2, map.get(Direction.NORTH));
+            if (state.getValue(EAST_WALL_SHAPE)) voxelShape2 = Shapes.or(voxelShape2, map.get(Direction.EAST));
+            if (state.getValue(SOUTH_WALL_SHAPE)) voxelShape2 = Shapes.or(voxelShape2, map.get(Direction.SOUTH));
+            if (state.getValue(WEST_WALL_SHAPE)) voxelShape2 = Shapes.or(voxelShape2, map.get(Direction.WEST));
 
             return voxelShape2;
         });
     }
 
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return (VoxelShape)this.outlineShapeFunction.get(state);
+        return this.outlineShapeFunction.get(state);
     }
 
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return (VoxelShape)this.collisionShapeFunction.get(state);
+        return this.collisionShapeFunction.get(state);
     }
 
     protected boolean isPathfindable(BlockState state, PathComputationType type) {
@@ -116,7 +107,7 @@ public class MazewoodBlock extends Block {
         boolean bl2 = this.shouldConnectTo(blockState2, blockState2.isFaceSturdy(worldView, blockPos3, Direction.WEST), Direction.WEST);
         boolean bl3 = this.shouldConnectTo(blockState3, blockState3.isFaceSturdy(worldView, blockPos4, Direction.NORTH), Direction.NORTH);
         boolean bl4 = this.shouldConnectTo(blockState4, blockState4.isFaceSturdy(worldView, blockPos5, Direction.EAST), Direction.EAST);
-        BlockState blockState6 = (BlockState)this.defaultBlockState();
+        BlockState blockState6 = this.defaultBlockState();
         return this.getStateWith(worldView, blockState6, blockPos6, blockState5, bl, bl2, bl3, bl4);
     }
 
@@ -147,8 +138,8 @@ public class MazewoodBlock extends Block {
         return floor.is(BlockTags.DIRT) || floor.is(Blocks.FARMLAND) || (floor.getBlock() instanceof MazewoodBlock);
     }
 
-    private static boolean isConnected(BlockState state, Property<MazewoodShape> property) {
-        return state.getValue(property) != MazewoodShape.NONE;
+    private static boolean isConnected(BlockState state, BooleanProperty property) {
+        return state.getValue(property);
     }
 
     private BlockState getStateAt(LevelReader world, BlockState state, BlockPos pos, BlockState aboveState) {
@@ -172,36 +163,27 @@ public class MazewoodBlock extends Block {
 
     private BlockState getStateWith(LevelReader world, BlockState state, BlockPos pos, BlockState aboveState, boolean north, boolean east, boolean south, boolean west) {
         VoxelShape voxelShape = aboveState.getCollisionShape(world, pos).getFaceShape(Direction.DOWN);
-        BlockState blockState = this.getStateWith(state, north, east, south, west, voxelShape);
-        return (BlockState)blockState.setValue(UP, true);
+        return this.getStateWith(state, north, east, south, west, voxelShape);
     }
 
     private BlockState getStateWith(BlockState state, boolean north, boolean east, boolean south, boolean west, VoxelShape aboveShape) {
-        return (BlockState)((BlockState)((BlockState)((BlockState)state.setValue(NORTH_WALL_SHAPE, this.getMazewoodShape(north, aboveShape, (VoxelShape)WALL_SHAPES_FOR_TALL_TEST_BY_DIRECTION.get(Direction.NORTH)))).setValue(EAST_WALL_SHAPE, this.getMazewoodShape(east, aboveShape, (VoxelShape)WALL_SHAPES_FOR_TALL_TEST_BY_DIRECTION.get(Direction.EAST)))).setValue(SOUTH_WALL_SHAPE, this.getMazewoodShape(south, aboveShape, (VoxelShape)WALL_SHAPES_FOR_TALL_TEST_BY_DIRECTION.get(Direction.SOUTH)))).setValue(WEST_WALL_SHAPE, this.getMazewoodShape(west, aboveShape, (VoxelShape)WALL_SHAPES_FOR_TALL_TEST_BY_DIRECTION.get(Direction.WEST)));
-    }
-
-    private MazewoodShape getMazewoodShape(boolean connected, VoxelShape aboveShape, VoxelShape tallShape) {
-        if (connected) {
-            return MazewoodShape.TALL;
-        } else {
-            return MazewoodShape.NONE;
-        }
+        return state.setValue(NORTH_WALL_SHAPE, north).setValue(EAST_WALL_SHAPE, east).setValue(SOUTH_WALL_SHAPE, south).setValue(WEST_WALL_SHAPE, west);
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(new Property[]{UP, NORTH_WALL_SHAPE, EAST_WALL_SHAPE, WEST_WALL_SHAPE, SOUTH_WALL_SHAPE});
+        builder.add(NORTH_WALL_SHAPE, EAST_WALL_SHAPE, WEST_WALL_SHAPE, SOUTH_WALL_SHAPE);
     }
 
     protected BlockState rotate(BlockState state, Rotation rotation) {
         switch (rotation) {
             case CLOCKWISE_180 -> {
-                return (BlockState)((BlockState)((BlockState)((BlockState)state.setValue(NORTH_WALL_SHAPE, (MazewoodShape)state.getValue(SOUTH_WALL_SHAPE))).setValue(EAST_WALL_SHAPE, (MazewoodShape)state.getValue(WEST_WALL_SHAPE))).setValue(SOUTH_WALL_SHAPE, (MazewoodShape)state.getValue(NORTH_WALL_SHAPE))).setValue(WEST_WALL_SHAPE, (MazewoodShape)state.getValue(EAST_WALL_SHAPE));
+                return state.setValue(NORTH_WALL_SHAPE, state.getValue(SOUTH_WALL_SHAPE)).setValue(EAST_WALL_SHAPE, state.getValue(WEST_WALL_SHAPE)).setValue(SOUTH_WALL_SHAPE, state.getValue(NORTH_WALL_SHAPE)).setValue(WEST_WALL_SHAPE, state.getValue(EAST_WALL_SHAPE));
             }
             case COUNTERCLOCKWISE_90 -> {
-                return (BlockState)((BlockState)((BlockState)((BlockState)state.setValue(NORTH_WALL_SHAPE, (MazewoodShape)state.getValue(EAST_WALL_SHAPE))).setValue(EAST_WALL_SHAPE, (MazewoodShape)state.getValue(SOUTH_WALL_SHAPE))).setValue(SOUTH_WALL_SHAPE, (MazewoodShape)state.getValue(WEST_WALL_SHAPE))).setValue(WEST_WALL_SHAPE, (MazewoodShape)state.getValue(NORTH_WALL_SHAPE));
+                return state.setValue(NORTH_WALL_SHAPE, state.getValue(EAST_WALL_SHAPE)).setValue(EAST_WALL_SHAPE, state.getValue(SOUTH_WALL_SHAPE)).setValue(SOUTH_WALL_SHAPE, state.getValue(WEST_WALL_SHAPE)).setValue(WEST_WALL_SHAPE, state.getValue(NORTH_WALL_SHAPE));
             }
             case CLOCKWISE_90 -> {
-                return (BlockState)((BlockState)((BlockState)((BlockState)state.setValue(NORTH_WALL_SHAPE, (MazewoodShape)state.getValue(WEST_WALL_SHAPE))).setValue(EAST_WALL_SHAPE, (MazewoodShape)state.getValue(NORTH_WALL_SHAPE))).setValue(SOUTH_WALL_SHAPE, (MazewoodShape)state.getValue(EAST_WALL_SHAPE))).setValue(WEST_WALL_SHAPE, (MazewoodShape)state.getValue(SOUTH_WALL_SHAPE));
+                return state.setValue(NORTH_WALL_SHAPE, state.getValue(WEST_WALL_SHAPE)).setValue(EAST_WALL_SHAPE, state.getValue(NORTH_WALL_SHAPE)).setValue(SOUTH_WALL_SHAPE, state.getValue(EAST_WALL_SHAPE)).setValue(WEST_WALL_SHAPE, state.getValue(SOUTH_WALL_SHAPE));
             }
             default -> {
                 return state;
@@ -212,10 +194,10 @@ public class MazewoodBlock extends Block {
     protected BlockState mirror(BlockState state, Mirror mirror) {
         switch (mirror) {
             case LEFT_RIGHT -> {
-                return (BlockState)((BlockState)state.setValue(NORTH_WALL_SHAPE, (MazewoodShape)state.getValue(SOUTH_WALL_SHAPE))).setValue(SOUTH_WALL_SHAPE, (MazewoodShape)state.getValue(NORTH_WALL_SHAPE));
+                return state.setValue(NORTH_WALL_SHAPE, state.getValue(SOUTH_WALL_SHAPE)).setValue(SOUTH_WALL_SHAPE, state.getValue(NORTH_WALL_SHAPE));
             }
             case FRONT_BACK -> {
-                return (BlockState)((BlockState)state.setValue(EAST_WALL_SHAPE, (MazewoodShape)state.getValue(WEST_WALL_SHAPE))).setValue(WEST_WALL_SHAPE, (MazewoodShape)state.getValue(EAST_WALL_SHAPE));
+                return state.setValue(EAST_WALL_SHAPE, state.getValue(WEST_WALL_SHAPE)).setValue(WEST_WALL_SHAPE, state.getValue(EAST_WALL_SHAPE));
             }
             default -> {
                 return super.mirror(state, mirror);
@@ -224,18 +206,9 @@ public class MazewoodBlock extends Block {
     }
 
     static {
-        UP = BlockStateProperties.UP;
-        EAST_WALL_SHAPE = EnumProperty.create("east", MazewoodShape.class);
-        NORTH_WALL_SHAPE = EnumProperty.create("north", MazewoodShape.class);
-        SOUTH_WALL_SHAPE = EnumProperty.create("south", MazewoodShape.class);
-        WEST_WALL_SHAPE = EnumProperty.create("west", MazewoodShape.class);
-        WALL_SHAPE_PROPERTIES_BY_DIRECTION = ImmutableMap.copyOf(Maps.newEnumMap(Map.of(Direction.NORTH, NORTH_WALL_SHAPE, Direction.EAST, EAST_WALL_SHAPE, Direction.SOUTH, SOUTH_WALL_SHAPE, Direction.WEST, WEST_WALL_SHAPE)));
-        // TODO
-        WALL_SHAPES_FOR_TALL_TEST_BY_DIRECTION = Map.of(
-                Direction.NORTH, Block.box(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 9.0D),
-                Direction.SOUTH, Block.box(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 9.0D),
-                Direction.EAST, Block.box(0.0D, 0.0D, 6.0D, 9.0D, 16.0D, 10.0D),
-                Direction.WEST, Block.box(0.0D, 0.0D, 6.0D, 9.0D, 16.0D, 10.0D)
-        );
+        EAST_WALL_SHAPE = BooleanProperty.create("east");
+        NORTH_WALL_SHAPE = BooleanProperty.create("north");
+        SOUTH_WALL_SHAPE = BooleanProperty.create("south");
+        WEST_WALL_SHAPE = BooleanProperty.create("west");
     }
 }

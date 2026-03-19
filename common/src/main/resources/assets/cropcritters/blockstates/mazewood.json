@@ -3,9 +3,6 @@
     {
       "apply": {
         "model": "cropcritters:block/mazewood_post"
-      },
-      "when": {
-        "up": "true"
       }
     },
     {
@@ -13,7 +10,7 @@
         "model": "cropcritters:block/mazewood_side"
       },
       "when": {
-        "north": "tall"
+        "north": true
       }
     },
     {
@@ -22,7 +19,7 @@
         "y": 90
       },
       "when": {
-        "east": "tall"
+        "east": true
       }
     },
     {
@@ -31,7 +28,7 @@
         "y": 180
       },
       "when": {
-        "south": "tall"
+        "south": true
       }
     },
     {
@@ -40,7 +37,7 @@
         "y": 270
       },
       "when": {
-        "west": "tall"
+        "west": true
       }
     }
   ]

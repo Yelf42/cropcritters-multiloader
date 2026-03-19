@@ -25,9 +25,7 @@ public class WheatCritterEntity extends AbstractCropCritterEntity {
 
     @Override
     protected Predicate<BlockState> getTargetBlockFilter() {
-        return (blockState -> (blockState.is(CropCritters.WEEDS) && !blockState.is(ModBlocks.STRANGLE_FERN))
-                || (blockState.is(ModBlocks.STRANGLE_FERN) && blockState.getOptionalValue(StrangleFern.AGE).orElse(0) > 1)
-                || blockState.is(Blocks.DEAD_BUSH));
+        return (blockState -> (blockState.is(CropCritters.WEEDS) && !blockState.is(ModBlocks.STRANGLE_FERN)) || blockState.is(Blocks.DEAD_BUSH));
     }
 
     @Override

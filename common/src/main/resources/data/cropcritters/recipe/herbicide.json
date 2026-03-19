@@ -6,21 +6,33 @@
       { "item": "cropcritters:crimson_thornweed" },
       { "item": "cropcritters:waftgrass" },
       { "item": "cropcritters:strangle_fern" },
-      { "item": "cropcritters:liverwort" }
+      { "item": "cropcritters:liverwort" },
+      { "item": "cropcritters:bone_trap" },
+      { "item": "cropcritters:withering_spiteweed"},
+      { "item": "cropcritters:popper_pod" },
+      { "item": "cropcritters:mazewood_sapling" }
     ],
     [
       { "item": "cropcritters:crawl_thistle" },
       { "item": "cropcritters:crimson_thornweed" },
       { "item": "cropcritters:waftgrass" },
       { "item": "cropcritters:strangle_fern" },
-      { "item": "cropcritters:liverwort" }
+      { "item": "cropcritters:liverwort" },
+      { "item": "cropcritters:bone_trap" },
+      { "item": "cropcritters:withering_spiteweed"},
+      { "item": "cropcritters:popper_pod" },
+      { "item": "cropcritters:mazewood_sapling" }
     ],
     [
       { "item": "cropcritters:crawl_thistle" },
       { "item": "cropcritters:crimson_thornweed" },
       { "item": "cropcritters:waftgrass" },
       { "item": "cropcritters:strangle_fern" },
-      { "item": "cropcritters:liverwort" }
+      { "item": "cropcritters:liverwort" },
+      { "item": "cropcritters:bone_trap" },
+      { "item": "cropcritters:withering_spiteweed"},
+      { "item": "cropcritters:popper_pod" },
+      { "item": "cropcritters:mazewood_sapling" }
     ],
     { "item": "minecraft:redstone" },
     { "item": "minecraft:quartz" },

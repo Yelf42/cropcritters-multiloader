@@ -20,7 +20,6 @@ public class CropCritters {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
     public static final String[] INT_TO_ROMAN = {" ", " I", " II", " III", " IV", " V", " VI", " VII", " VIII", " IX", " X"};
 
-
     // TAGS
     public static final TagKey<EntityType<?>> WEED_IMMUNE = TagKey.create(Registries.ENTITY_TYPE, identifier( "weed_immune"));
     public static final TagKey<EntityType<?>> CROP_CRITTERS = TagKey.create(Registries.ENTITY_TYPE, identifier( "crop_critters"));
