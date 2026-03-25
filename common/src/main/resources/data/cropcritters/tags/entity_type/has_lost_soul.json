@@ -2,7 +2,7 @@
   "replace": false,
   "values": [
     "#cropcritters:crop_critters",
-    "#minecraft:undead",
+    "#cropcritters:undead",
     "minecraft:allay",
     "minecraft:vex",
     "minecraft:snow_golem",

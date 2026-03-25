@@ -4,15 +4,11 @@ import com.yelf42.cropcritters.registry.ModComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import com.yelf42.cropcritters.entity.SeedBallProjectileEntity;
@@ -20,14 +16,9 @@ import com.yelf42.cropcritters.registry.ModSounds;
 
 import java.util.List;
 
-public class SeedBallItem extends Item implements ProjectileItem {
+public class SeedBallItem extends Item {
     public SeedBallItem(Properties settings) {
         super(settings);
-    }
-
-    @Override
-    public Projectile asProjectile(Level world, Position pos, ItemStack stack, Direction direction) {
-        return new SeedBallProjectileEntity(pos.x(), pos.y(), pos.z(), world, stack);
     }
 
     @Override
@@ -40,22 +31,22 @@ public class SeedBallItem extends Item implements ProjectileItem {
             serverWorld.addFreshEntity(seedBall);
         }
 
-        itemStack.consume(1, user);
+        itemStack.shrink(1);
         return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide());
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        ModComponents.PoisonousComponent poisonous = stack.get(ModComponents.POISONOUS_SEED_BALL);
+    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, level, tooltipComponents, tooltipFlag);
+        ModComponents.PoisonousComponent poisonous = ModComponents.getPoisonous(stack);
         if (poisonous != null) {
-            poisonous.addToTooltip(context, tooltipComponents::add, tooltipFlag);
+            poisonous.addToTooltip(tooltipComponents::add, tooltipFlag);
         }
 
         // Get and render seed types component
-        ModComponents.SeedTypesComponent seedTypes = stack.get(ModComponents.SEED_TYPES);
+        ModComponents.SeedTypesComponent seedTypes = ModComponents.getSeedTypes(stack);
         if (seedTypes != null) {
-            seedTypes.addToTooltip(context, tooltipComponents::add, tooltipFlag);
+            seedTypes.addToTooltip(tooltipComponents::add, tooltipFlag);
         }
     }
 }

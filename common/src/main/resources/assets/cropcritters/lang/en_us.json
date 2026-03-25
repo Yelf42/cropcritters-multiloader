@@ -115,6 +115,9 @@
   "sounds.cropcritters.throw_seed_ball": "Seed Ball Thrown",
   "sounds.cropcritters.wither_rose_convert": "Wither Rose Conversion",
   "sounds.cropcritters.revive_coral": "Revived Coral",
+  "sounds.cropcritters.soul_pot_insert": "Soul Pot Insert",
+  "sounds.cropcritters.soul_pot_fail_insert": "Failed Soul Pot Insert",
+
 
   "sounds.cropcritters.entity_critter_ambient": "Crop Critter",
   "sounds.cropcritters.entity_critter_evil_ambient": "Evil Crop Critter",

@@ -1,6 +1,5 @@
 package com.yelf42.cropcritters.blocks;
 
-import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModBlockEntities;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.world.level.LevelAccessor;
@@ -25,10 +24,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import org.jetbrains.annotations.Nullable;
 
 public class SoulRoseBlock extends BaseEntityBlock {
-    public static final MapCodec<SoulRoseBlock> CODEC = simpleCodec(SoulRoseBlock::new);
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
     public static final IntegerProperty LEVEL = IntegerProperty.create("level", 0, 3);
     public static final EnumProperty<SoulRoseType> TYPE = EnumProperty.create("type", SoulRoseType.class);
@@ -44,17 +41,12 @@ public class SoulRoseBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         if (state.getOptionalValue(HALF).orElse(DoubleBlockHalf.UPPER) == DoubleBlockHalf.LOWER) {
             return new SoulRoseBlockEntity(pos, state);
         }
@@ -62,12 +54,12 @@ public class SoulRoseBlock extends BaseEntityBlock {
     }
 
     @Override
-    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, ModBlockEntities.SOUL_ROSE, world.isClientSide() ? SoulRoseBlockEntity::clientTick : SoulRoseBlockEntity::serverTick);
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return switch(state.getOptionalValue(LEVEL).orElse(0)) {
             case 0 -> SMALL_0_SHAPE;
             case 1 -> SMALL_1_SHAPE;
@@ -81,14 +73,14 @@ public class SoulRoseBlock extends BaseEntityBlock {
     }
 
     @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockPos blockPos = ctx.getClickedPos();
         Level world = ctx.getLevel();
         return blockPos.getY() < world.getMaxBuildHeight() - 1 && world.getBlockState(blockPos.above()).canBeReplaced(ctx) ? super.getStateForPlacement(ctx) : null;
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
         if (isDoubleTallAtLevel(state.getValue(LEVEL))) {
             DoubleBlockHalf doubleBlockHalf = state.getValue(HALF);
             if (facing.getAxis() != Direction.Axis.Y || doubleBlockHalf == DoubleBlockHalf.LOWER != (facing == Direction.UP) || facingState.is(this) && facingState.getValue(HALF) != doubleBlockHalf) {
@@ -102,7 +94,7 @@ public class SoulRoseBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockState below = world.getBlockState(pos.below());
         if (state.getValue(HALF) != DoubleBlockHalf.UPPER) {
             return below.is(Blocks.SOUL_SOIL) || below.is(Blocks.SOUL_SAND);

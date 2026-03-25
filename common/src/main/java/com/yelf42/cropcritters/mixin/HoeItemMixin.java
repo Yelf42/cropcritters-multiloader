@@ -1,6 +1,7 @@
 package com.yelf42.cropcritters.mixin;
 
 import com.yelf42.cropcritters.events.ModEventHandlers;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoeItem;
@@ -21,13 +22,14 @@ public abstract class HoeItemMixin {
         Level world = context.getLevel();
         Player player = context.getPlayer();
         if (player == null) return;
+        if (player instanceof ServerPlayer serverPlayer) {
+            BlockPos pos = context.getClickedPos();
+            BlockState state = world.getBlockState(pos);
 
-        BlockPos pos = context.getClickedPos();
-        BlockState state = world.getBlockState(pos);
-
-        if (ModEventHandlers.handleHoeUse(world, pos, state)) {
-            context.getItemInHand().hurtAndBreak(1, player, player.getEquipmentSlotForItem(context.getItemInHand()));
-            cir.setReturnValue(InteractionResult.SUCCESS);
+            if (ModEventHandlers.handleHoeUse(world, pos, state)) {
+                context.getItemInHand().hurt(1, context.getLevel().getRandom(), serverPlayer);
+                cir.setReturnValue(InteractionResult.SUCCESS);
+            }
         }
     }
 }

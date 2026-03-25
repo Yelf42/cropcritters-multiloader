@@ -1,6 +1,5 @@
 package com.yelf42.cropcritters.blocks;
 
-import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
@@ -25,11 +24,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModEffects;
-import org.jetbrains.annotations.Nullable;
 
 public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
 
-    public static final MapCodec<StrangleFern> CODEC = simpleCodec(StrangleFern::new);
     public static final int MAX_AGE = 3;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
     public static final BooleanProperty CAN_SPREAD = BooleanProperty.create("can_spread");
@@ -40,17 +37,12 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
-    public MapCodec<? extends StrangleFern> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return ModBlocks.column(12, -1, 5 * Math.min(this.getAge(state), 2) + 4);
     }
 
@@ -79,18 +71,18 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     }
 
     @Override
-    protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockState floor = world.getBlockState(pos.below());
         return floor.is(BlockTags.DIRT);
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
         return !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, facing, facingState, world, pos, facingPos);
     }
 
     @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         if (canInfest(ctx.getLevel().getBlockState(ctx.getClickedPos()))) {
             return super.getStateForPlacement(ctx);
         }
@@ -98,12 +90,12 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return !isMature(state);
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         if (!isMature(state) && random.nextInt(2) == 0) {
             ageUp(state,world,pos);
         }
@@ -131,7 +123,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (level instanceof ServerLevel
                 && isMature(state)
                 && entity instanceof LivingEntity livingEntity) {
@@ -141,10 +133,10 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     }
 
     @Override
-    protected void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
         StrangleFernBlockEntity sfbe = (StrangleFernBlockEntity) world.getBlockEntity(pos);
         if (sfbe != null && !oldState.is(this)) {
-            if (!canInfest(oldState)) oldState = Blocks.SHORT_GRASS.defaultBlockState();
+            if (!canInfest(oldState)) oldState = Blocks.GRASS.defaultBlockState();
             sfbe.setInfestedState(oldState);
         }
         super.onPlace(state, world, pos, oldState, notify);
@@ -156,12 +148,12 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new StrangleFernBlockEntity(pos, state);
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state, boolean b) {
         return !isMature(state);
     }
 

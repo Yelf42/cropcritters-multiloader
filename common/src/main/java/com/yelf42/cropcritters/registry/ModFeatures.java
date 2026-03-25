@@ -21,21 +21,21 @@ public class ModFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> PUFFBOMB_BLOB_CONFIGURED_FEATURE =
             ResourceKey.create(
                     Registries.CONFIGURED_FEATURE,
-                    ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "puffbomb_blob")
+                    CropCritters.identifier( "puffbomb_blob")
             );
 
     public static final Feature<CountConfiguration> LIVERWORT_FEATURE = new LiverwortFeature(CountConfiguration.CODEC);
     public static final ResourceKey<ConfiguredFeature<?, ?>> LIVERWORT_CONFIGURED_FEATURE =
             ResourceKey.create(
                     Registries.CONFIGURED_FEATURE,
-                    ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "liverwort_patch")
+                    CropCritters.identifier( "liverwort_patch")
             );
 
     public static final Feature<NoneFeatureConfiguration> SOUL_ROSE_HINT_FEATURE = new SoulRoseHintFeature(NoneFeatureConfiguration.CODEC);
     public static final ResourceKey<ConfiguredFeature<?, ?>> SOUL_ROSE_HINT_CONFIGURED_FEATURE =
             ResourceKey.create(
                     Registries.CONFIGURED_FEATURE,
-                    ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "soul_rose_hint")
+                    CropCritters.identifier( "soul_rose_hint")
             );
 
     /// BINDER

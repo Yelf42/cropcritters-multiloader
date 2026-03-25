@@ -3,36 +3,34 @@ package com.yelf42.cropcritters.entity;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.Path;
-import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -42,14 +40,13 @@ import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.config.ConfigManager;
@@ -84,7 +81,6 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     protected boolean canWork() {return this.isTrusting();}
     public boolean isShaking() {return false;}
 
-    @Nullable
     BlockPos targetPos;
     TargetWorkGoal targetWorkGoal;
 
@@ -92,7 +88,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
 
     public AbstractCropCritterEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
-        setPathfindingMalus(PathType.DAMAGE_OTHER, 0.0f);
+        setPathfindingMalus(BlockPathTypes.DAMAGE_OTHER, 0.0f);
     }
 
     public void setTrusting(boolean trusting) {
@@ -126,7 +122,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
 
 
     @Override
-    public @Nullable AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {return null;}
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {return null;}
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
@@ -143,7 +139,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     }
 
     protected void registerGoals() {
-        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, (stack) -> stack.is(ModItems.LOST_SOUL), true);
+        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, Ingredient.of(ModItems.LOST_SOUL), true);
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, temptGoal);
         this.goalSelector.addGoal(4, new AvoidEntityGoal<>(this, Animal.class, 10.0F, 1.2, 1.4, FARM_ANIMALS_FILTER::test));
@@ -155,9 +151,10 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
         this.goalSelector.addGoal(20, new RandomLookAroundGoal(this));
     }
 
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(TRUSTING, false);
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(TRUSTING, false);
     }
 
     public static net.minecraft.world.entity.ai.attributes.AttributeSupplier.Builder createAttributes() {
@@ -175,7 +172,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
             playSound(ModSounds.ENTITY_CRITTER_AMBIENT, 1F, 0.6F);
         } else {
             // Smol
-            makeSound(ModSounds.ENTITY_CRITTER_AMBIENT);
+            playSound(ModSounds.ENTITY_CRITTER_AMBIENT);
         }
     }
 
@@ -187,12 +184,12 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
             playSound(ModSounds.ENTITY_CRITTER_HURT, 1F, 0.6F);
         } else {
             // Smol
-            makeSound(ModSounds.ENTITY_CRITTER_HURT);
+            playSound(ModSounds.ENTITY_CRITTER_HURT);
         }
     }
 
     @Override
-    protected @Nullable SoundEvent getDeathSound() {
+    protected SoundEvent getDeathSound() {
         if (this.getBoundingBox().getXsize() > 0.51) {
             // Big
             playSound(ModSounds.ENTITY_CRITTER_LARGE, 1F, 1.1F);
@@ -256,27 +253,27 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
             return false;
         } else {
             if (this.targetWorkGoal != null) this.targetWorkGoal.cancel();
-            if (source.getEntity() instanceof Player && source.getWeaponItem() != null && source.getWeaponItem().is(ItemTags.HOES)) amount *= 3;
+            if (source.getEntity() instanceof Player && source.getDirectEntity() instanceof LivingEntity attacker && attacker.getMainHandItem().is(ItemTags.HOES)) amount *= 3;
             return super.hurt(source, amount);
         }
     }
 
     @Override
-    protected void dropAllDeathLoot(ServerLevel world, DamageSource damageSource) {
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean recentlyHit) {
         Tuple<Item, Integer> loot = getLoot();
         int quantity = 1;
         if (loot.getB() > 1 && damageSource.getEntity() instanceof Player) {
-            boolean withHoe = damageSource.getWeaponItem() != null && damageSource.getWeaponItem().is(ItemTags.HOES);
-            if (withHoe) quantity = world.random.nextInt(loot.getB()) + 1;
+            boolean withHoe = damageSource.getDirectEntity() instanceof LivingEntity attacker && attacker.getMainHandItem().is(ItemTags.HOES);
+            if (withHoe) quantity = this.random.nextInt(loot.getB()) + 1;
         }
         ItemStack toDrop = new ItemStack(loot.getA(), quantity);
         this.spawnAtLocation(toDrop);
-        this.dropExperience(damageSource.getEntity());
+        this.dropExperience();
     }
 
     @Override
-    protected int getBaseExperienceReward() {
-        return super.getBaseExperienceReward() + (this.isTrusting() ? 3 : 0);
+    public int getExperienceReward() {
+        return super.getExperienceReward() + (this.isTrusting() ? 3 : 0);
     }
 
     @Override
@@ -456,11 +453,10 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
 
 
     static class TemptGoal extends net.minecraft.world.entity.ai.goal.TemptGoal {
-        @Nullable
         private Player player;
         private final AbstractCropCritterEntity critter;
 
-        public TemptGoal(AbstractCropCritterEntity critter, double speed, Predicate<ItemStack> foodPredicate, boolean canBeScared) {
+        public TemptGoal(AbstractCropCritterEntity critter, double speed, Ingredient foodPredicate, boolean canBeScared) {
             super(critter, speed, foodPredicate, canBeScared);
             this.critter = critter;
         }

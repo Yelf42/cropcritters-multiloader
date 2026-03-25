@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,7 @@ public record BlockArea(BlockPos position, int horizontalRange, int verticalRang
 
     public void getAllSections(Consumer<SectionPos> sectionConsumer) {
         BLOCK_AREA_SECTIONS.computeIfAbsent(this.asKey(), (BlockArea blockArea) -> {
-            ImmutableList.Builder<@NotNull SectionPos> builder = ImmutableList.builder();
+            ImmutableList.Builder<SectionPos> builder = ImmutableList.builder();
             getAllSections(this.position(), this.horizontalRange(), this.verticalRange(), this.shape(), builder::add);
             return builder.build();
         }).forEach(sectionConsumer);

@@ -507,5 +507,24 @@
         "volume": 0.9
       }
     ]
+  },
+  "soul_pot_insert": {
+    "subtitle" : "sounds.cropcritters.soul_pot_insert",
+    "sounds" : [
+      "cropcritters:insert1",
+      "cropcritters:insert2",
+      "cropcritters:insert3",
+      "cropcritters:insert4"
+    ]
+  },
+  "soul_pot_fail_insert": {
+    "subtitle" : "sounds.cropcritters.soul_pot_fail_insert",
+    "sounds" : [
+      "cropcritters:insert_fail1",
+      "cropcritters:insert_fail2",
+      "cropcritters:insert_fail3",
+      "cropcritters:insert_fail4",
+      "cropcritters:insert_fail5"
+    ]
   }
 }

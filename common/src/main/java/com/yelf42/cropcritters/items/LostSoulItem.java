@@ -21,6 +21,7 @@ import net.minecraft.core.BlockPos;
 import com.yelf42.cropcritters.config.CritterHelper;
 import com.yelf42.cropcritters.entity.AbstractCropCritterEntity;
 import com.yelf42.cropcritters.registry.ModSounds;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
@@ -47,7 +48,7 @@ public class LostSoulItem extends Item {
                 world.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
                 Slime slime = EntityType.SLIME.create(world);
                 slime.setSize(2, true);
-                slime.setPos(blockPos.getBottomCenter());
+                slime.setPos(Vec3.atBottomCenterOf(blockPos));
                 world.addFreshEntity(slime);
                 world.playSound(null, blockPos, ModSounds.SPAWN_SLIME, SoundSource.BLOCKS, 1F, 1F);
                 world.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 10, 0.5, 0.5, 0.5, 0F);
@@ -55,7 +56,7 @@ public class LostSoulItem extends Item {
             if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, blockPos, itemStack);
             }
-            itemStack.consume(1, playerEntity);
+            itemStack.shrink(1);
             return InteractionResult.SUCCESS;
         }
 
@@ -73,14 +74,14 @@ public class LostSoulItem extends Item {
                 toSpawnAt = blockPos.below();
             }
             world.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
-            critter.setPos(toSpawnAt.getBottomCenter());
+            critter.setPos(Vec3.atBottomCenterOf(toSpawnAt));
             world.addFreshEntity(critter);
             world.playSound(null, blockPos, ModSounds.SPAWN_CRITTER, SoundSource.BLOCKS, 1F, 1F);
             world.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 10, 0.5, 0.5, 0.5, 0F);
             if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, blockPos, itemStack);
             }
-            itemStack.consume(1, playerEntity);
+            itemStack.shrink(1);
         }
         return InteractionResult.SUCCESS;
     }

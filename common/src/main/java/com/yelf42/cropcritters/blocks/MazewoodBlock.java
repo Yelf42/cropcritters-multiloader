@@ -34,17 +34,12 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class MazewoodBlock extends Block {
-    public static final MapCodec<MazewoodBlock> CODEC = simpleCodec(MazewoodBlock::new);
     public static final BooleanProperty EAST_WALL_SHAPE;
     public static final BooleanProperty NORTH_WALL_SHAPE;
     public static final BooleanProperty SOUTH_WALL_SHAPE;
     public static final BooleanProperty WEST_WALL_SHAPE;
     private final Map<BlockState, VoxelShape> outlineShapeFunction;
     private final Map<BlockState, VoxelShape> collisionShapeFunction;
-
-    public MapCodec<MazewoodBlock> codec() {
-        return CODEC;
-    }
 
     public MazewoodBlock(Properties settings) {
         super(settings);
@@ -74,15 +69,16 @@ public class MazewoodBlock extends Block {
         });
     }
 
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return this.outlineShapeFunction.get(state);
     }
 
-    protected VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return this.collisionShapeFunction.get(state);
     }
 
-    protected boolean isPathfindable(BlockState state, PathComputationType type) {
+    @Override
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
         return false;
     }
 
@@ -111,7 +107,7 @@ public class MazewoodBlock extends Block {
         return this.getStateWith(worldView, blockState6, blockPos6, blockState5, bl, bl2, bl3, bl4);
     }
 
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
         if (!this.canSurvive(state, world, currentPos)) {
             if (world instanceof Level w) {
                 w.scheduleTick(currentPos, this, 1);
@@ -127,13 +123,13 @@ public class MazewoodBlock extends Block {
     }
 
     @Override
-    protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         world.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(state));
     }
 
     @Override
-    protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockState floor = world.getBlockState(pos.below());
         return floor.is(BlockTags.DIRT) || floor.is(Blocks.FARMLAND) || (floor.getBlock() instanceof MazewoodBlock);
     }
@@ -174,7 +170,7 @@ public class MazewoodBlock extends Block {
         builder.add(NORTH_WALL_SHAPE, EAST_WALL_SHAPE, WEST_WALL_SHAPE, SOUTH_WALL_SHAPE);
     }
 
-    protected BlockState rotate(BlockState state, Rotation rotation) {
+    public BlockState rotate(BlockState state, Rotation rotation) {
         switch (rotation) {
             case CLOCKWISE_180 -> {
                 return state.setValue(NORTH_WALL_SHAPE, state.getValue(SOUTH_WALL_SHAPE)).setValue(EAST_WALL_SHAPE, state.getValue(WEST_WALL_SHAPE)).setValue(SOUTH_WALL_SHAPE, state.getValue(NORTH_WALL_SHAPE)).setValue(WEST_WALL_SHAPE, state.getValue(EAST_WALL_SHAPE));
@@ -191,7 +187,7 @@ public class MazewoodBlock extends Block {
         }
     }
 
-    protected BlockState mirror(BlockState state, Mirror mirror) {
+    public BlockState mirror(BlockState state, Mirror mirror) {
         switch (mirror) {
             case LEFT_RIGHT -> {
                 return state.setValue(NORTH_WALL_SHAPE, state.getValue(SOUTH_WALL_SHAPE)).setValue(SOUTH_WALL_SHAPE, state.getValue(NORTH_WALL_SHAPE));

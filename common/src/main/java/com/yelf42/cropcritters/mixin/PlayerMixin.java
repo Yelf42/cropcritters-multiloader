@@ -40,16 +40,12 @@ public abstract class PlayerMixin {
             }
 
             // Silk Touch
-            Optional<Holder.Reference<Enchantment>> e = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(Enchantments.SILK_TOUCH);
-            if (e.isPresent()) {
-                dropChance += (EnchantmentHelper.getItemEnchantmentLevel(e.get(), stack) > 0) ? 2 * ConfigManager.CONFIG.lostSoulDropChance : 0;
-            }
+            dropChance += (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0) ? 2 * ConfigManager.CONFIG.lostSoulDropChance : 0;
+
 
             // Looting
-            Optional<Holder.Reference<Enchantment>> e2 = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(Enchantments.LOOTING);
-            if (e2.isPresent()) {
-                dropChance += (ConfigManager.CONFIG.lostSoulDropChance / 2) * EnchantmentHelper.getItemEnchantmentLevel(e2.get(), stack);
-            }
+            dropChance += (ConfigManager.CONFIG.lostSoulDropChance / 2) * (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MOB_LOOTING, stack));
+
 
             if (world.random.nextInt(100) + 1 < dropChance) {
                 Vec3 pos = killedEntity.position();

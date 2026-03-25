@@ -3,10 +3,10 @@ package com.yelf42.cropcritters;
 import com.yelf42.cropcritters.area_affectors.AffectorPositions;
 import com.yelf42.cropcritters.area_affectors.TypedBlockArea;
 import com.yelf42.cropcritters.entity.*;
+import com.yelf42.cropcritters.platform.FabricPlatformHelper;
 import com.yelf42.cropcritters.registry.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
@@ -15,6 +15,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 
 import java.util.Collection;
 import java.util.function.BiConsumer;
@@ -22,11 +23,17 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class CropCrittersFabric implements ModInitializer {
-    
+
+    public static final PaintingVariant RITUAL = Registry.register(
+            BuiltInRegistries.PAINTING_VARIANT,
+            CropCritters.identifier("ritual"),
+            new PaintingVariant(16, 32)
+    );
+
     @Override
     public void onInitialize() {
 
-        ModEffects.init();
+        bind(BuiltInRegistries.MOB_EFFECT, ModEffects::register);
 
         bind(BuiltInRegistries.PARTICLE_TYPE, ModParticles::register);
 
@@ -39,8 +46,6 @@ public class CropCrittersFabric implements ModInitializer {
         bind(BuiltInRegistries.CREATIVE_MODE_TAB, ModItems::registerTabs);
         bind(BuiltInRegistries.RECIPE_SERIALIZER, ModItems::registerRecipes);
 
-        bind(BuiltInRegistries.DATA_COMPONENT_TYPE, ModComponents::register);
-
         bind(BuiltInRegistries.FEATURE, ModFeatures::registerFeatures);
 
         bind(BuiltInRegistries.ENTITY_TYPE, ModEntities::register);
@@ -51,13 +56,12 @@ public class CropCrittersFabric implements ModInitializer {
 
         BiomeModifiers.register();
 
+        FabricPlatformHelper.registerPackets();
+
         registerCompostable();
         registerFuel();
 
         CropCritters.init();
-
-        PayloadTypeRegistry.playS2C().register(ModPackets.WaterSprayS2CPayload.ID, ModPackets.WaterSprayS2CPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(ModPackets.ParticleRingS2CPayload.ID, ModPackets.ParticleRingS2CPayload.CODEC);
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(Commands.literal("test_soul_rose")

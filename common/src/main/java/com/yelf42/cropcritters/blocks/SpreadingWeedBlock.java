@@ -31,7 +31,6 @@ import java.util.Optional;
 
 
 public class SpreadingWeedBlock extends BushBlock implements BonemealableBlock {
-    public static final MapCodec<SpreadingWeedBlock> CODEC = simpleCodec(SpreadingWeedBlock::new);
     public static final int MAX_AGE = 1;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_1;
     private static final VoxelShape[] SHAPES_BY_AGE = ModBlocks.boxes(2, age -> ModBlocks.column(8 + age * 4, 0.0, 8 + age * 4));
@@ -43,12 +42,7 @@ public class SpreadingWeedBlock extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    public MapCodec<? extends SpreadingWeedBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPES_BY_AGE[this.getAge(state)];
     }
 
@@ -72,17 +66,17 @@ public class SpreadingWeedBlock extends BushBlock implements BonemealableBlock {
 
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
         return super.updateShape(state.setValue(CAN_SPREAD, state.getValue(CAN_SPREAD) || !facingState.is(this)), facing, facingState, world, currentPos, facingPos);
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return state.getValue(CAN_SPREAD);
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
 
         // Turn farmlands bad
         BlockState soilCheck = world.getBlockState(pos.below());
@@ -138,7 +132,7 @@ public class SpreadingWeedBlock extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state, boolean b) {
         return !isMature(state) || hasSpreadableNeighbourPos(world, pos, state);
     }
 

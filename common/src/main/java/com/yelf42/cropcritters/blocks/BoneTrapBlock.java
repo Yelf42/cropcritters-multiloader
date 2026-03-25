@@ -27,7 +27,6 @@ import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModSounds;
 
 public class BoneTrapBlock extends BushBlock {
-    public static final MapCodec<BoneTrapBlock> CODEC = simpleCodec(BoneTrapBlock::new);
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     // 0 = open, 2 = closed, 1 = recharging
@@ -45,12 +44,7 @@ public class BoneTrapBlock extends BushBlock {
     }
 
     @Override
-    protected MapCodec<? extends BushBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPES_BY_STAGE[this.getStage(state)];
     }
 
@@ -63,12 +57,12 @@ public class BoneTrapBlock extends BushBlock {
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return false;
     }
 
     @Override
-    protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         if (this.getStage(state) == 2) {
             world.setBlockAndUpdate(pos, state.setValue(STAGE, 1));
             world.playSound(null, pos, ModSounds.BONE_TRAP_OPEN, SoundSource.BLOCKS, 0.5F, 1.0F + (world.random.nextFloat() * 0.6F - 0.3F));
@@ -80,9 +74,9 @@ public class BoneTrapBlock extends BushBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         if (entity instanceof LivingEntity livingEntity) {
-            double dist = livingEntity.position().distanceTo(pos.getBottomCenter());
+            double dist = livingEntity.position().distanceTo(Vec3.atBottomCenterOf(pos));
             if (this.getStage(state) == 0 && dist <= 0.2F) {
 
                 world.playSound(null, pos, ModSounds.BONE_TRAP_CLOSE, SoundSource.BLOCKS, 0.5F, 1.0F + (world.random.nextFloat() * 0.6F - 0.3F));

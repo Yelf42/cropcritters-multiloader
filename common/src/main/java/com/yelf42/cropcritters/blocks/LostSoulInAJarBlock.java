@@ -12,12 +12,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.ticks.TickPriority;
-import org.jetbrains.annotations.Nullable;
 import com.yelf42.cropcritters.events.WeedGrowNotifier;
 import com.yelf42.cropcritters.registry.ModParticles;
 import com.yelf42.cropcritters.registry.ModSounds;
@@ -31,12 +29,12 @@ public class LostSoulInAJarBlock extends LanternBlock {
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         world.scheduleTick(pos, state.getBlock(), 15, TickPriority.EXTREMELY_LOW);
     }
 
     @Override
-    protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         if (state.getValue(POWERED)) world.setBlock(pos, state.setValue(POWERED, false), 3);
         if (WeedGrowNotifier.checkWeedsToRing(world, pos)) {
             world.setBlock(pos, state.setValue(POWERED, true), 3);
@@ -61,7 +59,7 @@ public class LostSoulInAJarBlock extends LanternBlock {
     }
 
     @Override
-    protected boolean triggerEvent(BlockState state, Level world, BlockPos pos, int type, int data) {
+    public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int type, int data) {
         Vec3 cPos = pos.getCenter();
         double angle = Math.toRadians((double)data);
         double planeOffset = 0.8f;
@@ -72,12 +70,12 @@ public class LostSoulInAJarBlock extends LanternBlock {
     }
 
     @Override
-    protected boolean hasAnalogOutputSignal(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
+    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
         return (Boolean)world.getBlockState(pos).getValue(POWERED) ? 15 : 0;
     }
 

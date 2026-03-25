@@ -1,12 +1,12 @@
 package com.yelf42.cropcritters.entity;
 
-import com.yelf42.cropcritters.CropCritters;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.OcelotAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -29,14 +29,13 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import com.yelf42.cropcritters.registry.ModItems;
 import com.yelf42.cropcritters.registry.ModSounds;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.function.Predicate;
 
@@ -81,7 +80,7 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
 
     @Override
     protected void registerGoals() {
-        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, (stack) -> stack.is(ModItems.LOST_SOUL), false);
+        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, Ingredient.of(ModItems.LOST_SOUL), false);
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, temptGoal);
         this.targetSelector.addGoal(4, new EatTargetGoal());
@@ -168,7 +167,7 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
     private void consume(Level world, Entity target) {
         if (world.isClientSide()) return;
         if (target instanceof AbstractCropCritterEntity critter) {
-            critter.dropAllDeathLoot((ServerLevel) world, target.damageSources().genericKill());
+            critter.dropCustomDeathLoot(target.damageSources().genericKill(), 0, false);
         } else {
             Vec3 pos = target.position();
             ItemEntity item = new ItemEntity(world, pos.x, pos.y, pos.z, new ItemStack(ModItems.STRANGE_FERTILIZER));

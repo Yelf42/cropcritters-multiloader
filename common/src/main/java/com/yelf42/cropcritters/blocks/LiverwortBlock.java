@@ -27,15 +27,10 @@ import com.yelf42.cropcritters.config.WeedHelper;
 
 
 public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock {
-    public static final MapCodec<LiverwortBlock> CODEC = simpleCodec(LiverwortBlock::new);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private final MultifaceSpreader grower = new MultifaceSpreader(new LiverwortGrowChecker(this));
 
     public static final BooleanProperty CAN_SPREAD = BooleanProperty.create("can_spread");
-
-    public MapCodec<LiverwortBlock> codec() {
-        return CODEC;
-    }
 
     public LiverwortBlock(Properties settings) {
         super(settings);
@@ -43,7 +38,7 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
     }
 
     @Override
-    protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         if (super.canSurvive(state, world, pos)) return true;
 
         boolean bl = false;
@@ -70,7 +65,7 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
         if (state.getValue(WATERLOGGED)) {
             world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
@@ -78,17 +73,17 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
     }
 
     @Override
-    protected FluidState getFluidState(BlockState state) {
+    public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return true;
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         // Dry out in sunlight
         long time = world.getDayTime() % 24000;
         if (state.getFluidState().isEmpty()
@@ -130,7 +125,7 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
 
         // Rain growth
         if (world.isRainingAt(pos) || world.isRainingAt(pos.relative(Direction.getRandom(random)))) {
-            if (random.nextInt(2) == 0 && isValidBonemealTarget(world, pos, state)) this.grower.spreadFromRandomFaceTowardRandomDirection(state, world, pos, random);
+            if (random.nextInt(2) == 0 && isValidBonemealTarget(world, pos, state, false)) this.grower.spreadFromRandomFaceTowardRandomDirection(state, world, pos, random);
             return;
         }
 
@@ -138,7 +133,7 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
         BlockPos blockPos = PointedDripstoneBlock.findStalactiteTipAboveCauldron(world, pos);
         if (blockPos != null) {
             Fluid fluid = PointedDripstoneBlock.getCauldronFillFluidType(world, blockPos);
-            if (fluid == Fluids.WATER && isValidBonemealTarget(world, pos, state)) {
+            if (fluid == Fluids.WATER && isValidBonemealTarget(world, pos, state, false)) {
                 this.grower.spreadFromRandomFaceTowardRandomDirection(state, world, pos, random);
             } else if (fluid == Fluids.LAVA) {
                 world.blockEvent(pos, this, 0, 0);
@@ -148,12 +143,12 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
     }
 
     @Override
-    protected boolean triggerEvent(BlockState state, Level world, BlockPos pos, int type, int data) {
+    public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int type, int data) {
         int i = pos.getX();
         int j = pos.getY();
         int k = pos.getZ();
         for(int l = 0; l < 8; ++l) {
-            world.addParticle(ParticleTypes.WHITE_SMOKE, (double)((float)i + world.random.nextFloat()), (double)((float)j + world.random.nextFloat()), (double)((float)k + world.random.nextFloat()), (double)0.0F, (double)0.0F, (double)0.0F);
+            world.addParticle(ParticleTypes.LARGE_SMOKE, (double)((float)i + world.random.nextFloat()), (double)((float)j + world.random.nextFloat()), (double)((float)k + world.random.nextFloat()), (double)0.0F, (double)0.0F, (double)0.0F);
         }
         world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         return true;
@@ -166,7 +161,7 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
         builder.add(CAN_SPREAD);
     }
 
-    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state, boolean b) {
         return Direction.stream().anyMatch((direction) -> this.grower.canSpreadInAnyDirection(state, world, pos, direction.getOpposite()));
     }
 
@@ -179,7 +174,7 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return state.getFluidState().isEmpty();
     }
 

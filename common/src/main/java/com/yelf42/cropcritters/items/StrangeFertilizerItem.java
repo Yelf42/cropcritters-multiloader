@@ -24,12 +24,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import com.google.common.collect.ImmutableMap.Builder;
-import org.jetbrains.annotations.Nullable;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import com.yelf42.cropcritters.blocks.SoulRoseBlock;
 import com.yelf42.cropcritters.registry.ModSounds;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -114,13 +114,13 @@ public class StrangeFertilizerItem extends BoneMealItem {
         return InteractionResult.PASS;
     }
 
-    public static boolean useOnGround(ItemStack stack, Level world, BlockPos blockPos, BlockPos underwaterPos, @Nullable Direction facing) {
+    public static boolean useOnGround(ItemStack stack, Level world, BlockPos blockPos, BlockPos underwaterPos, Direction facing) {
         BlockState state = world.getBlockState(blockPos);
         BlockState underwaterState = world.getBlockState(underwaterPos);
         if (underwaterState.is(Blocks.WATER) && world.getFluidState(underwaterPos).getAmount() == 8) {
             useUnderwater(stack, world, underwaterPos, facing);
             return true;
-        } else if (state.is(BlockTags.DIRT) || state.getBlock() instanceof BonemealableBlock fertilizable && fertilizable.isValidBonemealTarget(world, blockPos, state)) {
+        } else if (state.is(BlockTags.DIRT) || state.getBlock() instanceof BonemealableBlock fertilizable && fertilizable.isValidBonemealTarget(world, blockPos, state, false)) {
             useOnLand(stack, world, blockPos);
             return true;
         } else {
@@ -128,7 +128,7 @@ public class StrangeFertilizerItem extends BoneMealItem {
         }
     }
 
-    private static void useUnderwater(ItemStack stack, Level world, BlockPos blockPos, @Nullable Direction facing) {
+    private static void useUnderwater(ItemStack stack, Level world, BlockPos blockPos, Direction facing) {
         if (!(world instanceof ServerLevel)) return;
 
         blockPos = blockPos.relative(facing);
@@ -147,18 +147,27 @@ public class StrangeFertilizerItem extends BoneMealItem {
             }
 
             if (i == 0 && facing != null && facing.getAxis().isHorizontal()) {
-                blockState = (BlockState) BuiltInRegistries.BLOCK
-                        .getRandomElementOf(BlockTags.WALL_CORALS, world.random)
-                        .map(blockEntry -> ((Block)blockEntry.value()).defaultBlockState())
-                        .orElse(blockState);
+                List<Block> wallCorals = BuiltInRegistries.BLOCK.getTag(BlockTags.WALL_CORALS)
+                        .map(tag -> tag.stream()
+                                .map(h -> (Block) h.value())
+                                .toList())
+                        .orElse(List.of());
+                if (!wallCorals.isEmpty()) {
+                    blockState = wallCorals.get(world.random.nextInt(wallCorals.size())).defaultBlockState();
+                }
+
                 if (blockState.hasProperty(BaseCoralWallFanBlock.FACING)) {
                     blockState = blockState.setValue(BaseCoralWallFanBlock.FACING, facing);
                 }
             } else if (random.nextInt(2) == 0) {
-                blockState = (BlockState) BuiltInRegistries.BLOCK
-                        .getRandomElementOf(CropCritters.UNDERWATER_STRANGE_FERTILIZERS, world.random)
-                        .map(blockEntry -> ((Block)blockEntry.value()).defaultBlockState())
-                        .orElse(blockState);
+                List<Block> underwater = BuiltInRegistries.BLOCK.getTag(CropCritters.UNDERWATER_STRANGE_FERTILIZERS)
+                        .map(tag -> tag.stream()
+                                .map(h -> (Block) h.value())
+                                .toList())
+                        .orElse(List.of());
+                if (!underwater.isEmpty()) {
+                    blockState = underwater.get(world.random.nextInt(underwater.size())).defaultBlockState();
+                }
             }
 
             if (blockState.is(BlockTags.WALL_CORALS, state -> state.hasProperty(BaseCoralWallFanBlock.FACING))) {
@@ -215,20 +224,26 @@ public class StrangeFertilizerItem extends BoneMealItem {
                 BlockState floor = world.getBlockState(blockPos2.below());
 
                 if (floor.is(Blocks.CRIMSON_NYLIUM) || floor.is(Blocks.WARPED_NYLIUM)) {
-                    toPlace = BuiltInRegistries.BLOCK
-                            .getRandomElementOf(CropCritters.ON_NYLIUM_STRANGE_FERTILIZERS, world.random)
-                            .map(blockEntry -> ((Block)blockEntry.value()).defaultBlockState())
-                            .orElse(Blocks.NETHER_SPROUTS.defaultBlockState());
+                    List<Block> nylium = BuiltInRegistries.BLOCK.getTag(CropCritters.ON_NYLIUM_STRANGE_FERTILIZERS)
+                            .map(tag -> tag.stream()
+                                    .map(h -> (Block) h.value())
+                                    .toList())
+                            .orElse(List.of());
+                    toPlace = !nylium.isEmpty() ? nylium.get(world.random.nextInt(nylium.size())).defaultBlockState() : Blocks.NETHER_SPROUTS.defaultBlockState();
                 } else if (floor.is(Blocks.MYCELIUM)) {
-                    toPlace = BuiltInRegistries.BLOCK
-                            .getRandomElementOf(CropCritters.ON_MYCELIUM_STRANGE_FERTILIZERS, world.random)
-                            .map(blockEntry -> ((Block)blockEntry.value()).defaultBlockState())
-                            .orElse(Blocks.BROWN_MUSHROOM.defaultBlockState());
+                    List<Block> mycelium = BuiltInRegistries.BLOCK.getTag(CropCritters.ON_MYCELIUM_STRANGE_FERTILIZERS)
+                            .map(tag -> tag.stream()
+                                    .map(h -> (Block) h.value())
+                                    .toList())
+                            .orElse(List.of());
+                    toPlace = !mycelium.isEmpty() ? mycelium.get(world.random.nextInt(mycelium.size())).defaultBlockState() : Blocks.BROWN_MUSHROOM.defaultBlockState();
                 } else {
-                    toPlace = BuiltInRegistries.BLOCK
-                            .getRandomElementOf((random.nextInt(2) == 0) ? CropCritters.ON_LAND_RARE_STRANGE_FERTILIZERS : CropCritters.ON_LAND_COMMON_STRANGE_FERTILIZERS, world.random)
-                            .map(blockEntry -> ((Block)blockEntry.value()).defaultBlockState())
-                            .orElse(Blocks.SHORT_GRASS.defaultBlockState());
+                    List<Block> land = BuiltInRegistries.BLOCK.getTag((random.nextInt(2) == 0) ? CropCritters.ON_LAND_RARE_STRANGE_FERTILIZERS : CropCritters.ON_LAND_COMMON_STRANGE_FERTILIZERS)
+                            .map(tag -> tag.stream()
+                                    .map(h -> (Block) h.value())
+                                    .toList())
+                            .orElse(List.of());
+                    toPlace = !land.isEmpty() ? land.get(world.random.nextInt(land.size())).defaultBlockState() : Blocks.GRASS.defaultBlockState();
                 }
 
                 if (!toPlace.is(CropCritters.IGNORE_STRANGE_FERTILIZERS) && toPlace.canSurvive(world, blockPos2)) {

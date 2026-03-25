@@ -134,7 +134,7 @@ public class SoulRoseBlockEntity extends BlockEntity {
     private static void tryAttack(ServerLevel world, BlockPos pos, BlockState state, SoulRoseBlockEntity blockEntity) {
         int level = state.getOptionalValue(SoulRoseBlock.LEVEL).orElse(0);
 
-        List<LivingEntity> list = world.getEntitiesOfClass(LivingEntity.class, getAttackZone(pos, level), (entity) -> entity.getType().is(EntityTypeTags.UNDEAD) && !entity.hasCustomName());
+        List<LivingEntity> list = world.getEntitiesOfClass(LivingEntity.class, getAttackZone(pos, level), (entity) -> entity.getType().is(CropCritters.UNDEAD) && !entity.hasCustomName());
         for (LivingEntity livingEntity : list) {
             if (livingEntity == null) continue;
             if (livingEntity.hasEffect(ModEffects.SOUL_SIPHON)) continue;

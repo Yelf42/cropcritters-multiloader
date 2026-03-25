@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.entity.EntityType;
@@ -30,15 +31,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.blocks.SoulFarmland;
 import com.yelf42.cropcritters.registry.ModItems;
 import com.yelf42.cropcritters.registry.ModSounds;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -54,7 +55,7 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
 
     @Override
     protected void registerGoals() {
-        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, (stack) -> stack.is(ModItems.LOST_SOUL), false);
+        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, Ingredient.of(ModItems.LOST_SOUL), false);
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, temptGoal);
         this.targetWorkGoal = new PumpkinTargetWorkGoal();
@@ -166,7 +167,7 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
                         this.moveToNextTarget();
                     } else {
                         PumpkinCritterEntity.this.navigation.stop();
-                        PumpkinCritterEntity.this.setYBodyRot((float) Mth.rotLerp(0.3, PumpkinCritterEntity.this.getVisualRotationYInDegrees(), targetYaw(this.nextTarget)));
+                        PumpkinCritterEntity.this.setYBodyRot((float) Mth.rotLerp(0.3F, PumpkinCritterEntity.this.getVisualRotationYInDegrees(), targetYaw(this.nextTarget)));
                         boolean bl2 = Mth.abs(Mth.wrapDegrees(PumpkinCritterEntity.this.getVisualRotationYInDegrees() - targetYaw(this.nextTarget))) < 5F;
                         if (bl2) {
                             PumpkinCritterEntity.this.getLookControl().setLookAt(this.nextTarget);

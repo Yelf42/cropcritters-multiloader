@@ -7,7 +7,6 @@ import net.minecraft.client.particle.RisingParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.Nullable;
 
 public class SoulSiphonParticle extends RisingParticle {
     private final SpriteSet sprites;
@@ -55,7 +54,7 @@ public class SoulSiphonParticle extends RisingParticle {
         }
 
         @Override
-        public @Nullable Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             return new SoulSiphonParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteProvider);
         }
     }

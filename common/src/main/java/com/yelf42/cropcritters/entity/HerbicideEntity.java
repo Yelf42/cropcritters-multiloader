@@ -32,13 +32,14 @@ public class HerbicideEntity extends ThrowableItemProjectile {
         super(ModEntities.HERBICIDE_PROJECTILE, livingEntity, serverWorld);
     }
 
+    // TODO check color
     @Override
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
         this.level().broadcastEntityEvent(this, (byte)3);
         if (this.level() instanceof ServerLevel serverWorld) {
             killWeeds(serverWorld, this.blockPosition());
-            serverWorld.levelEvent(2002, this.blockPosition(), CommonColors.GREEN);
+            serverWorld.levelEvent(2002, this.blockPosition(), 8889187);
             this.discard();
         }
     }
@@ -72,7 +73,7 @@ public class HerbicideEntity extends ThrowableItemProjectile {
     }
 
     @Override
-    protected double getDefaultGravity() {
-        return 0.04;
+    protected float getGravity() {
+        return 0.04F;
     }
 }

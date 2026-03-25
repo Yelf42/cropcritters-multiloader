@@ -58,7 +58,7 @@ public class ModEventHandlers {
                 infested = sfbe.getInfestedState();
             }
             world.setBlock(pos, infested, Block.UPDATE_ALL);
-            if (!player.isCreative()) stack.hurtAndBreak(1, player, player.getEquipmentSlotForItem(stack));
+            if (!player.isCreative()) stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(p.getUsedItemHand()));
             world.playSound(null, pos, SoundEvents.BEEHIVE_SHEAR, SoundSource.PLAYERS, 1.0F, 1.0F);
             return true;
         }
@@ -71,7 +71,7 @@ public class ModEventHandlers {
             itemEntity.setDefaultPickUpDelay();
             ((ServerLevel) world).addFreshEntity(itemEntity);
             world.setBlockAndUpdate(pos, state.setValue(PopperPlantBlock.AGE, 0));
-            if (!player.isCreative()) stack.hurtAndBreak(1, player, player.getEquipmentSlotForItem(stack));
+            if (!player.isCreative()) stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(p.getUsedItemHand()));
             world.playSound(null, pos, SoundEvents.BEEHIVE_SHEAR, SoundSource.PLAYERS, 1.0F, 1.0F);
             return true;
         }
@@ -85,7 +85,7 @@ public class ModEventHandlers {
         BlockState toPlant = ModBlocks.STRANGLE_FERN.defaultBlockState();
         if (toPlant.canSurvive(world, pos) && StrangleFern.canInfest(state)) {
             world.setBlockAndUpdate(pos, toPlant);
-            stack.consume(1, player);
+            stack.shrink(1);
             world.playSound(null, pos, ModSounds.SPORE_INFEST, SoundSource.BLOCKS, 1.0F, 1.0F);
             return true;
         }

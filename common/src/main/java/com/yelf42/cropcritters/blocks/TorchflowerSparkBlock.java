@@ -23,7 +23,7 @@ public class TorchflowerSparkBlock extends AirBlock {
     }
 
     @Override
-    protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         List<TorchflowerCritterEntity> list = world.getEntitiesOfClass(TorchflowerCritterEntity.class, new AABB(pos).inflate(2F), (torchflowerCritterEntity -> true));
         if (list.isEmpty()) {
             world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
@@ -42,17 +42,17 @@ public class TorchflowerSparkBlock extends AirBlock {
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return true;
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         world.scheduleTick(pos, ModBlocks.TORCHFLOWER_SPARK, 1, TickPriority.EXTREMELY_LOW);
     }
 
     @Override
-    protected void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
         world.scheduleTick(pos, ModBlocks.TORCHFLOWER_SPARK, 200, TickPriority.EXTREMELY_LOW);
         super.onPlace(state, world, pos, oldState, notify);
     }

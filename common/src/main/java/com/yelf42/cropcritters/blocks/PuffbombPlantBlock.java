@@ -40,22 +40,19 @@ public class PuffbombPlantBlock extends MushroomBlock {
         public boolean shouldBlockExplode(Explosion explosion, BlockGetter world, BlockPos pos, BlockState state, float power) {
             return false;
         }
-        public boolean shouldDamageEntity(Explosion explosion, Entity entity) {
-            return false;
-        }
     };
 
     public PuffbombPlantBlock(Properties settings) {
-        super(FEATURE_KEY, settings);
+        super(settings, FEATURE_KEY);
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPES_BY_AGE[this.getAge(state)];
     }
 
     @Override
-    protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockPos blockPos = pos.below();
         BlockState blockState = world.getBlockState(blockPos);
         if (blockState.is(BlockTags.MUSHROOM_GROW_BLOCK) || blockState.is(BlockTags.DIRT)) {
@@ -86,7 +83,7 @@ public class PuffbombPlantBlock extends MushroomBlock {
     }
 
     @Override
-    protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         switch(getAge(state)) {
             case 0:
                 world.scheduleTick(pos, state.getBlock(), 40, TickPriority.EXTREMELY_LOW);
@@ -106,7 +103,7 @@ public class PuffbombPlantBlock extends MushroomBlock {
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         if (random.nextInt(2) == 0) return;
         if (isMature(state)) {
             performBonemeal(world, random, pos, state);
@@ -118,7 +115,11 @@ public class PuffbombPlantBlock extends MushroomBlock {
     @Override
     public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state) {
         if (isMature(state)) {
-            world.explode(null, null, BURST, pos.getX(), pos.getY(), pos.getZ(), 3F, false, Level.ExplosionInteraction.BLOCK, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, ModSounds.PUFFBOMB_EXPLODE);
+            Explosion explosion = new Explosion(world, null, null, BURST,
+                    pos.getX(), pos.getY(), pos.getZ(), 3F, false, Explosion.BlockInteraction.KEEP);
+            explosion.explode();
+            explosion.finalizeExplosion(true);
+            world.playSound(null, pos, ModSounds.PUFFBOMB_EXPLODE, SoundSource.BLOCKS, 1.0F, 1.0F);
             super.performBonemeal(world, random, pos, state);
             return;
         }
@@ -126,7 +127,7 @@ public class PuffbombPlantBlock extends MushroomBlock {
     }
 
     @Override
-    protected void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
         world.scheduleTick(pos, state.getBlock(), 40, TickPriority.EXTREMELY_LOW);
         super.onPlace(state, world, pos, oldState, notify);
     }

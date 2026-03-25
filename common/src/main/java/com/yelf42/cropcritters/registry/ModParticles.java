@@ -1,12 +1,8 @@
 package com.yelf42.cropcritters.registry;
 
-import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.platform.Services;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.particles.ColorParticleOption;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import com.yelf42.cropcritters.CropCritters;
 
@@ -22,7 +18,7 @@ public class ModParticles {
 
     public static final SimpleParticleType SOUL_SIPHON = registerSimple("soul_siphon_particle");
 
-    public static final ParticleType<ColorParticleOption> SPORES = registerTinted("spore_particle");
+    public static final SimpleParticleType SPORES = registerSimple("spore_particle");
 
     public static final SimpleParticleType SOUL_HEART = registerSimple("soul_heart_particle");
 
@@ -38,22 +34,6 @@ public class ModParticles {
         var simpleParticleType = Services.PLATFORM.simpleParticleType();
         REGISTERED_PARTICLES.put(name, simpleParticleType);
         return simpleParticleType;
-    }
-
-    private static ParticleType<ColorParticleOption> registerTinted(String name) {
-        var colorParticleType = new ParticleType<ColorParticleOption>(false) {
-            @Override
-            public MapCodec<ColorParticleOption> codec() {
-                return ColorParticleOption.codec(this);
-            }
-            @Override
-            public StreamCodec<? super RegistryFriendlyByteBuf, ColorParticleOption> streamCodec() {
-                return ColorParticleOption.streamCodec(this);
-            }
-        };
-
-        REGISTERED_PARTICLES.put(name, colorParticleType);
-        return colorParticleType;
     }
 
     /// BINDER

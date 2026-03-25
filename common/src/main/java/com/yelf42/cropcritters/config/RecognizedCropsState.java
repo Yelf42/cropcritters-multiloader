@@ -1,7 +1,5 @@
 package com.yelf42.cropcritters.config;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
@@ -18,19 +16,14 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.HashSet;
 import java.util.Set;
 
+// TODO test properly
 public class RecognizedCropsState extends SavedData {
     private static final String DATA_NAME = CropCritters.MOD_ID;
     private final Set<Item> knownCrops = new HashSet<>();
 
-    public static final SavedData.Factory<RecognizedCropsState> FACTORY = new SavedData.Factory<>(
-            RecognizedCropsState::new,
-            RecognizedCropsState::load,
-            DataFixTypes.SAVED_DATA_MAP_DATA
-    );
-
     public RecognizedCropsState() {}
 
-    public static RecognizedCropsState load(CompoundTag tag, HolderLookup.Provider registries) {
+    public static RecognizedCropsState load(CompoundTag tag) {
         RecognizedCropsState state = new RecognizedCropsState();
         ListTag list = tag.getList("KnownCrops", Tag.TAG_STRING);
         for (int i = 0; i < list.size(); i++) {
@@ -43,7 +36,7 @@ public class RecognizedCropsState extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+    public CompoundTag save(CompoundTag tag) {
         ListTag list = new ListTag();
         for (Item item : knownCrops) {
             ResourceLocation id = BuiltInRegistries.ITEM.getKey(item);
@@ -68,7 +61,11 @@ public class RecognizedCropsState extends SavedData {
     public static RecognizedCropsState getServerState(MinecraftServer server) {
         ServerLevel overworld = server.getLevel(Level.OVERWORLD);
         assert overworld != null;
-        RecognizedCropsState state = overworld.getDataStorage().computeIfAbsent(FACTORY, DATA_NAME);
+        RecognizedCropsState state = overworld.getDataStorage().computeIfAbsent(
+                RecognizedCropsState::load,
+                RecognizedCropsState::new,
+                DATA_NAME
+        );
         state.setDirty();
         return state;
     }

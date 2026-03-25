@@ -2,23 +2,20 @@ package com.yelf42.cropcritters.items;
 
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import com.yelf42.cropcritters.entity.PopperPodEntity;
 
-public class PopperPodItem extends Item implements ProjectileItem {
+//TODO test dispenser behaviour
+public class PopperPodItem extends Item {
 
     public PopperPodItem(Properties settings) {
         super(settings);
@@ -53,7 +50,7 @@ public class PopperPodItem extends Item implements ProjectileItem {
                 PopperPodEntity pod = new PopperPodEntity(world, itemStack, user);
                 serverWorld.addFreshEntity(pod);
 
-                itemStack.consume(1, user);
+                itemStack.shrink(1);
                 user.awardStat(Stats.ITEM_USED.get(this));
             }
 
@@ -61,17 +58,5 @@ public class PopperPodItem extends Item implements ProjectileItem {
         } else {
             return InteractionResultHolder.pass(user.getItemInHand(hand));
         }
-    }
-
-    public Projectile asProjectile(Level world, Position pos, ItemStack stack, Direction direction) {
-        return new PopperPodEntity(world, stack.copyWithCount(1), pos.x(), pos.y(), pos.z(), true);
-    }
-
-    public DispenseConfig createDispenseConfig() {
-        return DispenseConfig.builder().positionFunction(PopperPodItem::position).uncertainty(1.0F).power(0.5F).overrideDispenseEvent(1004).build();
-    }
-
-    private static Vec3 position(BlockSource pointer, Direction facing) {
-        return pointer.center().add((double)facing.getStepX() * 0.5f, (double)facing.getStepY() * 0.5f, (double)facing.getStepZ() * 0.5f);
     }
 }

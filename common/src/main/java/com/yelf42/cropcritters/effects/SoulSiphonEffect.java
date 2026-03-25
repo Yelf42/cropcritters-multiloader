@@ -7,6 +7,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,19 +17,21 @@ import com.yelf42.cropcritters.area_affectors.AffectorPositions;
 import com.yelf42.cropcritters.area_affectors.AffectorType;
 import com.yelf42.cropcritters.area_affectors.TypedBlockArea;
 import com.yelf42.cropcritters.config.CritterHelper;
-import com.yelf42.cropcritters.registry.ModParticles;
 
 import java.util.Collection;
 
 public class SoulSiphonEffect extends MobEffect {
 
+    // TODO particle?
     public SoulSiphonEffect(MobEffectCategory statusEffectCategory, int i) {
-        super(statusEffectCategory, i, ModParticles.SOUL_SIPHON);
+        super(statusEffectCategory, i);
     }
 
+    // TODO test
     @Override
-    public void onMobRemoved(LivingEntity entity, int amplifier, Entity.RemovalReason reason) {
-        if (reason == Entity.RemovalReason.KILLED && entity.getType().is(EntityTypeTags.UNDEAD)) {
+    public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
+        super.removeAttributeModifiers(entity, attributeMap, amplifier);
+        if (entity.isDeadOrDying() && entity.getType().is(CropCritters.UNDEAD)) {
             Level world = entity.level();
             if (world instanceof ServerLevel serverLevel) {
                 Vec3 entityPos = entity.position();
@@ -59,7 +62,7 @@ public class SoulSiphonEffect extends MobEffect {
             if (!(blockState.getBlock() instanceof BushBlock)) continue;
 
             if (blockState.getBlock() instanceof BonemealableBlock fertilizable) {
-                if (fertilizable.isValidBonemealTarget(world, blockPos, blockState)) {
+                if (fertilizable.isValidBonemealTarget(world, blockPos, blockState, false)) {
                     if (world instanceof ServerLevel) {
                         if (fertilizable.isBonemealSuccess(world, world.random, blockPos, blockState)) {
                             fertilizable.performBonemeal(world, world.random, blockPos, blockState);
@@ -78,12 +81,12 @@ public class SoulSiphonEffect extends MobEffect {
         }
     }
 
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(LivingEntity entity, int amplifier) {
         entity.hurt(entity.damageSources().magic(), 3.0F);
-        return true;
     }
 
-    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+    @Override
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         int i = 42 / amplifier;
         if (i > 0) {
             return duration % i == 0;

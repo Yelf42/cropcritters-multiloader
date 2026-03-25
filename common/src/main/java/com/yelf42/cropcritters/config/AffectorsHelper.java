@@ -11,14 +11,13 @@ import com.yelf42.cropcritters.area_affectors.TypedBlockArea;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import com.yelf42.cropcritters.blocks.SoulRoseBlock;
 import com.yelf42.cropcritters.blocks.SoulRoseType;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
 public class AffectorsHelper {
 
     // Converts block state to affector type
-    public static @Nullable AffectorType getTypeFromBlockState(BlockState state) {
+    public static AffectorType getTypeFromBlockState(BlockState state) {
         if (state.is(ModBlocks.SOUL_ROSE) && state.getOptionalValue(SoulRoseBlock.HALF).orElse(DoubleBlockHalf.UPPER) == DoubleBlockHalf.LOWER) {
             int level = state.getOptionalValue(SoulRoseBlock.LEVEL).orElse(0);
             SoulRoseType type = state.getOptionalValue(SoulRoseBlock.TYPE).orElse(SoulRoseType.NONE);

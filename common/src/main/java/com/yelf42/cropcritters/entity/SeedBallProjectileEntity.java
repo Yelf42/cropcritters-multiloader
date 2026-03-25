@@ -16,7 +16,6 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.EntityHitResult;
@@ -73,7 +72,7 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
         Entity entity = entityHitResult.getEntity();
         if (entity instanceof Player player) player.addEffect((new MobEffectInstance(MobEffects.BLINDNESS, 20 * 4, 0)));
         if (entity instanceof LivingEntity livingEntity) {
-            int p = this.getItem().getOrDefault(ModComponents.POISONOUS_SEED_BALL, new ModComponents.PoisonousComponent(0)).poisonStacks();
+            int p = ModComponents.getPoisonous(this.getItem()).poisonStacks();
             livingEntity.addEffect((new MobEffectInstance(MobEffects.POISON, 20 * 6 * p, 0)));
         }
         if (!this.level().isClientSide()) {
@@ -88,7 +87,7 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
         if (!world.isClientSide()) {
             if (!state.isSolid()) return;
 
-            List<ResourceLocation> crops = this.getItem().getOrDefault(ModComponents.SEED_TYPES, new ModComponents.SeedTypesComponent(DefaultSeedTypes)).seedTypes();
+            List<ResourceLocation> crops = ModComponents.getSeedTypes(this.getItem()).seedTypes();
             if (crops.isEmpty()) {
                 this.discard();
                 return;

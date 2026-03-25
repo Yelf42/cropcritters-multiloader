@@ -32,7 +32,7 @@ public class WitheringSpiteweed extends SpreadingWeedBlock {
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         BlockState soilCheck = world.getBlockState(pos.below());
         if (!soilCheck.is(Blocks.BLACKSTONE) && (soilCheck.is(Blocks.SOUL_SAND) || soilCheck.is(Blocks.SOUL_SOIL) || soilCheck.is(ModBlocks.SOUL_FARMLAND))) {
             pushEntitiesUp(soilCheck, Blocks.BLACKSTONE.defaultBlockState(), world, pos);
@@ -56,7 +56,7 @@ public class WitheringSpiteweed extends SpreadingWeedBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         if (entity instanceof LivingEntity livingEntity
                 && !(livingEntity.getType().is(CropCritters.WEED_IMMUNE))) {
             Vec3 vec3d = new Vec3(0.9, 0.9F, 0.9);

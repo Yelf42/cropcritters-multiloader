@@ -6,10 +6,9 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import org.jetbrains.annotations.Nullable;
 
 public class SporeParticle extends TextureSheetParticle {
     private static final RandomSource RANDOM = RandomSource.create();
@@ -64,7 +63,7 @@ public class SporeParticle extends TextureSheetParticle {
         return clientPlayerEntity != null && clientPlayerEntity.getEyePosition().distanceToSqr(this.x, this.y, this.z) <= (double) 9.0F && minecraftClient.options.getCameraType().isFirstPerson() && clientPlayerEntity.isScoping();
     }
 
-    public static class Factory implements ParticleProvider<ColorParticleOption> {
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteProvider;
 
         public Factory(SpriteSet spriteProvider) {
@@ -72,10 +71,8 @@ public class SporeParticle extends TextureSheetParticle {
         }
 
         @Override
-        public @Nullable Particle createParticle(ColorParticleOption colorParticleOption, ClientLevel clientLevel, double v, double v1, double v2, double v3, double v4, double v5) {
+        public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double v, double v1, double v2, double v3, double v4, double v5) {
             SporeParticle sporeParticle = new SporeParticle(clientLevel, v, v1, v2, v3, v4, v5, this.spriteProvider);
-            sporeParticle.setColor(colorParticleOption.getRed(), colorParticleOption.getGreen(), colorParticleOption.getBlue());
-            sporeParticle.setAlpha(colorParticleOption.getAlpha());
             return sporeParticle;
         }
     }

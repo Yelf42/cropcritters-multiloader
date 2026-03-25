@@ -21,7 +21,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
@@ -40,7 +39,9 @@ import static net.minecraft.world.level.block.Block.pushEntitiesUp;
 
 public class PoisonousPotatoCritterEntity extends AbstractCropCritterEntity implements Enemy {
 
-    private static final ColorParticleOption PARTICLE_EFFECT = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, FastColor.ABGR32.color(255, 8889187));
+    private static final float PARTICLE_R = ((8889187 >> 16) & 0xFF) / 255.0f;
+    private static final float PARTICLE_G = ((8889187 >> 8) & 0xFF) / 255.0f;
+    private static final float PARTICLE_B = (8889187 & 0xFF) / 255.0f;
 
     private static final Predicate<Entity> POISON_PREDICATE = (entity) -> {
         if (entity instanceof Player playerEntity) return !playerEntity.isCreative();
@@ -67,7 +68,7 @@ public class PoisonousPotatoCritterEntity extends AbstractCropCritterEntity impl
 
     @Override
     public void playAmbientSound() {
-        makeSound(ModSounds.ENTITY_CRITTER_EVIL_AMBIENT);
+        playSound(ModSounds.ENTITY_CRITTER_EVIL_AMBIENT);
     }
 
     @Override
@@ -118,7 +119,7 @@ public class PoisonousPotatoCritterEntity extends AbstractCropCritterEntity impl
 
     @Override
     public boolean canBeAffected(MobEffectInstance effect) {
-        return !effect.is(MobEffects.POISON) && super.canBeAffected(effect);
+        return effect.getEffect() != MobEffects.POISON && super.canBeAffected(effect);
     }
 
     @Override
@@ -146,9 +147,11 @@ public class PoisonousPotatoCritterEntity extends AbstractCropCritterEntity impl
             double x = this.getX() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
             double y = this.getY() + this.getBbHeight() * 0.5;
             double z = this.getZ() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
-            this.level().addParticle(PARTICLE_EFFECT, x, y, z, 0, 0, 0);
+            this.level().addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, PARTICLE_R, PARTICLE_G, PARTICLE_B);
         }
     }
+
+
 
     @Override
     public void aiStep() {

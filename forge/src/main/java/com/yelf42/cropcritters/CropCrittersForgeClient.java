@@ -5,25 +5,19 @@ import com.yelf42.cropcritters.client.renderer.blockentity.StrangleFernBlockEnti
 import com.yelf42.cropcritters.client.renderer.entity.AbstractCritterRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.PopperPodEntityRenderer;
 import com.yelf42.cropcritters.registry.*;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.particle.SuspendedTownParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-public class CropCrittersNeoforgeClient {
-
+public class CropCrittersForgeClient {
     @SubscribeEvent
     public static void registerBlocks(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
@@ -101,32 +95,4 @@ public class CropCrittersNeoforgeClient {
         event.registerSpriteSet(ModParticles.SOUL_GLINT_PLUME, SoulGlintPlumeParticle.Factory::new);
     }
 
-    public static class ClientPayloadHandler {
-        public static void handleWaterSpray(ModPackets.WaterSprayS2CPayload data, IPayloadContext context) {
-            context.enqueueWork(() -> {
-                Player player = context.player();
-                ClientLevel world = (ClientLevel) player.level();
-
-                Vec3 pos = data.pos();
-                Vec3 dir = data.dir();
-                world.addParticle(ModParticles.WATER_SPRAY, pos.x, pos.y + 0.2, pos.z, dir.x, 0, dir.z);
-            });
-        }
-
-        public static void handleRing(ModPackets.ParticleRingS2CPayload data, IPayloadContext context) {
-            context.enqueueWork(() -> {
-                Player player = context.player();
-                ClientLevel world = (ClientLevel) player.level();
-
-                Vec3 pos = data.pos();
-                float radius = data.radius();
-                int count = data.count();
-                ParticleOptions effect = data.effect();
-                float angle = (float) ((Math.PI * 2.0) / ((float)count));
-                for (int i = 0; i < count; i++) {
-                    world.addParticle(effect, pos.x + Math.sin(angle * i) * radius, pos.y, pos.z + Math.cos(angle * i) * radius, 0, 0, 0);
-                }
-            });
-        }
-    }
 }

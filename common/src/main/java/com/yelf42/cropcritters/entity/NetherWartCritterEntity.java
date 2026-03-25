@@ -16,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Tuple;
@@ -33,9 +32,12 @@ import com.yelf42.cropcritters.registry.ModParticles;
 
 import java.util.function.Predicate;
 
+// TODO test explosion and color
 public class NetherWartCritterEntity extends AbstractCropCritterEntity {
 
-    private static final ColorParticleOption PARTICLE_EFFECT = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, FastColor.ABGR32.color(255, 16073282));
+    private static final float PARTICLE_R = ((16073282 >> 16) & 0xFF) / 255.0f;
+    private static final float PARTICLE_G = ((16073282 >> 8) & 0xFF) / 255.0f;
+    private static final float PARTICLE_B = (16073282 & 0xFF) / 255.0f;
     private static final int GO_CRAZY = 400;
     private static final EntityDataAccessor<Integer> LIFESPAN = SynchedEntityData.defineId(NetherWartCritterEntity.class, EntityDataSerializers.INT);
 
@@ -62,9 +64,9 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(LIFESPAN, 1200);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(LIFESPAN, 1200);
     }
 
     @Override
@@ -140,14 +142,16 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
             double x = this.getX() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
             double y = this.getY() + this.getBbHeight() * 0.5;
             double z = this.getZ() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
-            this.level().addParticle(PARTICLE_EFFECT, x, y, z, 0, 0, 0);
-        }
+            this.level().addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, PARTICLE_R, PARTICLE_G, PARTICLE_B);        }
     }
 
     private void explode() {
         if (this.level() instanceof ServerLevel serverWorld) {
             Vec3 p = this.position();
-            serverWorld.explode(this, Explosion.getDefaultDamageSource(this.level(), this), BURST, p.x, p.y, p.z, 1.5F, false, Level.ExplosionInteraction.MOB);
+            Explosion explosion = new Explosion(serverWorld, this, null, BURST,
+                    p.x, p.y, p.z, 1.5F, false, Explosion.BlockInteraction.KEEP);
+            explosion.explode();
+            explosion.finalizeExplosion(true);
             for (int i = -1; i <= 1; i++) {
                 for (int j = -1; j <= 1; j++) {
                     for (int k = -1; k <= 1; k++) {
@@ -163,7 +167,6 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
                 }
             }
             this.dead = true;
-            this.triggerOnDeathMobEffects(RemovalReason.KILLED);
             this.discard();
         }
     }

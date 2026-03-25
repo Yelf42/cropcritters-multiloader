@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.function.BiFunction;
 
@@ -62,5 +63,6 @@ public interface IPlatformHelper {
     AffectorPositions getAffectorPositions(ServerLevel world);
     void setAffectorPositions(ServerLevel world, AffectorPositions positions);
 
-    Holder<MobEffect> registerEffectForHolder(ResourceLocation id, MobEffect t);
+    void sendParticleRingToNearbyPlayers(ServerLevel world, Vec3 center, float radius, int count);
+    void sendWaterSpray(ServerLevel world, Vec3 pos, Vec3 dir);
 }

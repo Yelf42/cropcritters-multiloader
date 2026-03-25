@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -60,11 +61,11 @@ public class TorchflowerCritterEntity extends AbstractCropCritterEntity {
 
     @Override
     protected void registerGoals() {
-        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, (stack) -> stack.is(ModItems.LOST_SOUL), true);
+        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, Ingredient.of(ModItems.LOST_SOUL), true);
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, temptGoal);
-        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, (double)2.0F, 6.0F, 2.0F));
+        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, (double)2.0F, 6.0F, 2.0F, false));
         this.goalSelector.addGoal(8, new AvoidEntityGoal<>(this, Animal.class, 10.0F, 1.6, 1.4, (entity) -> FARM_ANIMALS_FILTER.test(entity) && !this.isTrusting()));
         this.goalSelector.addGoal(8, new AvoidEntityGoal<>(this, Player.class, 10.0F, 1.6, 1.4, (entity) -> NOTICEABLE_PLAYER_FILTER.test(entity) && !this.isTrusting()));
         this.goalSelector.addGoal(12, new WaterAvoidingRandomStrollGoal(this, (double)1.0F));

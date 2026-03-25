@@ -1,11 +1,10 @@
 package com.yelf42.cropcritters.blocks;
 
-import com.mojang.serialization.MapCodec;
+import com.yelf42.cropcritters.platform.Services;
 import com.yelf42.cropcritters.registry.*;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,12 +18,9 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
@@ -42,18 +38,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
-import org.jetbrains.annotations.Nullable;
 
+// TODO sound fx
 public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
-    public static final MapCodec<SoulPotBlock> CODEC = simpleCodec(SoulPotBlock::new);
     public static final BooleanProperty CRACKED;
     public static final BooleanProperty WATERLOGGED;
     public static final IntegerProperty LEVEL;
     private static final VoxelShape SHAPE;
-
-    public MapCodec<SoulPotBlock> codec() {
-        return CODEC;
-    }
 
     public SoulPotBlock(Properties settings) {
         super(settings);
@@ -61,11 +52,11 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
         if (state.getValue(WATERLOGGED)) {
             world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
@@ -93,12 +84,12 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return true;
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         BlockState above = world.getBlockState(pos.above());
         if (above.is(Blocks.POTTED_WITHER_ROSE)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -112,61 +103,62 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
                     world.playSound(null, pos.above(), ModSounds.WITHER_ROSE_CONVERT_EXTRA, SoundSource.BLOCKS);
 
                     Vec3 center = pos.above().getCenter();
-                    ModPackets.ParticleRingS2CPayload payload = new ModPackets.ParticleRingS2CPayload(center, 0.5F, 10, ModParticles.SOUL_GLOW);
-                    ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(payload);
-
-                    for (ServerPlayer player : world.players()) {
-                        if (center.closerThan(player.position(), 64)) {
-                            player.connection.send(packet);
-                        }
-                    }
+                    Services.PLATFORM.sendParticleRingToNearbyPlayers(world, center, 0.5F, 10);
                 }
             }
         }
     }
 
-
-
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    @Override
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof SoulPotBlockEntity soulPotBlockEntity) {
-            if (world.isClientSide() || !stack.is(ModItems.LOST_SOUL)) {
-                return ItemInteractionResult.SUCCESS;
-            } else {
-                ItemStack itemStack = soulPotBlockEntity.getTheItem();
-                if (!stack.isEmpty() && (itemStack.isEmpty() || ItemStack.isSameItemSameComponents(itemStack, stack) && itemStack.getCount() < itemStack.getMaxStackSize())) {
-                    player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
-                    ItemStack itemStack2 = stack.consumeAndReturn(1, player);
-                    float f;
-                    if (soulPotBlockEntity.isEmpty()) {
-                        soulPotBlockEntity.setTheItem(itemStack2);
-                        f = (float)itemStack2.getCount() / (float)itemStack2.getMaxStackSize();
-                    } else {
-                        soulPotBlockEntity.increaseStack();
-                        f = (float)itemStack.getCount() / (float)itemStack.getMaxStackSize();
-                    }
-
-                    world.playSound(null, pos, SoundEvents.DECORATED_POT_INSERT, SoundSource.BLOCKS, 1.0F, 0.7F + 0.5F * f);
-                    if (world instanceof ServerLevel serverWorld) {
-                        serverWorld.sendParticles(ModParticles.SOUL_GLINT_PLUME, (double)pos.getX() + (double)0.5F, (double)pos.getY() + 1.2, (double)pos.getZ() + (double)0.5F, 5, 0.0F, 0.0F, 0.0F, 0.0F);
-                    }
-
-                    soulPotBlockEntity.setChanged();
-                    world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                    return ItemInteractionResult.SUCCESS;
-                } else {
-                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-                }
-            }
-        } else {
-            return ItemInteractionResult .PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (!(blockEntity instanceof SoulPotBlockEntity soulPotBlockEntity)) {
+            return InteractionResult.PASS;
         }
-    }
 
-    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        BlockEntity var7 = world.getBlockEntity(pos);
-        if (var7 instanceof SoulPotBlockEntity) {
-            world.playSound(null, pos, SoundEvents.DECORATED_POT_INSERT_FAIL, SoundSource.BLOCKS, 1.0F, 1.0F);
+        ItemStack stack = player.getItemInHand(hand);
+
+        if (!stack.is(ModItems.LOST_SOUL)) {
+            // useWithoutItem behaviour
+            if (!world.isClientSide()) {
+                world.playSound(null, pos, ModSounds.SOUL_POT_FAIL_INSERT, SoundSource.BLOCKS, 1.0F, 1.0F);
+                world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+            }
+            return InteractionResult.SUCCESS;
+        }
+
+        if (world.isClientSide()) {
+            return InteractionResult.SUCCESS;
+        }
+
+        ItemStack itemStack = soulPotBlockEntity.getTheItem();
+        if (!stack.isEmpty() && (itemStack.isEmpty() || itemStack.getCount() < itemStack.getMaxStackSize())) {
+            player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+
+            // consumeAndReturn equivalent
+            ItemStack inserted = stack.copy();
+            inserted.setCount(1);
+            if (!player.isCreative()) {
+                stack.shrink(1);
+            }
+
+            float f;
+            if (soulPotBlockEntity.isEmpty()) {
+                soulPotBlockEntity.setTheItem(inserted);
+                f = (float) inserted.getCount() / (float) inserted.getMaxStackSize();
+            } else {
+                soulPotBlockEntity.increaseStack();
+                f = (float) itemStack.getCount() / (float) itemStack.getMaxStackSize();
+            }
+
+            world.playSound(null, pos, ModSounds.SOUL_POT_INSERT, SoundSource.BLOCKS, 1.0F, 0.7F + 0.5F * f);
+            if (world instanceof ServerLevel serverWorld) {
+                serverWorld.sendParticles(ModParticles.SOUL_GLINT_PLUME,
+                        pos.getX() + 0.5, pos.getY() + 1.2, pos.getZ() + 0.5,
+                        5, 0.0, 0.0, 0.0, 0.0);
+            }
+
+            soulPotBlockEntity.setChanged();
             world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             return InteractionResult.SUCCESS;
         } else {
@@ -174,11 +166,11 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
         }
     }
 
-    protected boolean isPathfindable(BlockState state, PathComputationType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
         return false;
     }
 
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -186,38 +178,44 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
         builder.add(LEVEL, WATERLOGGED, CRACKED);
     }
 
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new SoulPotBlockEntity(pos, state);
     }
 
-    protected void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
-        Containers.dropContentsOnDestroy(state, newState, world, pos);
+    @Override
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        if (!state.is(newState.getBlock())) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof SoulPotBlockEntity soulPotBlockEntity) {
+                Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), soulPotBlockEntity.getTheItem());
+            }
+        }
         super.onRemove(state, world, pos, newState, moved);
     }
 
-    public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         ItemStack itemStack = player.getMainHandItem();
         BlockState blockState = state;
-        if (itemStack.is(ItemTags.BREAKS_DECORATED_POTS) && !EnchantmentHelper.hasTag(itemStack, EnchantmentTags.PREVENTS_DECORATED_POT_SHATTERING)) {
+        if (itemStack.is(ItemTags.BREAKS_DECORATED_POTS) && !EnchantmentHelper.hasSilkTouch(itemStack)) {
             blockState = state.setValue(CRACKED, true);
-            world.setBlock(pos, blockState, 260);
+            level.setBlock(pos, blockState, 4);
         }
 
-        return super.playerWillDestroy(world, pos, blockState, player);
+        super.playerWillDestroy(level, pos, blockState, player);
     }
 
-    protected FluidState getFluidState(BlockState state) {
+    public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
-    protected SoundType getSoundType(BlockState state) {
+    public SoundType getSoundType(BlockState state) {
         return state.getValue(CRACKED) ? SoundType.DECORATED_POT_CRACKED : SoundType.DECORATED_POT;
     }
 
-    protected void onProjectileHit(Level world, BlockState state, BlockHitResult hit, Projectile projectile) {
+    public void onProjectileHit(Level world, BlockState state, BlockHitResult hit, Projectile projectile) {
         BlockPos blockPos = hit.getBlockPos();
         if (world instanceof ServerLevel serverWorld) {
-            if (projectile.mayInteract(serverWorld, blockPos) && projectile.mayBreak(serverWorld)) {
+            if (projectile.mayInteract(serverWorld, blockPos)) {
                 world.setBlock(blockPos, state.setValue(CRACKED, true), 260);
                 world.destroyBlock(blockPos, true, projectile);
             }
@@ -225,11 +223,11 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
 
     }
 
-    protected boolean hasAnalogOutputSignal(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
-    protected int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
+    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
     }
 

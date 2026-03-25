@@ -45,7 +45,7 @@ public class PuffbombBlobFeature extends Feature<NoneFeatureConfiguration> {
         this.setBlock(world, centerPos, toPlace);
 
         // Generate spheres
-        Vec3 trueCenter = centerPos.getBottomCenter();
+        Vec3 trueCenter = Vec3.atBottomCenterOf(centerPos);
         List<Sphere> spheres = new ArrayList<>();
         spheres.add(new Sphere(trueCenter, 2.0));
         for (int i = 0; i <= random.nextInt(3); i++) {

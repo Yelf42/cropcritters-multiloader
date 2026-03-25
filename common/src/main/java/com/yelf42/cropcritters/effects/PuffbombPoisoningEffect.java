@@ -21,9 +21,6 @@ public class PuffbombPoisoningEffect extends MobEffect {
         public boolean shouldBlockExplode(Explosion explosion, BlockGetter world, BlockPos pos, BlockState state, float power) {
             return false;
         }
-        public boolean shouldDamageEntity(Explosion explosion, Entity entity) {
-            return true;
-        }
     };
 
     public PuffbombPoisoningEffect(MobEffectCategory category, int color) {
@@ -31,24 +28,21 @@ public class PuffbombPoisoningEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(LivingEntity entity, int amplifier) {
         Level world = entity.level();
         int duration = entity.getEffect(ModEffects.PUFFBOMB_POISONING).getDuration();
         if (duration <= 20) {
             BlockPos pos = BlockPos.containing(entity.position());
-            world.explode(null, null, POP, pos.getX(), pos.getY(), pos.getZ(), 4F, false, Level.ExplosionInteraction.BLOCK, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, ModSounds.PUFFBOMB_EXPLODE);
+            world.explode(null, pos.getX(), pos.getY(), pos.getZ(), 4F, false, Level.ExplosionInteraction.BLOCK);
             entity.removeEffect(ModEffects.PUFFBOMB_POISONING);
         } else {
-            world.playSound(null, entity.blockPosition(), ModSounds.TICKING, SoundSource.HOSTILE, 0.5f, 0.8f + 0.05f * (float)world.random.nextInt(8));
+            world.playSound(null, entity.blockPosition(), ModSounds.TICKING, SoundSource.HOSTILE, 0.5f, 0.8f + 0.05f * (float) world.random.nextInt(8));
         }
-
-        return true;
     }
 
     @Override
-    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         return duration % 20 == 0;
     }
-
 
 }

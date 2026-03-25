@@ -4,6 +4,7 @@ import com.yelf42.cropcritters.client.particle.*;
 import com.yelf42.cropcritters.client.renderer.blockentity.StrangleFernBlockEntityRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.AbstractCritterRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.PopperPodEntityRenderer;
+import com.yelf42.cropcritters.platform.FabricPlatformHelper;
 import com.yelf42.cropcritters.registry.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -11,7 +12,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.particle.SuspendedTownParticle;
@@ -19,8 +19,6 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.world.phys.Vec3;
 
 public class CropCrittersFabricClient implements ClientModInitializer {
 
@@ -85,27 +83,31 @@ public class CropCrittersFabricClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(ModParticles.SOUL_GLINT, SuspendedTownParticle.HappyVillagerProvider::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.SOUL_GLINT_PLUME, SoulGlintPlumeParticle.Factory::new);
 
-        // Packets
-        ClientPlayNetworking.registerGlobalReceiver(ModPackets.WaterSprayS2CPayload.ID, (payload, context) -> {
-            ClientLevel world = context.client().level;
-            if (world == null) return;
-
-            Vec3 pos = payload.pos();
-            Vec3 dir = payload.dir();
-            world.addParticle(ModParticles.WATER_SPRAY, pos.x, pos.y + 0.2, pos.z, dir.x, 0, dir.z);
+        ClientPlayNetworking.registerGlobalReceiver(FabricPlatformHelper.WATER_SPRAY_ID, (client, handler, buf, responseSender) -> {
+            ModPackets.WaterSprayS2CPacket packet = ModPackets.WaterSprayS2CPacket.decode(buf);
+            client.execute(() -> {
+                ClientLevel world = client.level;
+                if (world == null) return;
+                world.addParticle(ModParticles.WATER_SPRAY,
+                        packet.pos().x, packet.pos().y + 0.2, packet.pos().z,
+                        packet.dir().x, 0, packet.dir().z);
+            });
         });
-        ClientPlayNetworking.registerGlobalReceiver(ModPackets.ParticleRingS2CPayload.ID, (payload, context) -> {
-            ClientLevel world = context.client().level;
-            if (world == null) return;
 
-            Vec3 pos = payload.pos();
-            float radius = payload.radius();
-            int count = payload.count();
-            ParticleOptions effect = payload.effect();
-            float angle = (float) ((Math.PI * 2.0) / ((float)count));
-            for (int i = 0; i < count; i++) {
-                world.addParticle(effect, pos.x + Math.sin(angle * i) * radius, pos.y, pos.z + Math.cos(angle * i) * radius, 0, 0, 0);
-            }
+        ClientPlayNetworking.registerGlobalReceiver(FabricPlatformHelper.PARTICLE_RING_ID, (client, handler, buf, responseSender) -> {
+            ModPackets.ParticleRingS2CPacket packet = ModPackets.ParticleRingS2CPacket.decode(buf);
+            client.execute(() -> {
+                ClientLevel world = client.level;
+                if (world == null) return;
+                float angle = (float) ((Math.PI * 2.0) / ((float) packet.count()));
+                for (int i = 0; i < packet.count(); i++) {
+                    world.addParticle(ModParticles.SOUL_GLOW,
+                            packet.pos().x + Math.sin(angle * i) * packet.radius(),
+                            packet.pos().y,
+                            packet.pos().z + Math.cos(angle * i) * packet.radius(),
+                            0, 0, 0);
+                }
+            });
         });
     }
 

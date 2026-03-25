@@ -35,7 +35,7 @@ public abstract class LightningBoltMixin {
         LightningBolt self = (LightningBolt) (Object)this;
         Vec3 pos = self.position();
         BlockPos blockPos = BlockPos.containing(pos.x, pos.y - 1.0E-6, pos.z);
-        strikeCrops(self.level(), blockPos, self.getRandom());
+        strikeCrops(self.level(), blockPos, self.level().getRandom());
     }
 
     @Unique

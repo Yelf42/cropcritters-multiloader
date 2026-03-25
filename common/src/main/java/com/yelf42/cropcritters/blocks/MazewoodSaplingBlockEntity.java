@@ -45,8 +45,8 @@ public class MazewoodSaplingBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
 
         long[] growIntoArray = new long[growInto.size()];
         int i = 0;
@@ -57,8 +57,8 @@ public class MazewoodSaplingBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
 
         growInto.clear();
         if (tag.contains("GrowInto", 12)) {

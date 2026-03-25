@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.BlockPos;
 
 public class StrangleFernBlockEntity extends BlockEntity {
@@ -15,12 +14,12 @@ public class StrangleFernBlockEntity extends BlockEntity {
 
     public StrangleFernBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.STRANGLE_FERN, pos, state);
-        if (Math.random() > 0.5) infestedState = Blocks.SHORT_GRASS.defaultBlockState();
+        if (Math.random() > 0.5) infestedState = Blocks.GRASS.defaultBlockState();
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("InfestedState")) {
             infestedState = BlockState.CODEC.parse(NbtOps.INSTANCE, tag.get("InfestedState"))
                     .resultOrPartial(e -> {})
@@ -31,8 +30,8 @@ public class StrangleFernBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         BlockState.CODEC.encodeStart(NbtOps.INSTANCE, infestedState)
                 .resultOrPartial(e -> {})
                 .ifPresent(nbt -> tag.put("InfestedState", nbt));
@@ -49,10 +48,6 @@ public class StrangleFernBlockEntity extends BlockEntity {
 
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return this.saveCustomOnly(registries);
     }
 
     private void updateListeners() {

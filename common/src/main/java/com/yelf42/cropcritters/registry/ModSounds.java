@@ -21,7 +21,7 @@ public class ModSounds {
     public static final SoundEvent MAZEWOOD_GROW = register("mazewood_grow");
 
     public static final SoundEvent TICKING = register("ticking");
-    public static final Holder<SoundEvent> PUFFBOMB_EXPLODE = registerHolder("puffbomb_explode");
+    public static final SoundEvent PUFFBOMB_EXPLODE = register("puffbomb_explode");
 
     public static final SoundEvent WITHER_ROSE_CONVERT = register("wither_rose_convert");
     public static final SoundEvent WITHER_ROSE_CONVERT_EXTRA = register("wither_rose_convert_extra");
@@ -50,6 +50,9 @@ public class ModSounds {
 
     public static final SoundEvent POPPER_POD_POP = register("popper_pod_pop");
     public static final SoundEvent POPPER_POD_LAUNCH = register("popper_pod_launch");
+
+    public static final SoundEvent SOUL_POT_INSERT = register("soul_pot_insert");
+    public static final SoundEvent SOUL_POT_FAIL_INSERT = register("soul_pot_fail_insert");
 
 
     private static SoundEvent register(String name) {

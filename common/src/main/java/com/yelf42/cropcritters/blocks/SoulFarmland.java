@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import org.jetbrains.annotations.Nullable;
 import com.yelf42.cropcritters.CropCritters;
 
 public class SoulFarmland extends FarmBlock {
@@ -22,7 +21,7 @@ public class SoulFarmland extends FarmBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(MOISTURE, 7));
     }
 
-    public static void setToSoulSoil(@Nullable Entity entity, BlockState state, Level world, BlockPos pos) {
+    public static void setToSoulSoil(Entity entity, BlockState state, Level world, BlockPos pos) {
         BlockState blockState = pushEntitiesUp(state, Blocks.SOUL_SOIL.defaultBlockState(), world, pos);
         world.setBlockAndUpdate(pos, blockState);
         world.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(entity, blockState));
@@ -42,14 +41,14 @@ public class SoulFarmland extends FarmBlock {
     }
 
     @Override
-    protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         if (!state.canSurvive(world, pos)) {
             setToSoulSoil(null, state, world, pos);
         }
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return false;
     }
 }

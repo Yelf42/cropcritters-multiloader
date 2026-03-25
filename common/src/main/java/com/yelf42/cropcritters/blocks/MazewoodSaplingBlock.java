@@ -19,11 +19,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import org.jetbrains.annotations.Nullable;
 import com.yelf42.cropcritters.config.ConfigManager;
 
 public class MazewoodSaplingBlock extends BaseEntityBlock implements BonemealableBlock {
-    public static final MapCodec<MazewoodSaplingBlock> CODEC = simpleCodec(MazewoodSaplingBlock::new);
     private static final VoxelShape SHAPE = ModBlocks.column(8.0F, 0.0F,8.0F);;
     public static final IntegerProperty SPREAD = IntegerProperty.create("spread", 0, 128);
 
@@ -33,22 +31,17 @@ public class MazewoodSaplingBlock extends BaseEntityBlock implements Bonemealabl
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new MazewoodSaplingBlockEntity(pos, state);
     }
 
     @Override
-    public MapCodec<? extends MazewoodSaplingBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -65,7 +58,7 @@ public class MazewoodSaplingBlock extends BaseEntityBlock implements Bonemealabl
     }
 
     @Override
-    protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof MazewoodSaplingBlockEntity spreader) {
             spreader.tickScheduled();
@@ -73,12 +66,12 @@ public class MazewoodSaplingBlock extends BaseEntityBlock implements Bonemealabl
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return true;
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof MazewoodSaplingBlockEntity spreader) {
             spreader.tickRandom(random);
@@ -91,12 +84,12 @@ public class MazewoodSaplingBlock extends BaseEntityBlock implements Bonemealabl
     }
 
     @Override
-    protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         return world.getBlockState(pos.below()).is(BlockTags.DIRT);
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state, boolean b) {
         return true;
     }
 

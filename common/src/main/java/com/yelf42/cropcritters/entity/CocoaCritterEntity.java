@@ -3,9 +3,8 @@ package com.yelf42.cropcritters.entity;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -13,6 +12,7 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
@@ -21,14 +21,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
@@ -37,15 +35,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import com.yelf42.cropcritters.config.RecognizedCropsState;
 import com.yelf42.cropcritters.registry.ModItems;
 import com.yelf42.cropcritters.registry.ModSounds;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -59,7 +56,6 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
 
     private static final int MAX_HOPPER_DISTANCE = 32;
 
-    @Nullable
     BlockPos hopperPos;
 
     static {
@@ -92,8 +88,11 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-
-        this.hopperPos = NbtUtils.readBlockPos(tag, "hopper_pos").orElse(null);
+        if (tag.contains("hopper_pos")) {
+            this.hopperPos = NbtUtils.readBlockPos(tag.getCompound("hopper_pos"));
+        } else {
+            this.hopperPos = null;
+        }
     }
 
 
@@ -103,7 +102,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
     }
 
     protected void registerGoals() {
-        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, (stack) -> stack.is(ModItems.LOST_SOUL), true);
+        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, Ingredient.of(ModItems.LOST_SOUL), true);
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, temptGoal);
         this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, Player.class, 10.0F, 1.6, 1.4, (entity) -> NOTICEABLE_PLAYER_FILTER.test(entity) && !this.isTrusting()));
@@ -206,14 +205,14 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
     }
 
     @Override
-    protected void dropAllDeathLoot(ServerLevel world, DamageSource damageSource) {
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean recentlyHit) {
         ItemStack itemStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
         if (!itemStack.isEmpty()) {
             this.spawnAtLocation(itemStack);
             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         }
 
-        super.dropAllDeathLoot(world, damageSource);
+        super.dropCustomDeathLoot(damageSource, looting, recentlyHit);
     }
 
     // Right click with empty hand makes critter try drop held item
@@ -236,7 +235,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
                 itemEntity = new ItemEntity(this.level(), this.getX(), this.getY() + (double)0.6F, this.getZ(), stack, 0F, 0F, 0F);
             }
             itemEntity.setPickUpDelay(40);
-            itemEntity.setThrower(this);
+            itemEntity.setThrower(this.uuid);
             this.playSound(ModSounds.ENTITY_CRITTER_DROP, 1.0F, 1.0F);
             this.level().addFreshEntity(itemEntity);
             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
@@ -340,8 +339,9 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
         }
 
         protected boolean checkHopper(BlockPos blockPos) {
-            return (CocoaCritterEntity.this.level().getBlockState(blockPos).is(Blocks.HOPPER))
-                    && (CocoaCritterEntity.this.level().getBlockState(blockPos.above()).isPathfindable(PathComputationType.LAND));
+            Level level = CocoaCritterEntity.this.level();
+            return level.getBlockState(blockPos).is(Blocks.HOPPER)
+                    && level.getBlockState(blockPos.above()).isPathfindable(level, blockPos.above(), PathComputationType.LAND);
         }
 
         protected Optional<BlockPos> getTargetBlock() {

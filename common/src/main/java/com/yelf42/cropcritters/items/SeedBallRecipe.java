@@ -2,6 +2,8 @@ package com.yelf42.cropcritters.items;
 
 import com.yelf42.cropcritters.registry.ModComponents;
 import com.yelf42.cropcritters.registry.ModItems;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.CropBlock;
@@ -9,9 +11,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import com.yelf42.cropcritters.CropCritters;
@@ -21,19 +21,19 @@ import java.util.List;
 
 public class SeedBallRecipe extends CustomRecipe {
 
-    public SeedBallRecipe(CraftingBookCategory category) {
-        super(category);
+    public SeedBallRecipe(ResourceLocation id, CraftingBookCategory category) {
+        super(id, category);
     }
 
     @Override
-    public boolean matches(CraftingInput input, Level world) {
-        if (input.ingredientCount() != 9 || input.height() != 3 || input.width() != 3) return false;
-        if (!input.getItem(1,1).is(Items.MUD)) return false;
+    public boolean matches(CraftingContainer input, Level level) {
+        if (input.getItems().size() != 9 || input.getHeight() != 3 || input.getWidth() != 3) return false;
+        if (!input.getItem(4).is(Items.MUD)) return false;
 
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++) {
                 if (i == 1 && j == 1) continue;
-                ItemStack is = input.getItem(i,j);
+                ItemStack is = input.getItem(j + i * 3);
 
                 if (!is.is(Items.POISONOUS_POTATO) && validItem(is) == null) return false;
             }
@@ -43,7 +43,7 @@ public class SeedBallRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
+    public ItemStack assemble(CraftingContainer input, RegistryAccess registryAccess) {
         ItemStack result = new ItemStack(ModItems.SEED_BALL, 1);
 
         List<ResourceLocation> usedSeeds = new ArrayList<>();
@@ -51,7 +51,7 @@ public class SeedBallRecipe extends CustomRecipe {
 
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++) {
-                ItemStack is = input.getItem(i,j);
+                ItemStack is = input.getItem(j + i * 3);
                 if (is.is(Items.POISONOUS_POTATO)) {
                     poisonousPotatoes += 1;
                 } else {
@@ -63,9 +63,8 @@ public class SeedBallRecipe extends CustomRecipe {
             }
         }
 
-        result.set(ModComponents.POISONOUS_SEED_BALL, new ModComponents.PoisonousComponent(poisonousPotatoes));
-
-        result.set(ModComponents.SEED_TYPES, new ModComponents.SeedTypesComponent(usedSeeds));
+        ModComponents.setPoisonous(result, new ModComponents.PoisonousComponent(poisonousPotatoes));
+        ModComponents.setSeedTypes(result, new ModComponents.SeedTypesComponent(usedSeeds));
         return result;
     }
 

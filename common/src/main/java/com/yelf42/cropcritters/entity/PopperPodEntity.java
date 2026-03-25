@@ -27,9 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import com.yelf42.cropcritters.registry.ModItems;
 import com.yelf42.cropcritters.registry.ModSounds;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.OptionalInt;
 
 public class PopperPodEntity extends ThrowableItemProjectile {
@@ -39,7 +37,7 @@ public class PopperPodEntity extends ThrowableItemProjectile {
     private int life;
     private int lifeTime;
     private boolean shouldExplode = true;
-    private @Nullable LivingEntity shooter;
+    private LivingEntity shooter;
 
     public PopperPodEntity(EntityType<? extends PopperPodEntity> entityType, Level world) {
         super(entityType, world);
@@ -58,7 +56,7 @@ public class PopperPodEntity extends ThrowableItemProjectile {
         this.lifeTime = 15 + this.random.nextInt(6) + this.random.nextInt(7);
     }
 
-    public PopperPodEntity(Level world, @Nullable Entity entity, double x, double y, double z, ItemStack stack) {
+    public PopperPodEntity(Level world, Entity entity, double x, double y, double z, ItemStack stack) {
         this(world, x, y, z, stack);
         this.setOwner(entity);
     }
@@ -75,11 +73,12 @@ public class PopperPodEntity extends ThrowableItemProjectile {
         this.entityData.set(SHOT_AT_ANGLE, shotAtAngle);
     }
 
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(ITEM, getDefaultStack());
-        builder.define(SHOOTER_ENTITY_ID, OptionalInt.empty());
-        builder.define(SHOT_AT_ANGLE, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ITEM, getDefaultStack());
+        this.entityData.define(SHOOTER_ENTITY_ID, OptionalInt.empty());
+        this.entityData.define(SHOT_AT_ANGLE, false);
+
     }
 
     public boolean shouldRenderAtSqrDistance(double distance) {
@@ -135,7 +134,7 @@ public class PopperPodEntity extends ThrowableItemProjectile {
         }
 
         if (!this.noPhysics && this.isAlive() && hitResult.getType() != HitResult.Type.MISS) {
-            this.hitTargetOrDeflectSelf(hitResult);
+            this.onHit(hitResult);
             this.hasImpulse = true;
         }
 
@@ -209,7 +208,7 @@ public class PopperPodEntity extends ThrowableItemProjectile {
     public void handleEntityEvent(byte status) {
         if (status == 17 && this.level().isClientSide()) {
             Vec3 vec3d = this.getDeltaMovement();
-            this.level().createFireworks(this.getX(), this.getY(), this.getZ(), vec3d.x, vec3d.y, vec3d.z, List.of());
+            this.level().createFireworks(this.getX(), this.getY(), this.getZ(), vec3d.x, vec3d.y, vec3d.z, null);
         }
         super.handleEntityEvent(status);
     }
@@ -220,7 +219,7 @@ public class PopperPodEntity extends ThrowableItemProjectile {
 
         tag.putInt("Life", this.life);
         tag.putInt("LifeTime", this.lifeTime);
-        tag.put("PopperPodItem", this.getItem().save(this.registryAccess()));
+        tag.put("PopperPodItem", this.getItem().save(new CompoundTag()));
         tag.putBoolean("ShotAtAngle", this.entityData.get(SHOT_AT_ANGLE));
     }
 
@@ -232,7 +231,7 @@ public class PopperPodEntity extends ThrowableItemProjectile {
         this.lifeTime = compound.getInt("LifeTime");
 
         if (compound.contains("PopperPodItem", 10)) {
-            this.entityData.set(ITEM, ItemStack.parse(this.registryAccess(), compound.getCompound("PopperPodItem")).orElseGet(PopperPodEntity::getDefaultItemStack));
+            this.entityData.set(ITEM, ItemStack.of(compound.getCompound("PopperPodItem")));
         } else {
             this.entityData.set(ITEM, getDefaultItemStack());
         }

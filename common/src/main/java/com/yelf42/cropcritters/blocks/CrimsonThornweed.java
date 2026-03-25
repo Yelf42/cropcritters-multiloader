@@ -26,7 +26,7 @@ public class CrimsonThornweed extends SpreadingWeedBlock {
     public int getMaxNeighbours() { return 3; }
 
     @Override
-    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         // Apply damage, avoid critters and nether mobs
         if (entity instanceof LivingEntity livingEntity
                 && !(livingEntity.getType().is(CropCritters.WEED_IMMUNE))) {

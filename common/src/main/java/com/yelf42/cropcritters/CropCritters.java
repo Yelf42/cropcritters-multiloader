@@ -24,6 +24,7 @@ public class CropCritters {
     public static final TagKey<EntityType<?>> WEED_IMMUNE = TagKey.create(Registries.ENTITY_TYPE, identifier( "weed_immune"));
     public static final TagKey<EntityType<?>> CROP_CRITTERS = TagKey.create(Registries.ENTITY_TYPE, identifier( "crop_critters"));
     public static final TagKey<EntityType<?>> SCARE_CRITTERS = TagKey.create(Registries.ENTITY_TYPE, identifier( "scare_critters"));
+    public static final TagKey<EntityType<?>> UNDEAD = TagKey.create(Registries.ENTITY_TYPE, identifier( "undead"));
     public static final TagKey<EntityType<?>> HAS_LOST_SOUL = TagKey.create(Registries.ENTITY_TYPE, identifier( "has_lost_soul"));
 
     public static final TagKey<Block> UNDERWATER_STRANGE_FERTILIZERS = TagKey.create(Registries.BLOCK, identifier( "underwater_strange_fertilizers"));
@@ -51,7 +52,7 @@ public class CropCritters {
     }
 
     public static ResourceLocation identifier(String path) {
-        return ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, path);
+        return new ResourceLocation(CropCritters.MOD_ID, path);
     }
 
     public static AffectorPositions getAffectorPositions(ServerLevel world) {

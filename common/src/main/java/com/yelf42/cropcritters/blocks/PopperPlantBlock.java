@@ -26,7 +26,6 @@ import com.yelf42.cropcritters.registry.ModItems;
 
 public class PopperPlantBlock extends BushBlock implements BonemealableBlock {
 
-    public static final MapCodec<PopperPlantBlock> CODEC = simpleCodec(PopperPlantBlock::new);
     public static final int MAX_AGE = 3;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
     public static final BooleanProperty CAN_SPREAD = BooleanProperty.create("can_spread");
@@ -38,12 +37,7 @@ public class PopperPlantBlock extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    protected MapCodec<? extends BushBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         Vec3 vec3 = state.getOffset(world, pos);
         return SHAPE.move(vec3.x, vec3.y, vec3.z);
     }
@@ -61,12 +55,12 @@ public class PopperPlantBlock extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return true;
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         int lightLevel = world.getBrightness(LightLayer.SKY, pos);
         float temp = world.getBiome(pos).value().getBaseTemperature();
         if (lightLevel < 12 || (temp >= 1.0 || temp < 0.5)) return;
@@ -103,7 +97,7 @@ public class PopperPlantBlock extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state, boolean b) {
         return true;
     }
 

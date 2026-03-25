@@ -30,13 +30,13 @@ public class ModItems {
     public static final Item STRANGE_FERTILIZER = registerItem("strange_fertilizer", StrangeFertilizerItem::new, new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final Item LOST_SOUL = registerItem("lost_soul", LostSoulItem::new, new Item.Properties().rarity(Rarity.UNCOMMON));
 
-    public static final Item SEED_BALL = registerItem("seed_ball", SeedBallItem::new, new Item.Properties().stacksTo(16).component(ModComponents.POISONOUS_SEED_BALL, new ModComponents.PoisonousComponent(0)));
+    public static final Item SEED_BALL = registerItem("seed_ball", SeedBallItem::new, new Item.Properties().stacksTo(16));
     public static final Item POPPER_POD = registerItem("popper_pod", PopperPodItem::new, new Item.Properties());
     public static final Item HERBICIDE = registerItem("herbicide", HerbicideItem::new, new Item.Properties().stacksTo(16));
 
-    public static final Item PUFFBOMB_SLICE = registerItem("puffbomb_slice", Item::new, new Item.Properties().food((new FoodProperties.Builder()).nutrition(2).saturationModifier(0.4F).build()));
-    public static final Item COOKED_PUFFBOMB_STEAK = registerItem("cooked_puffbomb_steak", Item::new, new Item.Properties().food((new FoodProperties.Builder()).nutrition(7).saturationModifier(0.9F).build()));
-    public static final Item SEED_BAR = registerItem("seed_bar", Item::new, new Item.Properties().food((new FoodProperties.Builder()).nutrition(5).saturationModifier(0.7F).build()));
+    public static final Item PUFFBOMB_SLICE = registerItem("puffbomb_slice", Item::new, new Item.Properties().food((new FoodProperties.Builder()).nutrition(2).saturationMod(0.4F).build()));
+    public static final Item COOKED_PUFFBOMB_STEAK = registerItem("cooked_puffbomb_steak", Item::new, new Item.Properties().food((new FoodProperties.Builder()).nutrition(7).saturationMod(0.9F).build()));
+    public static final Item SEED_BAR = registerItem("seed_bar", Item::new, new Item.Properties().food((new FoodProperties.Builder()).nutrition(5).saturationMod(0.7F).build()));
 
     public static final Item WHEAT_CRITTER_SPAWN_EGG = registerSpawnEgg("wheat_critter_spawn_egg", ModEntities.WHEAT_CRITTER);
     public static final Item MELON_CRITTER_SPAWN_EGG = registerSpawnEgg("melon_critter_spawn_egg", ModEntities.MELON_CRITTER);
@@ -89,7 +89,7 @@ public class ModItems {
 
     /// BINDER
     public static void registerTabs(BiConsumer<CreativeModeTab, ResourceLocation> consumer) {
-        consumer.accept(CROPCRITTERS_TAB, ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "cropcritters_tab"));
+        consumer.accept(CROPCRITTERS_TAB, CropCritters.identifier("cropcritters_tab"));
     }
 
 
@@ -99,7 +99,7 @@ public class ModItems {
 
     /// BINDER
     public static void registerRecipes(BiConsumer<RecipeSerializer<?>, ResourceLocation> consumer) {
-        consumer.accept(SEED_BALL_RECIPE, ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_ball"));
-        consumer.accept(SEED_BAR_RECIPE, ResourceLocation.fromNamespaceAndPath(CropCritters.MOD_ID, "crafting_special_seed_bar"));
+        consumer.accept(SEED_BALL_RECIPE, CropCritters.identifier("crafting_special_seed_ball"));
+        consumer.accept(SEED_BAR_RECIPE, CropCritters.identifier( "crafting_special_seed_bar"));
     }
 }

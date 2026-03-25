@@ -23,18 +23,13 @@ import com.yelf42.cropcritters.area_affectors.TypedBlockArea;
 import java.util.Collection;
 
 public class TrimmedSoulRoseBlock extends BushBlock {
-    public static final MapCodec<TrimmedSoulRoseBlock> CODEC = simpleCodec(TrimmedSoulRoseBlock::new);
     private static final VoxelShape SHAPE = ModBlocks.column(8.0F, 0.0F, 8.0F);
-
-    public MapCodec<? extends TrimmedSoulRoseBlock> codec() {
-        return CODEC;
-    }
 
     public TrimmedSoulRoseBlock(Properties settings) {
         super(settings);
     }
 
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -44,7 +39,7 @@ public class TrimmedSoulRoseBlock extends BushBlock {
     }
 
     @Override
-    protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         AffectorPositions affectorPositions = CropCritters.getAffectorPositions(world);
         Collection<? extends TypedBlockArea> affectorsInSection = affectorPositions.getAffectorsInSection(pos);
         if (!affectorsInSection.isEmpty()) {
@@ -67,18 +62,18 @@ public class TrimmedSoulRoseBlock extends BushBlock {
     }
 
     @Override
-    protected void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
         world.scheduleTick(pos, ModBlocks.TRIMMED_SOUL_ROSE, 40, TickPriority.EXTREMELY_LOW);
         super.onPlace(state, world, pos, oldState, notify);
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return true;
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         world.scheduleTick(pos, ModBlocks.TRIMMED_SOUL_ROSE, 40, TickPriority.EXTREMELY_LOW);
     }
 

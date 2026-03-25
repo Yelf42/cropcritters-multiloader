@@ -3,6 +3,7 @@ package com.yelf42.cropcritters.mixin;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.events.WeedGrowNotifier;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -11,6 +12,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.level.Level;
@@ -40,8 +42,14 @@ public abstract class ServerLevelMixin extends Level {
         if (newState.is(CropCritters.WEEDS)) WeedGrowNotifier.notifyEvent(ServerLevel.class.cast(this), pos);
     }
 
-    @Inject(method = "tickPrecipitation", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;shouldSnow(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z", shift = At.Shift.AFTER))
-    public void injectFarmlandSnowFall(BlockPos pos, CallbackInfo ci) {
+    // TODO test snowfall
+    @Inject(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;shouldSnow(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z", shift = At.Shift.AFTER))
+    public void injectFarmlandSnowFall(LevelChunk chunk, int randomTickSpeed, CallbackInfo ci) {
+        ChunkPos chunkpos = chunk.getPos();
+        int i = chunkpos.getMinBlockX();
+        int j = chunkpos.getMinBlockZ();
+        BlockPos pos = this.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.getBlockRandomPos(i, 0, j, 15));
+
         BlockPos blockPos = this.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos).below();
         BlockState blockState = this.getBlockState(blockPos);
         if (blockState.is(Blocks.FARMLAND)) {

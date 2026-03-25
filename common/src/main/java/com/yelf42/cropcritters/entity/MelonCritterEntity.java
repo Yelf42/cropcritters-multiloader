@@ -1,6 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
-import com.yelf42.cropcritters.registry.ModPackets;
+import com.yelf42.cropcritters.platform.Services;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.BonemealableBlock;
@@ -23,12 +24,9 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
@@ -52,7 +50,7 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
 
     @Override
     protected void registerGoals() {
-        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, (stack) -> stack.is(ModItems.LOST_SOUL), false);
+        net.minecraft.world.entity.ai.goal.TemptGoal temptGoal = new TemptGoal(this, 0.6, Ingredient.of(ModItems.LOST_SOUL), false);
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, temptGoal);
         this.targetWorkGoal = new TargetWorkGoal();
@@ -179,7 +177,7 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
                     BlockPos toWater = wateringTargets.get(MelonCritterEntity.this.random.nextInt(wateringTargets.size()));
                     BlockState toWaterState = serverWorld.getBlockState(toWater);
                     if (toWaterState.getBlock() instanceof BonemealableBlock fertilizable) {
-                        if (fertilizable.isValidBonemealTarget(serverWorld, toWater, toWaterState)) {
+                        if (fertilizable.isValidBonemealTarget(serverWorld, toWater, toWaterState, false)) {
                             if (fertilizable.isBonemealSuccess(serverWorld, serverWorld.random, toWater, toWaterState)) {
                                 fertilizable.performBonemeal(serverWorld, serverWorld.random, toWater, toWaterState);
                             }
@@ -189,14 +187,7 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
                 Vec3 facing = MelonCritterEntity.this.getLookAngle().normalize().scale(3);
                 Vec3 start = MelonCritterEntity.this.position().add(0F, 0.1F, 0F);
 
-                ModPackets.WaterSprayS2CPayload payload = new ModPackets.WaterSprayS2CPayload(start, facing);
-                ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(payload);
-
-                for (ServerPlayer player : serverWorld.players()) {
-                    if (start.closerThan(player.position(), 64)) {
-                        player.connection.send(packet);
-                    }
-                }
+                Services.PLATFORM.sendWaterSpray(serverWorld, start, facing);
 
                 MelonCritterEntity.this.playSound(ModSounds.ENTITY_CRITTER_WATER, 0.01F, 0.8F / (MelonCritterEntity.this.getRandom().nextFloat() * 0.4F + 0.8F));
             }
@@ -205,7 +196,8 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
         }
 
         private void findWateringTargets() {
-            Direction dir = MelonCritterEntity.this.getNearestViewDirection();
+            Vec3 look = MelonCritterEntity.this.getLookAngle();
+            Direction dir = Direction.getNearest((float) look.x, (float) look.y, (float) look.z);
             Vec3 facing = new Vec3(dir.getStepX(), dir.getStepY(), dir.getStepZ());
             BlockPos start = MelonCritterEntity.this.blockPosition();
             float stepSize = 0.3F;

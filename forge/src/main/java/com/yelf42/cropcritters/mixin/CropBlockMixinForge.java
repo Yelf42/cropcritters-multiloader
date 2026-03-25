@@ -3,6 +3,7 @@ package com.yelf42.cropcritters.mixin;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CropBlock.class)
-public abstract class CropBlockMixinNeoforge {
+public abstract class CropBlockMixinForge {
 
     // If SOUL_FARMLAND, ignore vanilla moisture stuff and just return 18.f
     @Inject(method = "getGrowthSpeed", at = @At("HEAD"), cancellable = true)
-    private static void soulBasedMoisture(BlockState blockState, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Float> cir) {
-        if (blockState.is(ModBlocks.SOUL_FARMLAND)) {
+    private static void soulBasedMoisture(Block block, BlockGetter level, BlockPos pos, CallbackInfoReturnable<Float> cir) {
+        if (level.getBlockState(pos.below()).is(ModBlocks.SOUL_FARMLAND)) {
             cir.setReturnValue(18.f);
         }
     }
