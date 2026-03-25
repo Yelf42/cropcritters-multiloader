@@ -38,10 +38,11 @@ dependencies {
     compileOnly project(":common")
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
-    // No fg.deobf() — legacyforge handles deobf automatically
-    implementation "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}"
-    implementation "com.eliotlash.mclib:mclib:20"
+    modImplementation "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}"
+    //implementation "com.eliotlash.mclib:mclib:20"
 }
+
+
 
 jar {
     finalizedBy('reobfJar')

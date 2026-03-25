@@ -16,6 +16,7 @@ import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.function.BiConsumer;
@@ -25,9 +26,9 @@ import java.util.function.Consumer;
 public class CropCrittersForge {
     public static IEventBus eventBus;
 
-    public CropCrittersForge(IEventBus eventBus) {
+    public CropCrittersForge() {
 
-        CropCrittersForge.eventBus = eventBus;
+        CropCrittersForge.eventBus = FMLJavaModLoadingContext.get().getModEventBus();;
 
         ForgePlatformHelper.register(eventBus, MinecraftForge.EVENT_BUS);
 
@@ -49,6 +50,16 @@ public class CropCrittersForge {
         bind(Registries.ENTITY_TYPE, ModEntities::register);
         eventBus.addListener(this::registerEntityAttributes);
 
+        // Fuel & Compost & Dispenser
+        eventBus.addListener(this::setupCommon);
+        MinecraftForge.EVENT_BUS.addListener((FurnaceFuelBurnTimeEvent event) -> {
+            Item item = event.getItemStack().getItem();
+            if (item == ModItems.LOST_SOUL) {
+                event.setBurnTime(80 * 20);
+            }
+        });
+
+
         // Client
         if (net.minecraftforge.fml.loading.FMLEnvironment.dist.isClient()) {
             eventBus.addListener(CropCrittersForgeClient::registerParticleFactories);
@@ -58,19 +69,7 @@ public class CropCrittersForge {
             eventBus.addListener(CropCrittersForgeClient::registerItemColors);
         }
 
-        ModDispenserBehaviours.registerDispenserBehavior();
-        eventBus.addListener(this::setupDispenserBehaviors);
-
         BiomeModifiers.register(eventBus);
-
-        // Fuel & Compost
-        registerCompostable();
-        eventBus.addListener((FurnaceFuelBurnTimeEvent event) -> {
-            Item item = event.getItemStack().getItem();
-            if (item == ModItems.LOST_SOUL) {
-                event.setBurnTime(80 * 20);
-            }
-        });
 
         CropCritters.init();
 
@@ -84,8 +83,11 @@ public class CropCrittersForge {
         });
     }
 
-    public void setupDispenserBehaviors(FMLCommonSetupEvent event) {
-        event.enqueueWork(ModDispenserBehaviours::runDispenserRegistration);
+    public void setupCommon(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            registerCompostable();
+            ModDispenserBehaviours.runDispenserRegistration();
+        });
     }
 
     private void registerEntityAttributes(EntityAttributeCreationEvent event) {
