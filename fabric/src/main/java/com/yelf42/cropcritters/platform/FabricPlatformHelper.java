@@ -80,7 +80,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
                     .persistent(AffectorPositions.CODEC)
                     .buildAndRegister(CropCritters.identifier("affector_positions"));
 
-    // TODO test this
     @Override
     public AffectorPositions getAffectorPositions(ServerLevel world) {
         return ((AttachmentTarget) world).getAttachedOrElse(

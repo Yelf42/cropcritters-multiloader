@@ -1,6 +1,8 @@
 package com.yelf42.cropcritters.entity;
 
+import com.yelf42.cropcritters.registry.ModComponents;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -41,16 +43,22 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 public class PumpkinCritterEntity extends AbstractCropCritterEntity implements RangedAttackMob {
 
     public static final RawAnimation LOB_SEEDS = RawAnimation.begin().thenPlay("plant");
-
+    private static final ItemStack SEED_BALL = new ItemStack(ModItems.SEED_BALL, 1);
 
     public PumpkinCritterEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
+        ModComponents.setSeedTypes(SEED_BALL, new ModComponents.SeedTypesComponent(List.of(
+                ResourceLocation.of("minecraft:wheat", ':'),
+                ResourceLocation.of("minecraft:carrots", ':'),
+                ResourceLocation.of("minecraft:potatoes", ':'),
+                ResourceLocation.of("minecraft:beetroots", ':'))));
     }
 
     @Override
@@ -99,8 +107,7 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
         Level world = this.level();
         float dist = (float) this.position().distanceTo(this.targetPos.getCenter());
         if (world instanceof ServerLevel serverWorld) {
-            ItemStack itemStack = new ItemStack(ModItems.SEED_BALL);
-            SeedBallProjectileEntity spitSeed = new SeedBallProjectileEntity(serverWorld, this, itemStack);
+            SeedBallProjectileEntity spitSeed = new SeedBallProjectileEntity(serverWorld, this, SEED_BALL);
             spitSeed.shoot(dir.x, 1.8F, dir.z, 0.4F * (dist / 5.0F), 0.0F);
             this.level().addFreshEntity(spitSeed);
         }

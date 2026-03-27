@@ -37,6 +37,13 @@ public class StrangleFernBlockEntity extends BlockEntity {
                 .ifPresent(nbt -> tag.put("InfestedState", nbt));
     }
 
+    @Override
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag);
+        return tag;
+    }
+
     public BlockState getInfestedState() {
         return infestedState;
     }

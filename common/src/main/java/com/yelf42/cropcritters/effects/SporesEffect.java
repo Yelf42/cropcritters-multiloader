@@ -2,6 +2,8 @@ package com.yelf42.cropcritters.effects;
 
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModEffects;
+import com.yelf42.cropcritters.registry.ModParticles;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -14,7 +16,6 @@ import com.yelf42.cropcritters.blocks.StrangleFern;
 
 public class SporesEffect extends MobEffect {
 
-    // TODO particle?
     public SporesEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
@@ -22,19 +23,35 @@ public class SporesEffect extends MobEffect {
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
         Level world = entity.level();
-        BlockState toPlant = ModBlocks.STRANGLE_FERN.defaultBlockState();
-        if (entity instanceof LivingEntity) {
-            BlockPos pos = BlockPos.containing(entity.position().add(0.0, 0.5, 0.0));
-
-            boolean canPlant = StrangleFern.canInfest(world.getBlockState(pos));
-            if (canPlant) {
-                world.setBlockAndUpdate(pos, toPlant);
-                reduceDuration(entity);
-            }
-            if (!world.getFluidState(pos).isEmpty()) {
-                entity.removeEffect(ModEffects.SPORES);
+        if (world instanceof ServerLevel serverLevel) {
+            if (entity.getRandom().nextInt(5) == 0) {
+                serverLevel.sendParticles(
+                        ModParticles.SPORES,
+                        entity.getX(),
+                        entity.getY() + 1,
+                        entity.getZ(),
+                        1, 0.5, 0.5, 0.5, 0
+                );
             }
         }
+
+        if (entity.tickCount % 10 == 0) {
+            BlockState toPlant = ModBlocks.STRANGLE_FERN.defaultBlockState();
+            if (entity instanceof LivingEntity) {
+                BlockPos pos = BlockPos.containing(entity.position().add(0.0, 0.5, 0.0));
+
+                boolean canPlant = StrangleFern.canInfest(world.getBlockState(pos));
+                if (canPlant) {
+                    world.setBlockAndUpdate(pos, toPlant);
+                    reduceDuration(entity);
+                }
+                if (!world.getFluidState(pos).isEmpty()) {
+                    entity.removeEffect(ModEffects.SPORES);
+                }
+            }
+        }
+
+
     }
 
     private void reduceDuration(LivingEntity entity) {
@@ -51,6 +68,6 @@ public class SporesEffect extends MobEffect {
 
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
-        return duration % 10 == 0;
+        return true;
     }
 }

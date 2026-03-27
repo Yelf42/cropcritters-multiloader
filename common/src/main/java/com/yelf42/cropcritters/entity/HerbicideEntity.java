@@ -32,7 +32,6 @@ public class HerbicideEntity extends ThrowableItemProjectile {
         super(ModEntities.HERBICIDE_PROJECTILE, livingEntity, serverWorld);
     }
 
-    // TODO check color
     @Override
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);

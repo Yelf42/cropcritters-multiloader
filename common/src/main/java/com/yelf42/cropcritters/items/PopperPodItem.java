@@ -14,7 +14,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import com.yelf42.cropcritters.entity.PopperPodEntity;
 
-//TODO test dispenser behaviour
 public class PopperPodItem extends Item {
 
     public PopperPodItem(Properties settings) {

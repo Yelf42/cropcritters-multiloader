@@ -16,7 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.HashSet;
 import java.util.Set;
 
-// TODO test properly
 public class RecognizedCropsState extends SavedData {
     private static final String DATA_NAME = CropCritters.MOD_ID;
     private final Set<Item> knownCrops = new HashSet<>();

@@ -38,13 +38,13 @@ public class ConfigManager {
                 String value = parts[1].trim();
 
                 switch (key) {
-                    case "regularWeedsGrowChance" -> CONFIG.regularWeedChance = Math.clamp(Integer.parseInt(value), 0, 100);
-                    case "netherWeedsGrowChance" -> CONFIG.netherWeedChance = Math.clamp(Integer.parseInt(value), 0, 100);
-                    case "mazewoodSpread" -> CONFIG.mazewoodSpread = Math.clamp(Integer.parseInt(value), 1, 16);
-                    case "lostSoulDropChance" -> CONFIG.lostSoulDropChance = Math.clamp(Integer.parseInt(value), 0, 100);
+                    case "regularWeedsGrowChance" -> CONFIG.regularWeedChance = CropCritters.clamp(Integer.parseInt(value), 0, 100);
+                    case "netherWeedsGrowChance" -> CONFIG.netherWeedChance = CropCritters.clamp(Integer.parseInt(value), 0, 100);
+                    case "mazewoodSpread" -> CONFIG.mazewoodSpread = CropCritters.clamp(Integer.parseInt(value), 1, 16);
+                    case "lostSoulDropChance" -> CONFIG.lostSoulDropChance = CropCritters.clamp(Integer.parseInt(value), 0, 100);
                     case "monoculturePenalize" -> CONFIG.monoculturePenalize = Boolean.parseBoolean(value);
-                    case "critterSpawnChance" -> CONFIG.critterSpawnChance = Math.clamp(Integer.parseInt(value), 0, 100);
-                    case "critterWorkSpeedMultiplier" -> CONFIG.critterWorkSpeedMultiplier = Math.clamp(Float.parseFloat(value), 0, 10);
+                    case "critterSpawnChance" -> CONFIG.critterSpawnChance = CropCritters.clamp(Integer.parseInt(value), 0, 100);
+                    case "critterWorkSpeedMultiplier" -> CONFIG.critterWorkSpeedMultiplier = CropCritters.clamp(Float.parseFloat(value), 0, 10);
                     case "deadCoralGeneration" -> CONFIG.deadCoralGeneration = Boolean.parseBoolean(value);
                     case "soulRoseHintGeneration" -> CONFIG.soulRoseHintGeneration = Boolean.parseBoolean(value);
                     case "thornweedGeneration" -> CONFIG.thornweedGeneration = Boolean.parseBoolean(value);
@@ -53,7 +53,7 @@ public class ConfigManager {
                     case "strangleFernGeneration" -> CONFIG.strangleFernGeneration = Boolean.parseBoolean(value);
                     case "puffbombGeneration" -> CONFIG.puffbombGeneration = Boolean.parseBoolean(value);
                     case "liverwortGeneration" -> CONFIG.liverwortGeneration = Boolean.parseBoolean(value);
-                    case "copperSoulRoseSlowdown" -> CONFIG.copperSoulRoseSlowdown = Math.clamp(Integer.parseInt(value), 0, 100);
+                    case "copperSoulRoseSlowdown" -> CONFIG.copperSoulRoseSlowdown = CropCritters.clamp(Integer.parseInt(value), 0, 100);
                     default -> {
                         CropCritters.LOGGER.error("Error detected in crop-critters-config.toml, resetting config");
                         CONFIG = new CropCrittersConfig();

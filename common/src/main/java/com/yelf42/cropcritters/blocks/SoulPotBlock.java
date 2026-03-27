@@ -39,7 +39,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 
-// TODO sound fx
 public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty CRACKED;
     public static final BooleanProperty WATERLOGGED;

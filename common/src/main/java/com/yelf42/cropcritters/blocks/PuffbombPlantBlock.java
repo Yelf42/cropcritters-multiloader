@@ -115,10 +115,7 @@ public class PuffbombPlantBlock extends MushroomBlock {
     @Override
     public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state) {
         if (isMature(state)) {
-            Explosion explosion = new Explosion(world, null, null, BURST,
-                    pos.getX(), pos.getY(), pos.getZ(), 3F, false, Explosion.BlockInteraction.KEEP);
-            explosion.explode();
-            explosion.finalizeExplosion(true);
+            world.sendParticles(ParticleTypes.EXPLOSION_EMITTER, pos.getX(), pos.getY(), pos.getZ(), 5, 1.0, 0.0, 1.0, 0.0);
             world.playSound(null, pos, ModSounds.PUFFBOMB_EXPLODE, SoundSource.BLOCKS, 1.0F, 1.0F);
             super.performBonemeal(world, random, pos, state);
             return;

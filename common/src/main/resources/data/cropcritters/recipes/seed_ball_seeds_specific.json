@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "SGT",
+    "TTT"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:wheat_seeds"
+    },
+    "T": {
+      "item": "minecraft:carrot"
+    },
+    "G": {
+      "item": "minecraft:mud"
+    }
+  },
+  "result": {
+    "item": "cropcritters:seed_ball",
+    "count": 1,
+    "components": {
+      "cropcritters:seed_types": {
+        "seedTypes": [
+          "minecraft:wheat",
+          "minecraft:carrots"
+        ]
+      }
+    }
+  }
+}

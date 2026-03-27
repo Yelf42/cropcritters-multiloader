@@ -27,6 +27,8 @@ public class SporeParticle extends TextureSheetParticle {
             this.zd *= (double) 0.1F;
         }
 
+        this.setAlpha(0.3f);
+
         this.quadSize *= 0.75F;
         this.lifetime = (int) ((double) 5.0F / ((double) this.random.nextFloat() * 0.8 + 0.2));
         this.hasPhysics = false;

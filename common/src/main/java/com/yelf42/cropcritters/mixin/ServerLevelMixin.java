@@ -42,7 +42,6 @@ public abstract class ServerLevelMixin extends Level {
         if (newState.is(CropCritters.WEEDS)) WeedGrowNotifier.notifyEvent(ServerLevel.class.cast(this), pos);
     }
 
-    // TODO test snowfall
     @Inject(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;shouldSnow(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z", shift = At.Shift.AFTER))
     public void injectFarmlandSnowFall(LevelChunk chunk, int randomTickSpeed, CallbackInfo ci) {
         ChunkPos chunkpos = chunk.getPos();

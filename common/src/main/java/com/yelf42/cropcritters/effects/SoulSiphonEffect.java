@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.effects;
 
+import com.yelf42.cropcritters.registry.ModParticles;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.effect.MobEffect;
@@ -22,35 +23,8 @@ import java.util.Collection;
 
 public class SoulSiphonEffect extends MobEffect {
 
-    // TODO particle?
     public SoulSiphonEffect(MobEffectCategory statusEffectCategory, int i) {
         super(statusEffectCategory, i);
-    }
-
-    // TODO test
-    @Override
-    public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
-        super.removeAttributeModifiers(entity, attributeMap, amplifier);
-        if (entity.isDeadOrDying() && entity.getType().is(CropCritters.UNDEAD)) {
-            Level world = entity.level();
-            if (world instanceof ServerLevel serverLevel) {
-                Vec3 entityPos = entity.position();
-                BlockPos pos = new BlockPos((int)entityPos.x, (int) Math.floor(entityPos.y + 0.5F), (int)entityPos.z);
-                AffectorPositions affectorPositions = CropCritters.getAffectorPositions(serverLevel);
-                Collection<? extends TypedBlockArea> affectorsInSection = affectorPositions.getAffectorsInSection(pos);
-                if (!affectorsInSection.isEmpty()) {
-                    for (TypedBlockArea typedBlockArea : affectorsInSection) {
-                        AffectorType type = typedBlockArea.type();
-                        if (type == AffectorType.SOUL_ROSE_GOLD_3 || type == AffectorType.SOUL_ROSE_GOLD_2 || type == AffectorType.SOUL_ROSE_GOLD_1) {
-                            if (typedBlockArea.blockArea().isPositionInside(pos)) {
-                                growCropsAndCritters(serverLevel, pos, amplifier);
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private void growCropsAndCritters(ServerLevel world, BlockPos pos, int amplifier) {
@@ -81,17 +55,49 @@ public class SoulSiphonEffect extends MobEffect {
         }
     }
 
+    @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
-        entity.hurt(entity.damageSources().magic(), 3.0F);
+        int i = 42 / amplifier;
+        boolean shouldApplyEffect = i <= 0 || entity.tickCount % i == 0;
+
+        if (entity.level() instanceof ServerLevel serverLevel) {
+            if (entity.getRandom().nextInt(5) == 0) {
+                serverLevel.sendParticles(
+                        ModParticles.SOUL_SIPHON,
+                        entity.getRandomX(0.5),
+                        entity.getRandomY(),
+                        entity.getRandomZ(0.5),
+                        1, 0, 0, 0, 0
+                );
+            }
+
+            if (shouldApplyEffect) {
+                if (entity.getType().is(CropCritters.UNDEAD) && entity.getHealth() <= 3.0f) {
+                    Vec3 entityPos = entity.position();
+                    BlockPos pos = new BlockPos((int) entityPos.x, (int) Math.floor(entityPos.y + 0.5F), (int) entityPos.z);
+                    AffectorPositions affectorPositions = CropCritters.getAffectorPositions(serverLevel);
+                    Collection<? extends TypedBlockArea> affectorsInSection = affectorPositions.getAffectorsInSection(pos);
+                    if (!affectorsInSection.isEmpty()) {
+                        for (TypedBlockArea typedBlockArea : affectorsInSection) {
+                            AffectorType type = typedBlockArea.type();
+                            if (type == AffectorType.SOUL_ROSE_GOLD_3 || type == AffectorType.SOUL_ROSE_GOLD_2 || type == AffectorType.SOUL_ROSE_GOLD_1) {
+                                if (typedBlockArea.blockArea().isPositionInside(pos)) {
+                                    growCropsAndCritters(serverLevel, pos, amplifier);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    entity.kill();
+                } else {
+                    entity.hurt(entity.damageSources().magic(), 3.0F);
+                }
+            }
+        }
     }
 
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
-        int i = 42 / amplifier;
-        if (i > 0) {
-            return duration % i == 0;
-        } else {
-            return true;
-        }
+        return true;
     }
 }

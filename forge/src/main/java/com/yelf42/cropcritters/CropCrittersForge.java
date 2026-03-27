@@ -7,9 +7,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraftforge.api.distmarker.Dist;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
@@ -17,7 +19,9 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -26,11 +30,19 @@ import java.util.function.Consumer;
 public class CropCrittersForge {
     public static IEventBus eventBus;
 
+    private static final DeferredRegister<PaintingVariant> PAINTING_VARIANTS =
+            DeferredRegister.create(Registries.PAINTING_VARIANT, CropCritters.MOD_ID);
+
+    public static final RegistryObject<PaintingVariant> RITUAL =
+            PAINTING_VARIANTS.register("ritual", () -> new PaintingVariant(16, 32));
+
     public CropCrittersForge() {
 
         CropCrittersForge.eventBus = FMLJavaModLoadingContext.get().getModEventBus();;
 
         ForgePlatformHelper.register(eventBus, MinecraftForge.EVENT_BUS);
+
+        PAINTING_VARIANTS.register(eventBus);
 
         bind(Registries.MOB_EFFECT, ModEffects::register);
 
@@ -61,13 +73,16 @@ public class CropCrittersForge {
 
 
         // Client
-        if (net.minecraftforge.fml.loading.FMLEnvironment.dist.isClient()) {
-            eventBus.addListener(CropCrittersForgeClient::registerParticleFactories);
-            eventBus.addListener(CropCrittersForgeClient::registerEntityRenderers);
-            eventBus.addListener(CropCrittersForgeClient::registerBlocks);
-            eventBus.addListener(CropCrittersForgeClient::registerBlockColors);
-            eventBus.addListener(CropCrittersForgeClient::registerItemColors);
-        }
+        net.minecraftforge.fml.DistExecutor.unsafeRunWhenOn(
+                net.minecraftforge.api.distmarker.Dist.CLIENT,
+                () -> () -> {
+                    eventBus.addListener(CropCrittersForgeClient::registerParticleFactories);
+                    eventBus.addListener(CropCrittersForgeClient::registerEntityRenderers);
+                    eventBus.addListener(CropCrittersForgeClient::registerBlocks);
+                    eventBus.addListener(CropCrittersForgeClient::registerBlockColors);
+                    eventBus.addListener(CropCrittersForgeClient::registerItemColors);
+                }
+        );
 
         BiomeModifiers.register(eventBus);
 
@@ -85,7 +100,12 @@ public class CropCrittersForge {
 
     public void setupCommon(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+            ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(
+                    new ResourceLocation(CropCritters.MOD_ID, "soul_rose"),
+                    () -> ModBlocks.POTTED_SOUL_ROSE
+            );
             registerCompostable();
+            ModDispenserBehaviours.registerDispenserBehavior();
             ModDispenserBehaviours.runDispenserRegistration();
         });
     }

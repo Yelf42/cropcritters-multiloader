@@ -19,7 +19,6 @@ public class WeedGrowNotifier {
 
         long currentTime = world.getGameTime();
         Iterator<Map.Entry<BlockPos, Long>> it = positions.entrySet().iterator();
-        CropCritters.LOGGER.info(String.valueOf(positions.size()));
         while (it.hasNext()) {
             var entry = it.next();
             if (currentTime - entry.getValue() > MAX_AGE_TICKS) {

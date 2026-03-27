@@ -4,7 +4,7 @@
     "sounds" : [
       {
         "attenuation_distance": 6,
-        "name": "block/copper_bulb/toggle"
+        "name": "cropcritters:block/copper_bulb/toggle"
       }
     ]
   },
@@ -91,15 +91,15 @@
     "subtitle" : "sounds.cropcritters.puffbomb_explode",
     "sounds" : [
       {
-        "name": "mob/breeze/wind_burst1",
+        "name": "cropcritters:mob/breeze/wind_burst1",
         "pitch": 1.2
       },
       {
-        "name": "mob/breeze/wind_burst2",
+        "name": "cropcritters:mob/breeze/wind_burst2",
         "pitch": 1.2
       },
       {
-        "name": "mob/breeze/wind_burst3",
+        "name": "cropcritters:mob/breeze/wind_burst3",
         "pitch": 1.2
       }
     ]

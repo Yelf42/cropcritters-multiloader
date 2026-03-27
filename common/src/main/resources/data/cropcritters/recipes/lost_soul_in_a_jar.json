@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "cropcritters:lost_soul"
+    },
+    "X": {
+      "item": "minecraft:copper_ingot"
+    },
+    "B": {
+      "item": "minecraft:bell"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    }
+  },
+  "pattern": [
+    " X ",
+    "G#G",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "item": "cropcritters:lost_soul_in_a_jar"
+  }
+}

@@ -10,7 +10,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
 import com.yelf42.cropcritters.entity.HerbicideEntity;
 
-//TODO test dispenser behaviour
 public class HerbicideItem extends Item {
     public HerbicideItem(Properties settings) {
         super(settings);

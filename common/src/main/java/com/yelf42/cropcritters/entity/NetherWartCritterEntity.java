@@ -1,8 +1,7 @@
 package com.yelf42.cropcritters.entity;
 
-import com.yelf42.cropcritters.CropCritters;
-import net.minecraft.util.FastColor;
-import net.minecraft.world.entity.Entity;
+import com.yelf42.cropcritters.registry.ModSounds;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -23,16 +22,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.ExplosionDamageCalculator;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import com.yelf42.cropcritters.registry.ModParticles;
 
 import java.util.function.Predicate;
 
-// TODO test explosion and color
 public class NetherWartCritterEntity extends AbstractCropCritterEntity {
 
     private static final float PARTICLE_R = ((16073282 >> 16) & 0xFF) / 255.0f;
@@ -40,16 +35,6 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
     private static final float PARTICLE_B = (16073282 & 0xFF) / 255.0f;
     private static final int GO_CRAZY = 400;
     private static final EntityDataAccessor<Integer> LIFESPAN = SynchedEntityData.defineId(NetherWartCritterEntity.class, EntityDataSerializers.INT);
-
-    private static final ExplosionDamageCalculator BURST = new ExplosionDamageCalculator() {
-        public boolean shouldBlockExplode(Explosion explosion, BlockGetter world, BlockPos pos, BlockState state, float power) {
-            return state.is(ModBlocks.WITHERING_SPITEWEED) || state.is(Blocks.WITHER_ROSE);
-        }
-        public boolean shouldDamageEntity(Explosion explosion, Entity entity) {
-            return false;
-        }
-    };
-
 
     public NetherWartCritterEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
@@ -142,16 +127,13 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
             double x = this.getX() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
             double y = this.getY() + this.getBbHeight() * 0.5;
             double z = this.getZ() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
-            this.level().addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, PARTICLE_R, PARTICLE_G, PARTICLE_B);        }
+            this.level().addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, PARTICLE_R, PARTICLE_G, PARTICLE_B);
+        }
     }
 
     private void explode() {
         if (this.level() instanceof ServerLevel serverWorld) {
-            Vec3 p = this.position();
-            Explosion explosion = new Explosion(serverWorld, this, null, BURST,
-                    p.x, p.y, p.z, 1.5F, false, Explosion.BlockInteraction.KEEP);
-            explosion.explode();
-            explosion.finalizeExplosion(true);
+            serverWorld.broadcastEntityEvent(this, (byte)10);
             for (int i = -1; i <= 1; i++) {
                 for (int j = -1; j <= 1; j++) {
                     for (int k = -1; k <= 1; k++) {
@@ -168,6 +150,18 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
             }
             this.dead = true;
             this.discard();
+        }
+    }
+
+    @Override
+    public void handleEntityEvent(byte id) {
+        if (id == 10) {
+            Vec3 p = this.position();
+            this.level().playLocalSound(p.x, p.y, p.z, ModSounds.PUFFBOMB_EXPLODE, SoundSource.AMBIENT,
+                    1.0F, (1.0F + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2F) * 0.7F, false);
+            this.level().addParticle(ParticleTypes.EXPLOSION, p.x, p.y, p.z, 1.0F, 0.0F, 0.0F);
+        } else {
+            super.handleEntityEvent(id);
         }
     }
 }

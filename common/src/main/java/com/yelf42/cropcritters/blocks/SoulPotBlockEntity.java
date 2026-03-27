@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.blocks;
 
+import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -87,7 +88,7 @@ public class SoulPotBlockEntity extends BlockEntity {
         if (this.level != null && !this.level.isClientSide()) {
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(SoulPotBlock.LEVEL,
-                    (int) Math.clamp(this.count() / 2, 0, 12)), 3);
+                    (int) CropCritters.clamp(this.count() / 2, 0, 12)), 3);
         }
     }
 }

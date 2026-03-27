@@ -5,6 +5,8 @@ import com.yelf42.cropcritters.client.renderer.blockentity.StrangleFernBlockEnti
 import com.yelf42.cropcritters.client.renderer.entity.AbstractCritterRenderer;
 import com.yelf42.cropcritters.client.renderer.entity.PopperPodEntityRenderer;
 import com.yelf42.cropcritters.registry.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.particle.SuspendedTownParticle;
 import net.minecraft.client.renderer.BiomeColors;

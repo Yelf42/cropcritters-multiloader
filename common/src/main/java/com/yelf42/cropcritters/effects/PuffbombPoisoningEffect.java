@@ -33,7 +33,7 @@ public class PuffbombPoisoningEffect extends MobEffect {
         int duration = entity.getEffect(ModEffects.PUFFBOMB_POISONING).getDuration();
         if (duration <= 20) {
             BlockPos pos = BlockPos.containing(entity.position());
-            world.explode(null, pos.getX(), pos.getY(), pos.getZ(), 4F, false, Level.ExplosionInteraction.BLOCK);
+            world.explode(null, pos.getX(), pos.getY(), pos.getZ(), 4F, false, Level.ExplosionInteraction.NONE);
             entity.removeEffect(ModEffects.PUFFBOMB_POISONING);
         } else {
             world.playSound(null, entity.blockPosition(), ModSounds.TICKING, SoundSource.HOSTILE, 0.5f, 0.8f + 0.05f * (float) world.random.nextInt(8));

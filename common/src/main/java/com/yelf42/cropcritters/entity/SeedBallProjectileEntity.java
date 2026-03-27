@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModEntities;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.level.block.state.BlockState;

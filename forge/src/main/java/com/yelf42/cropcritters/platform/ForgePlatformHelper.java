@@ -3,23 +3,18 @@ package com.yelf42.cropcritters.platform;
 import com.mojang.datafixers.DSL;
 import com.mojang.serialization.DataResult;
 import com.yelf42.cropcritters.CropCritters;
+import com.yelf42.cropcritters.ForgeClientPacketHandlers;
 import com.yelf42.cropcritters.area_affectors.AffectorPositions;
 import com.yelf42.cropcritters.platform.services.IPlatformHelper;
 import com.yelf42.cropcritters.registry.ModPackets;
-import com.yelf42.cropcritters.registry.ModParticles;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -35,17 +30,13 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.nio.file.Path;
 import java.util.function.BiFunction;
 
-// TODO test all this
 public class ForgePlatformHelper implements IPlatformHelper {
 
     // ---- CAPABILITY DEFINITION ----
@@ -114,35 +105,14 @@ public class ForgePlatformHelper implements IPlatformHelper {
         CHANNEL.messageBuilder(ModPackets.WaterSprayS2CPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(ModPackets.WaterSprayS2CPacket::encode)
                 .decoder(ModPackets.WaterSprayS2CPacket::decode)
-                .consumerMainThread((packet, ctx) -> handleWaterSpray(packet))
+                .consumerMainThread(ForgeClientPacketHandlers::handleWaterSpray)
                 .add();
 
         CHANNEL.messageBuilder(ModPackets.ParticleRingS2CPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(ModPackets.ParticleRingS2CPacket::encode)
                 .decoder(ModPackets.ParticleRingS2CPacket::decode)
-                .consumerMainThread((packet, ctx) -> handleParticleRing(packet))
+                .consumerMainThread(ForgeClientPacketHandlers::handleParticleRing)
                 .add();
-    }
-
-    private static void handleWaterSpray(ModPackets.WaterSprayS2CPacket packet) {
-        ClientLevel world = Minecraft.getInstance().level;
-        if (world == null) return;
-        world.addParticle(ModParticles.WATER_SPRAY,
-                packet.pos().x, packet.pos().y + 0.2, packet.pos().z,
-                packet.dir().x, 0, packet.dir().z);
-    }
-
-    private static void handleParticleRing(ModPackets.ParticleRingS2CPacket packet) {
-        ClientLevel world = Minecraft.getInstance().level;
-        if (world == null) return;
-        float angle = (float) ((Math.PI * 2.0) / ((float) packet.count()));
-        for (int i = 0; i < packet.count(); i++) {
-            world.addParticle(ModParticles.SOUL_GLOW,
-                    packet.pos().x + Math.sin(angle * i) * packet.radius(),
-                    packet.pos().y,
-                    packet.pos().z + Math.cos(angle * i) * packet.radius(),
-                    0, 0, 0);
-        }
     }
 
     @Override

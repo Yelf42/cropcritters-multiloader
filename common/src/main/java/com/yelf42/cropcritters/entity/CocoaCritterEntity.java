@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.yelf42.cropcritters.CropCritters;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -176,7 +177,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
 
         int index = world.random.nextInt(items.size());
         ItemStack toDrop = items.remove(index);
-        toDrop.setCount(Math.clamp(toDrop.getCount(), 1, 5));
+        toDrop.setCount(CropCritters.clamp(toDrop.getCount(), 1, 5));
         this.setItemSlot(EquipmentSlot.MAINHAND, toDrop);
         this.setGuaranteedDrop(EquipmentSlot.MAINHAND);
         recordCrop(toDrop.getItem());

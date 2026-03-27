@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.registry;
 
+import com.yelf42.cropcritters.entity.HerbicideEntity;
 import com.yelf42.cropcritters.entity.SeedBallProjectileEntity;
 import com.yelf42.cropcritters.items.StrangeFertilizerItem;
 import net.minecraft.Util;
@@ -21,7 +22,6 @@ import java.util.List;
 public class ModDispenserBehaviours {
     public static final List<Runnable> DISPENSER_BEHAVIORS = new ArrayList<>();
 
-    //TODO test
     public static void registerDispenserBehavior() {
         DISPENSER_BEHAVIORS.add(() ->
                 DispenserBlock.registerBehavior(ModItems.SEED_BALL, new AbstractProjectileDispenseBehavior() {
@@ -31,6 +31,13 @@ public class ModDispenserBehaviours {
                         });
                     }
                 })
+        );
+        DISPENSER_BEHAVIORS.add(() ->
+            DispenserBlock.registerBehavior(ModItems.HERBICIDE, new AbstractProjectileDispenseBehavior() {
+                protected Projectile getProjectile(Level level, Position position, ItemStack stack) {
+                    return new HerbicideEntity(position.x(), position.y(), position.z(), level, stack);
+                }
+            })
         );
         DISPENSER_BEHAVIORS.add(() ->
                 DispenserBlock.registerBehavior(ModItems.STRANGE_FERTILIZER, new OptionalDispenseItemBehavior() {

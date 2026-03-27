@@ -51,7 +51,7 @@ public class ModEntities {
     public static <T extends Entity> EntityType<T> registerCritter(String name, EntityType.EntityFactory<T> factory, float width, float height, float eyeHeight) {
         var entity = EntityType.Builder.of(factory, MobCategory.MISC)
                 .sized(width, height)
-                //.eyeHeight(eyeHeight) //TODO
+                //.eyeHeight(eyeHeight) // Doesn't seem to have 1.20.1 equivalent
                 .clientTrackingRange(10)
                 .build(name);
         REGISTERED_ENTITIES.put(name, entity);

@@ -55,7 +55,7 @@ public class WeedHelper {
             r -= pair.getB();
             if (r <= 0) return pair.getA();
         }
-        return list.getLast().getA();
+        return list.get(list.size() - 1).getA();
     }
 
     public static void generateWeed(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, boolean nether) {
