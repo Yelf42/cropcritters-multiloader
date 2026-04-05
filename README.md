@@ -6,6 +6,7 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
 - Locust swarm raid
 - New weed types:
     - Tumbleweed
+- Item that makes critters just chill
 
 ## RepoCredits
 [MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) <br>
