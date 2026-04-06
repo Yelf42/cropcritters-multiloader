@@ -3,6 +3,7 @@ package com.yelf42.cropcritters.mixin;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.events.WeedGrowNotifier;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -40,9 +41,10 @@ public abstract class ServerLevelMixin extends Level {
         if (newState.is(CropCritters.WEEDS)) WeedGrowNotifier.notifyEvent(ServerLevel.class.cast(this), pos);
     }
 
-    @Inject(method = "tickPrecipitation", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;shouldSnow(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z", shift = At.Shift.AFTER))
+    @Inject(method = "tickPrecipitation", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;getGameRules()Lnet/minecraft/world/level/GameRules;", shift = At.Shift.AFTER))
     public void injectFarmlandSnowFall(BlockPos pos, CallbackInfo ci) {
         BlockPos blockPos = this.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos).below();
+        if (!this.getBiome(blockPos.above()).value().shouldSnow(this, blockPos.above())) return;
         BlockState blockState = this.getBlockState(blockPos);
         if (blockState.is(Blocks.FARMLAND)) {
             Block.pushEntitiesUp(blockState, Blocks.DIRT.defaultBlockState(), this, blockPos);

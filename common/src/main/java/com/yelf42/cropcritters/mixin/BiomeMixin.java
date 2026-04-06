@@ -1,5 +1,7 @@
 package com.yelf42.cropcritters.mixin;
 
+import com.yelf42.cropcritters.registry.ModBlocks;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.core.BlockPos;
@@ -17,7 +19,8 @@ public abstract class BiomeMixin {
     @Inject(method = "shouldSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelReader;getBrightness(Lnet/minecraft/world/level/LightLayer;Lnet/minecraft/core/BlockPos;)I", shift = At.Shift.AFTER), cancellable = true)
     public void injectSnowOnCrops(LevelReader world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         BlockState blockState = world.getBlockState(pos);
-        if (blockState.is(CropCritters.SNOW_FALL_KILLS) || (blockState.getBlock() instanceof CropBlock cropBlock && !world.getBlockState(pos.above()).is(cropBlock))) {
+        if (blockState.is(CropCritters.SNOW_FALL_KILLS)
+                || (blockState.getBlock() instanceof CropBlock cropBlock && !world.getBlockState(pos.above()).is(cropBlock))) {
             cir.setReturnValue(true);
         }
     }
