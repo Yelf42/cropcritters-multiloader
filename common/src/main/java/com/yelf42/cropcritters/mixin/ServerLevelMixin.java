@@ -42,7 +42,7 @@ public abstract class ServerLevelMixin extends Level {
         if (newState.is(CropCritters.WEEDS)) WeedGrowNotifier.notifyEvent(ServerLevel.class.cast(this), pos);
     }
 
-    @Inject(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;shouldSnow(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z", shift = At.Shift.AFTER))
+    @Inject(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/GameRules;getInt(Lnet/minecraft/world/level/GameRules$Key;)I", shift = At.Shift.AFTER))
     public void injectFarmlandSnowFall(LevelChunk chunk, int randomTickSpeed, CallbackInfo ci) {
         ChunkPos chunkpos = chunk.getPos();
         int i = chunkpos.getMinBlockX();
@@ -50,6 +50,8 @@ public abstract class ServerLevelMixin extends Level {
         BlockPos pos = this.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.getBlockRandomPos(i, 0, j, 15));
 
         BlockPos blockPos = this.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos).below();
+        if (!this.getBiome(blockPos.above()).value().shouldSnow(this, blockPos.above())) return;
+
         BlockState blockState = this.getBlockState(blockPos);
         if (blockState.is(Blocks.FARMLAND)) {
             Block.pushEntitiesUp(blockState, Blocks.DIRT.defaultBlockState(), this, blockPos);
