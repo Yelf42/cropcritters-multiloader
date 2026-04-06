@@ -31,9 +31,10 @@ public abstract class ServerLevelMixin extends Level {
         AffectorPositions.onBlockStateChange(ServerLevel.class.cast(this), pos, oldState, newState);
     }
 
-    @Inject(method = "tickPrecipitation", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;shouldSnow(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z", shift = At.Shift.AFTER))
+    @Inject(method = "tickPrecipitation", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;getGameRules()Lnet/minecraft/world/level/gamerules/GameRules;", shift = At.Shift.AFTER))
     public void injectFarmlandSnowFall(BlockPos pos, CallbackInfo ci) {
         BlockPos blockPos = this.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos).below();
+        if (!this.getBiome(blockPos.above()).value().shouldSnow(this, blockPos.above())) return;
         BlockState blockState = this.getBlockState(blockPos);
         if (blockState.is(Blocks.FARMLAND)) {
             Block.pushEntitiesUp(blockState, Blocks.DIRT.defaultBlockState(), this, blockPos);
