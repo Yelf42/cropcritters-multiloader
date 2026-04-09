@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
@@ -8,15 +9,11 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.util.Tuple;
@@ -101,5 +98,9 @@ public class TorchflowerCritterEntity extends AbstractCropCritterEntity {
         if (this.isTame()) this.setOrderedToSit(true);
     }
 
+    public boolean shouldTryTeleportToOwner() {
+        LivingEntity livingentity = this.getOwner();
+        return livingentity != null && this.distanceToSqr(this.getOwner()) >= (double)49.0F;
+    }
 
 }

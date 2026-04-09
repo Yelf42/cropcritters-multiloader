@@ -248,7 +248,10 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     }
 */
 
-
+    @Override
+    public boolean shouldTryTeleportToOwner() {
+        return false;
+    }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
