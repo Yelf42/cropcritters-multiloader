@@ -243,6 +243,11 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
 */
 
     @Override
+    public boolean shouldTryTeleportToOwner() {
+        return false;
+    }
+
+    @Override
     public boolean hurtServer(ServerLevel world, DamageSource source, float amount) {
         if (this.isInvulnerableTo(world, source) || source.is(DamageTypes.CACTUS) || source.is(DamageTypes.SWEET_BERRY_BUSH)) {
             return false;
