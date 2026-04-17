@@ -60,7 +60,7 @@ public class PuffbombPlantBlock extends MushroomBlock {
     protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockPos blockPos = pos.below();
         BlockState blockState = world.getBlockState(blockPos);
-        if (blockState.is(BlockTags.MUSHROOM_GROW_BLOCK) || blockState.is(BlockTags.DIRT)) {
+        if (blockState.is(BlockTags.OVERRIDES_MUSHROOM_LIGHT_REQUIREMENT) || blockState.is(BlockTags.SUPPORTS_VEGETATION)) {
             return true;
         } else {
             return world.getRawBrightness(pos, 0) < 13 && blockState.isSolidRender();

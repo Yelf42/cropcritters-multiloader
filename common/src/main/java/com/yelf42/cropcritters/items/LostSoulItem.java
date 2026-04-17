@@ -42,7 +42,7 @@ public class LostSoulItem extends Item {
 
         // Create slime
         if (state.is(Blocks.SLIME_BLOCK)) {
-            if (world.random.nextInt(2) == 0) {
+            if (world.getRandom().nextInt(2) == 0) {
                 world.sendParticles(ParticleTypes.SMOKE, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 10, 0.5, 0.5, 0.5, 0F);
             } else {
                 world.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
@@ -65,7 +65,7 @@ public class LostSoulItem extends Item {
         if (toSpawn.isEmpty()) return InteractionResult.PASS;
         AbstractCropCritterEntity critter = toSpawn.get();
         int failChance = (critter.getMaxHealth() > 12) ? 80 : 60;
-        if (world.random.nextInt(100) + 1 <= failChance) {
+        if (world.getRandom().nextInt(100) + 1 <= failChance) {
             world.sendParticles(ParticleTypes.SMOKE, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 10, 0.5, 0.5, 0.5, 0F);
         } else {
             BlockPos toSpawnAt = blockPos;

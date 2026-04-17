@@ -29,7 +29,7 @@ public abstract class CropBlockMixin {
     // Allows plants to be planted on SOUL_FARMLAND
     @Inject(method = "mayPlaceOn", at = @At("HEAD"), cancellable = true)
     private void allowPlantOnSoulAndDirt(BlockState floor, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (floor.is(BlockTags.DIRT)) cir.setReturnValue(true);
+        if (floor.is(BlockTags.SUPPORTS_VEGETATION)) cir.setReturnValue(true);
     }
 
     /// getGrowthSpeed is different in fabric v neoforge

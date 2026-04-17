@@ -18,7 +18,7 @@
 				{
 					"name": "RightHandItem",
 					"parent": "main",
-					"pivot": [0, 2.7, -3],
+					"pivot": [0, 1.2, -4],
 					"rotation": [-80, 0, 0]
 				},
 				{

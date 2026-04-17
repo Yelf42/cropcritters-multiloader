@@ -137,7 +137,7 @@ public class MazewoodBlock extends Block {
     @Override
     protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockState floor = world.getBlockState(pos.below());
-        return floor.is(BlockTags.DIRT) || floor.is(Blocks.FARMLAND) || (floor.getBlock() instanceof MazewoodBlock);
+        return floor.is(BlockTags.SUPPORTS_VEGETATION) || (floor.getBlock() instanceof MazewoodBlock);
     }
 
     private static boolean isConnected(BlockState state, Property<MazewoodShape> property) {

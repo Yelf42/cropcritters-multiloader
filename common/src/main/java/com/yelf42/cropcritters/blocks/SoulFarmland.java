@@ -8,13 +8,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 import com.yelf42.cropcritters.CropCritters;
 
-public class SoulFarmland extends FarmBlock {
+public class SoulFarmland extends FarmlandBlock {
 
     public SoulFarmland(Properties settings) {
         super(settings);
@@ -30,10 +30,10 @@ public class SoulFarmland extends FarmBlock {
     @Override
     public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, double fallDistance) {
         if (world instanceof ServerLevel serverWorld) {
-            if ((double)world.random.nextFloat() < fallDistance - (double)0.5F
+            if ((double)world.getRandom().nextFloat() < fallDistance - (double)0.5F
                     && entity instanceof LivingEntity
                     && (entity instanceof Player || serverWorld.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.MOB_GRIEFING))
-                    && (entity.getBbWidth() * entity.getBbWidth() * entity.getBbHeight() > 0.512F || entity.getType().is(CropCritters.CROP_CRITTERS))) {
+                    && (entity.getBbWidth() * entity.getBbWidth() * entity.getBbHeight() > 0.512F || entity.is(CropCritters.CROP_CRITTERS))) {
                 setToSoulSoil(entity, state, world, pos);
             }
         }

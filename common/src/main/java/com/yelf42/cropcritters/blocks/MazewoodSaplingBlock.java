@@ -99,7 +99,7 @@ public class MazewoodSaplingBlock extends BaseEntityBlock implements Bonemealabl
 
     @Override
     protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-        return world.getBlockState(pos.below()).is(BlockTags.DIRT);
+        return world.getBlockState(pos.below()).is(BlockTags.SUPPORTS_VEGETATION);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class MazewoodSaplingBlock extends BaseEntityBlock implements Bonemealabl
 
     @Override
     public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState state) {
-        return (double)world.random.nextFloat() < 0.45;
+        return (double)world.getRandom().nextFloat() < 0.45;
     }
 
     @Override

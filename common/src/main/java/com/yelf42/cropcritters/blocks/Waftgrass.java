@@ -32,7 +32,7 @@ public class Waftgrass extends SpreadingWeedBlock {
         // Apply damage, avoid critters and nether mobs
         if (world instanceof ServerLevel
                 && entity instanceof LivingEntity livingEntity
-                && !(livingEntity.getType().is(CropCritters.WEED_IMMUNE))) {
+                && !(livingEntity.is(CropCritters.WEED_IMMUNE))) {
             livingEntity.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 120));
         }
     }

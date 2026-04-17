@@ -100,11 +100,11 @@ public class MazewoodSaplingBlockEntity extends BlockEntity {
             planted = true;
         }
 
-        level.scheduleTick(worldPosition, getBlockState().getBlock(), planted ? 15 + level.random.nextInt(30) : 1, TickPriority.EXTREMELY_LOW);
+        level.scheduleTick(worldPosition, getBlockState().getBlock(), planted ? 15 + level.getRandom().nextInt(30) : 1, TickPriority.EXTREMELY_LOW);
     }
 
     private boolean canPlantAt(BlockState checkState, BlockState checkBelowState) {
-        return (checkBelowState.is(BlockTags.DIRT))
+        return (checkBelowState.is(BlockTags.SUPPORTS_VEGETATION))
                 && (checkState.isAir()
                 || (!(checkState.getBlock() instanceof MazewoodSaplingBlock)
                     && (checkState.getBlock() instanceof VegetationBlock)));

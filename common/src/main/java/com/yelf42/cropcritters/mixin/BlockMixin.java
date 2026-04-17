@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.mixin;
 
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.CropBlock;
@@ -25,7 +26,7 @@ public class BlockMixin {
     @Inject(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
     private static void onGetDroppedStacks4Param(BlockState state, ServerLevel world, BlockPos pos, @Nullable BlockEntity blockEntity, CallbackInfoReturnable<List<ItemStack>> cir) {
         if (state.getBlock() instanceof CropBlock cropBlock && !cropBlock.isValidBonemealTarget(world, pos, state)) {
-            if (world.random.nextDouble() < 0.15F * AffectorsHelper.ironSoulRoseCheck(world, pos)) {
+            if (world.getRandom().nextDouble() < 0.15F * AffectorsHelper.ironSoulRoseCheck(world, pos)) {
                 List<ItemStack> list = cir.getReturnValue();
                 for (int i = list.size() - 1; i >= 0; i--) {
                     list.add(i + 1, list.get(i));
@@ -35,10 +36,10 @@ public class BlockMixin {
             }
         }
     }
-    @Inject(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
-    private static void onGetDroppedStacks6Param(BlockState state, ServerLevel world, BlockPos pos, @Nullable BlockEntity blockEntity, @Nullable Entity entity, ItemStack stack, CallbackInfoReturnable<List<ItemStack>> cir) {
+    @Inject(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemInstance;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
+    private static void onGetDroppedStacks6Param(BlockState state, ServerLevel world, BlockPos pos, @Nullable BlockEntity blockEntity, @Nullable Entity entity, ItemInstance stack, CallbackInfoReturnable<List<ItemStack>> cir) {
         if (state.getBlock() instanceof CropBlock cropBlock && !cropBlock.isValidBonemealTarget(world, pos, state)) {
-            if (world.random.nextDouble() < 0.15F * AffectorsHelper.ironSoulRoseCheck(world, pos)) {
+            if (world.getRandom().nextDouble() < 0.15F * AffectorsHelper.ironSoulRoseCheck(world, pos)) {
                 List<ItemStack> list = cir.getReturnValue();
                 for (int i = list.size() - 1; i >= 0; i--) {
                     list.add(i + 1, list.get(i));

@@ -81,7 +81,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     @Override
     protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockState floor = world.getBlockState(pos.below());
-        return floor.is(BlockTags.DIRT);
+        return floor.is(BlockTags.SUPPORTS_VEGETATION);
     }
 
     @Override
@@ -114,12 +114,12 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
         int newAge = this.getAge(state) + 1;
 
         if (newAge == this.getMaxAge()) {
-            if (world.random.nextInt(5) == 0) {
+            if (world.getRandom().nextInt(5) == 0) {
                 StrangleFernBlockEntity sfbe = (StrangleFernBlockEntity) world.getBlockEntity(pos);
                 if (sfbe != null) sfbe.setInfestedState(Blocks.DEAD_BUSH.defaultBlockState());
             }
             if (state.getValue(CAN_SPREAD)) {
-                if (world.random.nextInt(3) == 0) {
+                if (world.getRandom().nextInt(3) == 0) {
                     world.setBlock(pos, state.setValue(AGE, newAge), 3);
                 } else {
                     world.setBlock(pos, state.setValue(CAN_SPREAD, false), 3);

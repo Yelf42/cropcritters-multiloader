@@ -88,7 +88,7 @@ public class SoulRoseBlockEntity extends BlockEntity {
             if (world.dimensionType().hasFixedTime() && !world.getBiome(pos).is(Biomes.SOUL_SAND_VALLEY)) return;
 
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-            RandomSource random = world.random;
+            RandomSource random = world.getRandom();
             int i = pos.getX();
             int j = pos.getY();
             int k = pos.getZ();
@@ -134,7 +134,7 @@ public class SoulRoseBlockEntity extends BlockEntity {
     private static void tryAttack(ServerLevel world, BlockPos pos, BlockState state, SoulRoseBlockEntity blockEntity) {
         int level = state.getValueOrElse(SoulRoseBlock.LEVEL, 0);
 
-        List<LivingEntity> list = world.getEntitiesOfClass(LivingEntity.class, getAttackZone(pos, level), (entity) -> entity.getType().is(EntityTypeTags.UNDEAD) && !entity.hasCustomName());
+        List<LivingEntity> list = world.getEntitiesOfClass(LivingEntity.class, getAttackZone(pos, level), (entity) -> entity.is(EntityTypeTags.UNDEAD) && !entity.hasCustomName());
         for (LivingEntity livingEntity : list) {
             if (livingEntity == null) continue;
             if (livingEntity.hasEffect(ModEffects.SOUL_SIPHON)) continue;

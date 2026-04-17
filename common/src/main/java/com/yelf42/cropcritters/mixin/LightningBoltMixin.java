@@ -58,7 +58,7 @@ public abstract class LightningBoltMixin {
                 checkLocations.add(rPos.above());
                 pushEntitiesUp(ModBlocks.SOUL_FARMLAND.defaultBlockState(), Blocks.SOUL_SOIL.defaultBlockState(), world, rPos);
                 world.setBlock(rPos, Blocks.SOUL_SOIL.defaultBlockState(), Block.UPDATE_CLIENTS);
-            } else if (struckState.is(BlockTags.DIRT)) {
+            } else if (struckState.is(BlockTags.SUPPORTS_VEGETATION)) {
                 checkLocations.add(rPos.above());
             }
         }

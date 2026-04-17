@@ -140,7 +140,7 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
             if (!this.isTrusting()) this.entityData.set(LIFESPAN, this.entityData.get(LIFESPAN) - 1);
             if (this.entityData.get(LIFESPAN) <= 0) explode();
         } else if (this.isShaking()) {
-            if (this.level().random.nextInt(10) != 0) return;
+            if (this.level().getRandom().nextInt(10) != 0) return;
             double x = this.getX() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
             double y = this.getY() + this.getBbHeight() * 0.5;
             double z = this.getZ() + (this.random.nextDouble() - 0.5) * this.getBbWidth();

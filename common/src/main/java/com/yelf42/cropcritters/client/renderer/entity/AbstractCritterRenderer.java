@@ -3,11 +3,11 @@ package com.yelf42.cropcritters.client.renderer.entity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
-import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.constant.dataticket.DataTicket;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.renderer.base.GeoRenderState;
-import software.bernie.geckolib.renderer.layer.builtin.ItemInHandGeoLayer;
+import com.geckolib.constant.DataTickets;
+import com.geckolib.constant.dataticket.DataTicket;
+import com.geckolib.renderer.GeoEntityRenderer;
+import com.geckolib.renderer.base.GeoRenderState;
+import com.geckolib.renderer.layer.builtin.ItemInHandGeoLayer;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.entity.AbstractCropCritterEntity;
 import com.yelf42.cropcritters.client.model.entity.AbstractCritterModel;
@@ -24,7 +24,7 @@ public class AbstractCritterRenderer<R extends LivingEntityRenderState & GeoRend
         this.trustingTexture = Identifier.fromNamespaceAndPath(CropCritters.MOD_ID,"textures/entity/critters/" + id.getPath() + "_trusting.png");
         if (id.getPath().equals("cocoa_critter")) {
             //addRenderLayer(new ItemInHandGeoLayer<>(this));
-            withRenderLayer(new ItemInHandGeoLayer<>(this));
+            withRenderLayer(new ItemInHandGeoLayer<>(context, this));
         }
     }
 

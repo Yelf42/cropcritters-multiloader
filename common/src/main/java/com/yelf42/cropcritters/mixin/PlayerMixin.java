@@ -31,13 +31,13 @@ public abstract class PlayerMixin {
         Player player = (Player) (Object) this;
         ItemStack stack = player.getMainHandItem();
 
-        if (killedEntity.getType().is(CropCritters.HAS_LOST_SOUL)) {
+        if (killedEntity.is(CropCritters.HAS_LOST_SOUL)) {
             int dropChance = ConfigManager.CONFIG.lostSoulDropChance;
 
             // Hoe +| Critter
             if (stack.is(ItemTags.HOES)) {
                 dropChance += ConfigManager.CONFIG.lostSoulDropChance;
-                dropChance += (killedEntity.getType().is(CropCritters.CROP_CRITTERS)) ? ConfigManager.CONFIG.lostSoulDropChance : 0;
+                dropChance += (killedEntity.is(CropCritters.CROP_CRITTERS)) ? ConfigManager.CONFIG.lostSoulDropChance : 0;
             }
 
             // Silk Touch
@@ -52,7 +52,7 @@ public abstract class PlayerMixin {
                 dropChance += (ConfigManager.CONFIG.lostSoulDropChance / 2) * EnchantmentHelper.getItemEnchantmentLevel(e2.get(), stack);
             }
 
-            if (world.random.nextInt(100) + 1 < dropChance) {
+            if (world.getRandom().nextInt(100) + 1 < dropChance) {
                 Vec3 pos = killedEntity.position();
                 ItemEntity ls = new ItemEntity(world, pos.x, pos.y, pos.z, new ItemStack(ModItems.LOST_SOUL));
                 ls.setDefaultPickUpDelay();

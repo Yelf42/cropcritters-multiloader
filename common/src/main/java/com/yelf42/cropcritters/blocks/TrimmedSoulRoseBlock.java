@@ -41,7 +41,7 @@ public class TrimmedSoulRoseBlock extends VegetationBlock {
 
     protected boolean mayPlaceOn(BlockState floor, BlockGetter world, BlockPos pos) {
         BlockState blockState = world.getBlockState(pos);
-        return blockState.is(BlockTags.DIRT) || blockState.isFaceSturdy(world, pos, Direction.UP, SupportType.CENTER);
+        return blockState.is(BlockTags.SUPPORTS_VEGETATION) || blockState.isFaceSturdy(world, pos, Direction.UP, SupportType.CENTER);
     }
 
     @Override

@@ -12,7 +12,6 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Rarity;
@@ -21,6 +20,8 @@ import com.yelf42.cropcritters.CropCritters;
 import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class ModItems {
 
@@ -91,13 +92,13 @@ public class ModItems {
     }
 
     // TAB
-    public static final CreativeModeTab CROPCRITTERS_TAB = Services.PLATFORM.tabBuilder()
-            .icon(() -> new ItemStack(ModItems.LOST_SOUL))
-            .title(Component.translatable("itemGroup.cropcritters"))
-            .displayItems((itemDisplayParameters, output) -> {
-                ModItems.REGISTERED_ITEMS.forEach((s, item) -> output.accept(item));
-                ModBlocks.REGISTERED_BLOCK_ITEMS.forEach((s, item) -> output.accept(item));
-            }).build();
+    public static final CreativeModeTab CROPCRITTERS_TAB = Services.PLATFORM.tabBuilder(
+            "itemGroup.cropcritters",
+            Stream.concat(
+                    ModItems.REGISTERED_ITEMS.values().stream(),
+                    ModBlocks.REGISTERED_BLOCK_ITEMS.values().stream()
+            ).toList());
+
 
     /// BINDER
     public static void registerTabs(BiConsumer<CreativeModeTab, Identifier> consumer) {
@@ -106,8 +107,8 @@ public class ModItems {
 
 
     // RECIPES
-    public static final RecipeSerializer<SeedBallRecipe> SEED_BALL_RECIPE = new CustomRecipe.Serializer<>(SeedBallRecipe::new);
-    public static final RecipeSerializer<SeedBarRecipe> SEED_BAR_RECIPE = new CustomRecipe.Serializer<>(SeedBarRecipe::new);
+    public static final RecipeSerializer<SeedBallRecipe> SEED_BALL_RECIPE = SeedBallRecipe.SERIALIZER;
+    public static final RecipeSerializer<SeedBarRecipe> SEED_BAR_RECIPE = SeedBarRecipe.SERIALIZER;
 
     /// BINDER
     public static void registerRecipes(BiConsumer<RecipeSerializer<?>, Identifier> consumer) {

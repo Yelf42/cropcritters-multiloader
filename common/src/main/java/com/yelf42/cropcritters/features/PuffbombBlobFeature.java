@@ -42,7 +42,7 @@ public class PuffbombBlobFeature extends Feature<NoneFeatureConfiguration> {
 
         // Stop worldgen on leaves etc
         BlockState soil = world.getBlockState(centerPos.below());
-        if ((!soil.is(BlockTags.MUSHROOM_GROW_BLOCK) && !soil.is(BlockTags.DIRT)) && (!soil.isSolidRender())) return false;
+        if ((!soil.is(BlockTags.OVERRIDES_MUSHROOM_LIGHT_REQUIREMENT) && !soil.is(BlockTags.SUPPORTS_VEGETATION)) && (!soil.isSolidRender())) return false;
 
         // Seed center block
         BlockState toPlace = ModBlocks.PUFFBOMB_MUSHROOM_BLOCK.defaultBlockState();

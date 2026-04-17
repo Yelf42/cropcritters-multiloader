@@ -44,7 +44,7 @@ public class PoisonousPotatoCritterEntity extends AbstractCropCritterEntity impl
 
     private static final Predicate<Entity> POISON_PREDICATE = (entity) -> {
         if (entity instanceof Player playerEntity) return !playerEntity.isCreative();
-        return !entity.getType().is(CropCritters.CROP_CRITTERS);
+        return !entity.is(CropCritters.CROP_CRITTERS);
     };
 
     private boolean lastTargetMature = false;
@@ -142,7 +142,7 @@ public class PoisonousPotatoCritterEntity extends AbstractCropCritterEntity impl
                 this.destroyFarmland--;
             }
         } else {
-            if (this.level().random.nextInt(10) != 0) return;
+            if (this.level().getRandom().nextInt(10) != 0) return;
             double x = this.getX() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
             double y = this.getY() + this.getBbHeight() * 0.5;
             double z = this.getZ() + (this.random.nextDouble() - 0.5) * this.getBbWidth();
@@ -182,7 +182,7 @@ public class PoisonousPotatoCritterEntity extends AbstractCropCritterEntity impl
         }
 
         public void playBreakSound(Level world, BlockPos pos) {
-            world.playSound(null, pos, SoundEvents.TURTLE_EGG_BREAK, SoundSource.BLOCKS, 0.7F, 0.9F + world.random.nextFloat() * 0.2F);
+            world.playSound(null, pos, SoundEvents.TURTLE_EGG_BREAK, SoundSource.BLOCKS, 0.7F, 0.9F + world.getRandom().nextFloat() * 0.2F);
         }
 
         public double acceptedDistance() {

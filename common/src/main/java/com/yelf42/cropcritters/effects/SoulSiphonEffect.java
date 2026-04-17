@@ -31,7 +31,7 @@ public class SoulSiphonEffect extends MobEffect {
     }
 
     public void onMobRemoved(ServerLevel world, LivingEntity entity, int amplifier, Entity.RemovalReason reason) {
-        if (reason == Entity.RemovalReason.KILLED && entity.getType().is(EntityTypeTags.UNDEAD)) {
+        if (reason == Entity.RemovalReason.KILLED && entity.is(EntityTypeTags.UNDEAD)) {
             Vec3 entityPos = entity.position();
             BlockPos pos = new BlockPos((int)entityPos.x, (int) Math.floor(entityPos.y + 0.5F), (int)entityPos.z);
             AffectorPositions affectorPositions = CropCritters.getAffectorPositions(world);
@@ -53,7 +53,7 @@ public class SoulSiphonEffect extends MobEffect {
     private void growCropsAndCritters(ServerLevel world, BlockPos pos, int amplifier) {
         Iterable<BlockPos> iterable = BlockPos.withinManhattan(pos, amplifier, 1, amplifier);
         for(BlockPos blockPos : iterable) {
-            if (world.random.nextInt(2) == 0) continue;
+            if (world.getRandom().nextInt(2) == 0) continue;
 
             BlockState blockState = world.getBlockState(blockPos);
             if (!(blockState.getBlock() instanceof VegetationBlock)) continue;
@@ -61,18 +61,18 @@ public class SoulSiphonEffect extends MobEffect {
             if (blockState.getBlock() instanceof BonemealableBlock fertilizable) {
                 if (fertilizable.isValidBonemealTarget(world, blockPos, blockState)) {
                     if (world instanceof ServerLevel) {
-                        if (fertilizable.isBonemealSuccess(world, world.random, blockPos, blockState)) {
-                            fertilizable.performBonemeal(world, world.random, blockPos, blockState);
+                        if (fertilizable.isBonemealSuccess(world, world.getRandom(), blockPos, blockState)) {
+                            fertilizable.performBonemeal(world, world.getRandom(), blockPos, blockState);
                         }
                     }
                 } else {
                     if ((blockState.getBlock() instanceof CropBlock) || (blockState.getBlock() instanceof PitcherCropBlock)) {
-                        CritterHelper.spawnCritter(world, blockState, world.random, blockPos);
+                        CritterHelper.spawnCritter(world, blockState, world.getRandom(), blockPos);
                     }
                 }
             } else {
                 if (blockState.is(Blocks.NETHER_WART) && blockState.getValueOrElse(NetherWartBlock.AGE, 0) == NetherWartBlock.MAX_AGE) {
-                    CritterHelper.spawnCritter(world, blockState, world.random, blockPos);
+                    CritterHelper.spawnCritter(world, blockState, world.getRandom(), blockPos);
                 }
             }
         }

@@ -37,13 +37,13 @@ public class PopperSeedEntity extends ThrowableItemProjectile {
 
     @Override
     protected void onInsideBlock(BlockState state) {
-        if (this.level().getBlockState(this.blockPosition()).is(BlockTags.DIRT)) {
+        if (this.level().getBlockState(this.blockPosition()).is(BlockTags.SUPPORTS_VEGETATION)) {
             BlockState toCheckUp = this.level().getBlockState(this.blockPosition().above());
             if (WeedHelper.canWeedsReplace(toCheckUp)) {
                 this.level().setBlockAndUpdate(this.blockPosition().above(), ModBlocks.POPPER_PLANT.defaultBlockState());
                 this.discard();
             }
-        } else if (this.level().getBlockState(this.blockPosition().below()).is(BlockTags.DIRT)) {
+        } else if (this.level().getBlockState(this.blockPosition().below()).is(BlockTags.SUPPORTS_VEGETATION)) {
             BlockState toCheck = this.level().getBlockState(this.blockPosition());
             if (WeedHelper.canWeedsReplace(toCheck)) {
                 this.level().setBlockAndUpdate(this.blockPosition(), ModBlocks.POPPER_PLANT.defaultBlockState());

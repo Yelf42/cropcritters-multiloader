@@ -10,7 +10,7 @@
     "BlockItemMixin",
     "BlockMixin",
     "CropBlockMixin",
-    "FarmBlockMixin",
+    "FarmlandBlockMixin",
     "HoeItemMixin",
     "LightningBoltMixin",
     "NetherWartBlockMixin",

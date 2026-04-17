@@ -40,7 +40,7 @@ public class PuffbombPoisoningEffect extends MobEffect {
             world.explode(null, null, POP, pos.getX(), pos.getY(), pos.getZ(), 4F, false, Level.ExplosionInteraction.BLOCK, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, WeightedList.of(), ModSounds.PUFFBOMB_EXPLODE);
             entity.removeEffect(ModEffects.PUFFBOMB_POISONING);
         } else {
-            world.playSound(null, entity.blockPosition(), ModSounds.TICKING, SoundSource.HOSTILE, 0.5f, 0.8f + 0.05f * (float)world.random.nextInt(8));
+            world.playSound(null, entity.blockPosition(), ModSounds.TICKING, SoundSource.HOSTILE, 0.5f, 0.8f + 0.05f * (float)world.getRandom().nextInt(8));
         }
 
         return true;

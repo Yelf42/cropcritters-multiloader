@@ -1,6 +1,9 @@
 package com.yelf42.cropcritters.config;
 
+import com.mojang.datafixers.DSL;
 import com.mojang.serialization.Codec;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
@@ -28,10 +31,10 @@ public class RecognizedCropsState extends SavedData {
             );
 
     private static final SavedDataType<RecognizedCropsState> type = new SavedDataType<>(
-            CropCritters.MOD_ID,
+            CropCritters.identifier("recognised_crop_states"),
             RecognizedCropsState::new,
             CODEC,
-            null
+            null // TODO NotNull, but unfamiliar
     );
 
     private RecognizedCropsState() {

@@ -42,7 +42,7 @@ public class LostSoulInAJarBlock extends LanternBlock {
             world.setBlock(pos, (BlockState)state.setValue(POWERED, true), 3);
             ring(world, pos, random);
         }
-        world.scheduleTick(pos, state.getBlock(), 15 + world.random.nextInt(30), TickPriority.EXTREMELY_LOW);
+        world.scheduleTick(pos, state.getBlock(), 15 + world.getRandom().nextInt(30), TickPriority.EXTREMELY_LOW);
     }
 
     @Override

@@ -19,6 +19,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -32,6 +34,7 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
 
     private static final List<Identifier> DefaultSeedTypes = Arrays.asList(BuiltInRegistries.BLOCK.getKey(Blocks.WHEAT), BuiltInRegistries.BLOCK.getKey(Blocks.CARROTS), BuiltInRegistries.BLOCK.getKey(Blocks.POTATOES), BuiltInRegistries.BLOCK.getKey(Blocks.BEETROOTS));
 
+    private int range = 2;
 
     public SeedBallProjectileEntity(EntityType<? extends ThrowableItemProjectile> entityType, Level world) {
         super(entityType, world);
@@ -45,6 +48,23 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
         super(ModEntities.SEED_BALL_PROJECTILE, livingEntity, serverWorld, itemStack);
     }
 
+    public SeedBallProjectileEntity(ServerLevel serverWorld, LivingEntity livingEntity, ItemStack itemStack, int range) {
+        super(ModEntities.SEED_BALL_PROJECTILE, livingEntity, serverWorld, itemStack);
+        this.range = range;
+    }
+
+    @Override
+    protected void addAdditionalSaveData(ValueOutput view) {
+        super.addAdditionalSaveData(view);
+        view.putInt("Range", this.range);
+    }
+
+    @Override
+    protected void readAdditionalSaveData(ValueInput view) {
+        super.readAdditionalSaveData(view);
+        this.range = view.getIntOr("Range", 2);
+    }
+
     @Override
     protected Item getDefaultItem() {
         return ModItems.SEED_BALL;
@@ -52,7 +72,7 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
 
     private ParticleOptions getParticleParameters() {
         ItemStack itemStack = this.getItem();
-        return (itemStack.isEmpty() ? ParticleTypes.SPLASH : new ItemParticleOption(ParticleTypes.ITEM, itemStack));
+        return (itemStack.isEmpty() ? ParticleTypes.SPLASH : new ItemParticleOption(ParticleTypes.ITEM, itemStack.getItem()));
     }
 
     public void handleEntityEvent(byte status) {
@@ -63,8 +83,6 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
             }
         }
     }
-
-
 
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
@@ -84,11 +102,6 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
     protected void onInsideBlock(BlockState state) {
         Level world = this.level();
         if (!world.isClientSide()) {
-            if (!state.isSolid()) return;
-            if (!state.is(BlockTags.DIRT)) {
-                this.discard();
-                return;
-            }
 
             List<Identifier> crops = this.getItem().getOrDefault(ModComponents.SEED_TYPES, new ModComponents.SeedTypesComponent(DefaultSeedTypes)).seedTypes();
             if (crops.isEmpty()) {
@@ -96,10 +109,10 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
                 return;
             }
 
-            Iterable<BlockPos> iterable = BlockPos.withinManhattan(this.blockPosition(), 2, 3, 2);
+            Iterable<BlockPos> iterable = BlockPos.withinManhattan(this.blockPosition(), this.range, 3, this.range);
             for(BlockPos blockPos : iterable) {
                 BlockState blockState = BuiltInRegistries.BLOCK.getValue(crops.get(this.random.nextInt(crops.size()))).defaultBlockState();
-                if ((world.random.nextInt(2) == 0 || blockPos == this.blockPosition()) && blockState.canSurvive(world, blockPos) && world.getBlockState(blockPos).isAir()) {
+                if ((world.getRandom().nextInt(2) == 0 || blockPos == this.blockPosition()) && blockState.canSurvive(world, blockPos) && world.getBlockState(blockPos).isAir()) {
                     world.setBlockAndUpdate(blockPos, blockState);
                 }
             }

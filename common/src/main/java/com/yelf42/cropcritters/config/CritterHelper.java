@@ -38,7 +38,7 @@ public class CritterHelper {
             } else if (state.is(Blocks.TORCHFLOWER)) {
                 output = ModEntities.TORCHFLOWER_CRITTER.create(world, EntitySpawnReason.SPAWN_ITEM_USE);
             } else if (state.is(Blocks.NETHER_WART)) {
-                for (int i = 0; i <= world.random.nextInt(3); i++) {
+                for (int i = 0; i <= world.getRandom().nextInt(3); i++) {
                     output = ModEntities.NETHER_WART_CRITTER.create(world, EntitySpawnReason.SPAWN_ITEM_USE);
                 }
             } else if (state.getBlock() instanceof CropBlock cropBlock && cropBlock.isMaxAge(state)) {
@@ -47,7 +47,7 @@ public class CritterHelper {
                 } else if (state.is(Blocks.CARROTS)) {
                     output = ModEntities.CARROT_CRITTER.create(world, EntitySpawnReason.SPAWN_ITEM_USE);
                 } else if (state.is(Blocks.POTATOES)) {
-                    if (world.random.nextInt(100) + 1 < world.getDifficulty().getId() * 5) {
+                    if (world.getRandom().nextInt(100) + 1 < world.getDifficulty().getId() * 5) {
                         output = ModEntities.POISONOUS_POTATO_CRITTER.create(world, EntitySpawnReason.SPAWN_ITEM_USE);
                     } else {
                         output = ModEntities.POTATO_CRITTER.create(world, EntitySpawnReason.SPAWN_ITEM_USE);
@@ -89,13 +89,13 @@ public class CritterHelper {
                     ModEntities.POTATO_CRITTER.spawn(world, pos, EntitySpawnReason.NATURAL);
                 }
             } else if (state.is(Blocks.NETHER_WART)) {
-                for (int i = 0; i <= world.random.nextInt(3); i++) {
+                for (int i = 0; i <= world.getRandom().nextInt(3); i++) {
                     ModEntities.NETHER_WART_CRITTER.spawn(world, pos, EntitySpawnReason.NATURAL);
                 }
             } else if (state.is(Blocks.BEETROOTS)) {
                 ModEntities.BEETROOT_CRITTER.spawn(world, pos, EntitySpawnReason.NATURAL);
             } else if (state.is(Blocks.NETHER_WART)) {
-                for (int i = 0; i <= world.random.nextInt(3); i++) {
+                for (int i = 0; i <= world.getRandom().nextInt(3); i++) {
                     ModEntities.NETHER_WART_CRITTER.spawn(world, pos, EntitySpawnReason.NATURAL);
                 }
             } else if (state.is(Blocks.TORCHFLOWER_CROP)) {

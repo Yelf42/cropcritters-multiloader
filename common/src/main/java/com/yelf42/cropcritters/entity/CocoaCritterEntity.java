@@ -38,11 +38,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.manager.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.object.PlayState;
-import software.bernie.geckolib.constant.DefaultAnimations;
+import com.geckolib.animatable.manager.AnimatableManager;
+import com.geckolib.animation.AnimationController;
+import com.geckolib.animation.RawAnimation;
+import com.geckolib.animation.object.PlayState;
+import com.geckolib.constant.DefaultAnimations;
 import com.yelf42.cropcritters.config.RecognizedCropsState;
 import com.yelf42.cropcritters.registry.ModItems;
 import com.yelf42.cropcritters.registry.ModSounds;
@@ -171,7 +171,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
         List<ItemStack> items = state.getDrops(builder);
         if (items.isEmpty()) return;
 
-        int index = world.random.nextInt(items.size());
+        int index = world.getRandom().nextInt(items.size());
         ItemStack toDrop = items.remove(index);
         toDrop.setCount(Math.clamp(toDrop.getCount(), 1, 5));
         this.setItemSlot(EquipmentSlot.MAINHAND, toDrop);

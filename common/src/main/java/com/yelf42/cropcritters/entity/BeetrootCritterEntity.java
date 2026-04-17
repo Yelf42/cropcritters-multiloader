@@ -1,6 +1,8 @@
 package com.yelf42.cropcritters.entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.EntityType;
@@ -44,6 +46,13 @@ public class BeetrootCritterEntity extends AbstractCropCritterEntity {
     @Override
     protected boolean isHealingItem(ItemStack itemStack) {
         return itemStack.is(Items.BEETROOT) || itemStack.is(Items.BEETROOT_SEEDS);
+    }
+
+    @Override
+    public boolean isAttractive(BlockPos pos) {
+        BlockState target = this.level().getBlockState(pos);
+        BlockState above = this.level().getBlockState(pos.above());
+        return this.getTargetBlockFilter().test(target) && (above.isAir() || above.getBlock() instanceof VegetationBlock);
     }
 
     @Override

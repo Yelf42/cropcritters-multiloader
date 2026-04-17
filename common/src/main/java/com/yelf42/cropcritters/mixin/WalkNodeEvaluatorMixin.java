@@ -16,10 +16,10 @@ public abstract class WalkNodeEvaluatorMixin {
 
     // PathNodeType.DAMAGE_OTHER is only used for CACTUS and SWEET_BERRY_BUSH, which is close enough to WEEDS
     // In the future, consider custom PathNodeType just for WEEDS
-    @Inject(method= "getPathTypeFromState", at=@At("HEAD"), cancellable = true)
+    @Inject(method= "getPathTypeFromState", at = @At("HEAD"), cancellable = true)
     private static void injectWeedPenalties(BlockGetter world, BlockPos pos, CallbackInfoReturnable<PathType> cir) {
         BlockState state = world.getBlockState(pos);
-        if (state.is(CropCritters.PATH_PENALTY_WEEDS)) cir.setReturnValue(PathType.DAMAGE_OTHER);
+        if (state.is(CropCritters.PATH_PENALTY_WEEDS)) cir.setReturnValue(PathType.DAMAGING);
     }
 
 }

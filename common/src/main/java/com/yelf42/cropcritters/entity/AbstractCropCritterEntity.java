@@ -43,14 +43,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animatable.manager.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.object.PlayState;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import com.geckolib.animatable.GeoEntity;
+import com.geckolib.animatable.instance.AnimatableInstanceCache;
+import com.geckolib.animatable.manager.AnimatableManager;
+import com.geckolib.animation.AnimationController;
+import com.geckolib.animation.RawAnimation;
+import com.geckolib.animation.object.PlayState;
+import com.geckolib.constant.DefaultAnimations;
+import com.geckolib.util.GeckoLibUtil;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.config.ConfigManager;
 import com.yelf42.cropcritters.registry.ModItems;
@@ -65,7 +65,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final EntityDataAccessor<Boolean> TRUSTING = SynchedEntityData.defineId(AbstractCropCritterEntity.class, EntityDataSerializers.BOOLEAN);
     private static final Predicate<Entity> NOTICEABLE_PLAYER_FILTER = (entity) -> !entity.isDiscrete() && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(entity);
-    private static final Predicate<Entity> FARM_ANIMALS_FILTER = (entity -> entity.getType().is(CropCritters.SCARE_CRITTERS));
+    private static final Predicate<Entity> FARM_ANIMALS_FILTER = (entity -> entity.is(CropCritters.SCARE_CRITTERS));
     public static final RawAnimation SIT = RawAnimation.begin().thenLoop("animated.sit");
 
     // Override these methods
@@ -92,7 +92,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
 
     public AbstractCropCritterEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
-        setPathfindingMalus(PathType.DAMAGE_OTHER, 0.0f);
+        setPathfindingMalus(PathType.DAMAGING, 0.0f);
     }
 
     public void setTrusting(boolean trusting) {
@@ -264,7 +264,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
         int quantity = 1;
         if (loot.getB() > 1 && damageSource.getEntity() instanceof Player) {
             boolean withHoe = damageSource.getWeaponItem() != null && damageSource.getWeaponItem().is(ItemTags.HOES);
-            if (withHoe) quantity = world.random.nextInt(loot.getB()) + 1;
+            if (withHoe) quantity = world.getRandom().nextInt(loot.getB()) + 1;
         }
         ItemStack toDrop = new ItemStack(loot.getA(), quantity);
         this.spawnAtLocation(world, toDrop);

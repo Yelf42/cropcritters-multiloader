@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 
 public class TorchflowerCritterEntity extends AbstractCropCritterEntity {
     private static final Predicate<Entity> NOTICEABLE_PLAYER_FILTER = (entity) -> !entity.isDiscrete() && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(entity);
-    private static final Predicate<Entity> FARM_ANIMALS_FILTER = (entity -> entity.getType().is(CropCritters.SCARE_CRITTERS));
+    private static final Predicate<Entity> FARM_ANIMALS_FILTER = (entity -> entity.is(CropCritters.SCARE_CRITTERS));
 
 
     public TorchflowerCritterEntity(EntityType<? extends TamableAnimal> entityType, Level world) {

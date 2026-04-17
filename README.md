@@ -6,6 +6,9 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
 - Locust swarm raid
 - New weed types:
     - Tumbleweed
+- Carrot Critter hoes beneath crops
+- Pumpkin Critter custom crops
+- Golden Dandelion makes critters idle
 
 ## RepoCredits
 [MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) <br>

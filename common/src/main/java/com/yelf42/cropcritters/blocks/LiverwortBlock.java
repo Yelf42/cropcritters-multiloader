@@ -5,7 +5,6 @@ import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.MultifaceSpreadeableBlock;
 import net.minecraft.world.level.block.MultifaceSpreader;
@@ -50,7 +49,7 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
         boolean bl = false;
         for(Direction direction : DIRECTIONS) {
             if (hasFace(state, direction)) {
-                if (!world.getBlockState(pos.relative(direction)).is(BlockTags.DIRT)) {
+                if (!world.getBlockState(pos.relative(direction)).is(BlockTags.SUPPORTS_VEGETATION)) {
                     return false;
                 }
                 bl = true;
@@ -64,7 +63,7 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
         if (super.isValidStateForPlacement(world, state, pos, direction)) return true;
         if (this.isFaceSupported(direction) && (!state.is(this) || !hasFace(state, direction))) {
             BlockPos blockPos = pos.relative(direction);
-            return world.getBlockState(blockPos).is(BlockTags.DIRT);
+            return world.getBlockState(blockPos).is(BlockTags.SUPPORTS_VEGETATION);
         } else {
             return false;
         }
@@ -83,7 +82,7 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
     @Override
     protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         // Dry out in sunlight
-        long time = world.getDayTime() % 24000;
+        long time = world.getDefaultClockTime() % 24000; // TODO test
         if (state.getFluidState().isEmpty()
                 && (time <= 8000 && time >= 4000)
                 && world.getBrightness(LightLayer.SKY, pos) >= 15
@@ -146,7 +145,7 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
         int j = pos.getY();
         int k = pos.getZ();
         for(int l = 0; l < 8; ++l) {
-            world.addParticle(ParticleTypes.WHITE_SMOKE, (double)((float)i + world.random.nextFloat()), (double)((float)j + world.random.nextFloat()), (double)((float)k + world.random.nextFloat()), (double)0.0F, (double)0.0F, (double)0.0F);
+            world.addParticle(ParticleTypes.WHITE_SMOKE, (double)((float)i + world.getRandom().nextFloat()), (double)((float)j + world.getRandom().nextFloat()), (double)((float)k + world.getRandom().nextFloat()), (double)0.0F, (double)0.0F, (double)0.0F);
         }
         world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         return true;

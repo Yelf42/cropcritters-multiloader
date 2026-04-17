@@ -3,10 +3,15 @@ package com.yelf42.cropcritters.platform;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.area_affectors.AffectorPositions;
 import com.yelf42.cropcritters.platform.services.IPlatformHelper;
+import com.yelf42.cropcritters.registry.ModBlocks;
+import com.yelf42.cropcritters.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -20,6 +25,7 @@ import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -45,8 +51,12 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public Builder tabBuilder() {
-        return CreativeModeTab.builder();
+    public CreativeModeTab tabBuilder(String title, List<Item> items) {
+        return CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.LOST_SOUL))
+                .title(Component.translatable("itemGroup.cropcritters"))
+                .displayItems((itemDisplayParameters, output) -> {
+                    items.forEach(output::accept);
+                }).build();
     }
 
     @Override

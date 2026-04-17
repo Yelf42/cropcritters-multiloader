@@ -7,12 +7,17 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public interface IPlatformHelper {
 
@@ -48,7 +53,7 @@ public interface IPlatformHelper {
         return isDevelopmentEnvironment() ? "development" : "production";
     }
 
-    CreativeModeTab.Builder tabBuilder();
+    CreativeModeTab tabBuilder(String title, List<Item> items);
     <T extends BlockEntity> BlockEntityType<T> blockEntityType(BiFunction<BlockPos, BlockState, T> function, Block... validBlocks);
     SimpleParticleType simpleParticleType();
 

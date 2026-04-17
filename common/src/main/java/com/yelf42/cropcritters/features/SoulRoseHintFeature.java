@@ -1,6 +1,7 @@
 package com.yelf42.cropcritters.features;
 
 import com.mojang.serialization.Codec;
+import com.yelf42.cropcritters.CropCritters;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.core.BlockPos;
@@ -20,9 +21,14 @@ public class SoulRoseHintFeature extends Feature<NoneFeatureConfiguration> {
 
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        CropCritters.LOGGER.info("Attempting to place SOUL_ROSE_HINT, ignore OutOfBounds errors");
         RandomSource random = context.random();
         int level = random.nextInt(3) + 1;
         WorldGenLevel world = context.level();
+
+//        BlockPos pos = world.getChunk(context.origin()).getPos().getMiddleBlockPosition(context.origin().below().getY());
+//        if (!world.getBlockState(pos.above()).is(Blocks.AIR)) return false;
+
         if (!world.getBlockState(context.origin()).is(Blocks.AIR)) return false;
         BlockPos pos = context.origin().below();
 
@@ -68,7 +74,6 @@ public class SoulRoseHintFeature extends Feature<NoneFeatureConfiguration> {
     }
 
     private static BlockState chooseBlock(RandomSource random) {
-        //return Blocks.END_ROD.getDefaultState();
         return random.nextInt(5) != 0 ? Blocks.GILDED_BLACKSTONE.defaultBlockState() : (random.nextInt(2) == 0 ? Blocks.BLACKSTONE.defaultBlockState() : Blocks.RAW_GOLD_BLOCK.defaultBlockState());
     }
 

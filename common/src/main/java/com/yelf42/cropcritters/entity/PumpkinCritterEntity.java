@@ -1,16 +1,18 @@
 package com.yelf42.cropcritters.entity;
 
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.level.pathfinder.Path;
@@ -18,8 +20,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
@@ -31,11 +31,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.animatable.manager.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.object.PlayState;
-import software.bernie.geckolib.constant.DefaultAnimations;
+import com.geckolib.animatable.manager.AnimatableManager;
+import com.geckolib.animation.AnimationController;
+import com.geckolib.animation.RawAnimation;
+import com.geckolib.animation.object.PlayState;
+import com.geckolib.constant.DefaultAnimations;
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.blocks.SoulFarmland;
 import com.yelf42.cropcritters.registry.ModItems;
@@ -85,7 +85,7 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
 
     @Override
     protected Predicate<BlockState> getTargetBlockFilter() {
-        return (blockState -> blockState.getBlock() instanceof FarmBlock || blockState.getBlock() instanceof SoulFarmland);
+        return (blockState -> blockState.getBlock() instanceof FarmlandBlock || blockState.getBlock() instanceof SoulFarmland);
     }
 
     @Override
@@ -98,10 +98,54 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
         Vec3 dir = this.getLookAngle();
         Level world = this.level();
         if (world instanceof ServerLevel serverWorld) {
-            ItemStack itemStack = new ItemStack(ModItems.SEED_BALL);
-            Projectile.spawnProjectile(new SeedBallProjectileEntity(serverWorld, this, itemStack), serverWorld, itemStack, (entity) -> entity.shoot(dir.x, 1.8F, dir.z, 0.4F, 0.0F));
+            ItemStack held = this.getItemBySlot(EquipmentSlot.MAINHAND);
+            ItemStack itemStack = held.isEmpty() ? new ItemStack(ModItems.SEED_BALL) : held;
+            float dist = (float) this.position().distanceTo(this.targetPos.getCenter());
+            Projectile.spawnProjectile(new SeedBallProjectileEntity(serverWorld, this, itemStack, 1), serverWorld, itemStack, (entity) -> entity.shoot(dir.x, 1.8F, dir.z, 0.4F * (dist / 5.0F), 0.0F));
         }
         this.playSound(ModSounds.ENTITY_CRITTER_SPIT, 2.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+    }
+
+    // Right click with empty hand makes critter try drop held item
+    @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        InteractionResult actionResult = super.mobInteract(player, hand);
+        ItemStack inHand = player.getItemInHand(hand);
+        if (!this.level().isClientSide() && !actionResult.consumesAction() && this.isTrusting()) {
+            if (inHand.isEmpty()) {
+                if (tryPutDown(this.getItemBySlot(EquipmentSlot.MAINHAND), true)) return InteractionResult.SUCCESS;
+                return InteractionResult.PASS;
+            } else if (canHoldItem(inHand)) {
+                if (!this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty()) tryPutDown(this.getItemBySlot(EquipmentSlot.MAINHAND), true);
+                this.setItemSlot(EquipmentSlot.MAINHAND, inHand.split(1));
+                this.setGuaranteedDrop(EquipmentSlot.MAINHAND);
+            }
+        }
+        return actionResult;
+    }
+
+    // For dropping held item
+    private boolean tryPutDown(ItemStack stack, boolean withVelocity) {
+        if (!stack.isEmpty()) {
+            ItemEntity itemEntity;
+            if (withVelocity) {
+                itemEntity = new ItemEntity(this.level(), this.getX() + this.getLookAngle().x, this.getY() + (double)0.6F, this.getZ() + this.getLookAngle().z, stack);
+            } else {
+                itemEntity = new ItemEntity(this.level(), this.getX(), this.getY() + (double)0.6F, this.getZ(), stack, 0F, 0F, 0F);
+            }
+            itemEntity.setPickUpDelay(40);
+            itemEntity.setThrower(this);
+            this.playSound(ModSounds.ENTITY_CRITTER_DROP, 1.0F, 1.0F);
+            this.level().addFreshEntity(itemEntity);
+            this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean canHoldItem(ItemStack stack) {
+        return stack.is(ModItems.SEED_BALL);
     }
 
     @Override
@@ -126,7 +170,7 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
 
     @Override
     protected int resetTicksUntilCanWork() {
-        return resetTicksUntilCanWork(Mth.nextInt(this.random, 150, 500));
+        return resetTicksUntilCanWork(Mth.nextInt(this.random, 500, 1000));
     }
 
     @Override
@@ -206,7 +250,7 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
     class MelonActiveTargetGoal extends NearestAttackableTargetGoal<LivingEntity> {
 
         public MelonActiveTargetGoal() {
-            super(PumpkinCritterEntity.this, LivingEntity.class, 10, true, false, (entity, serverWorld) -> (!(entity.getType().is(CropCritters.CROP_CRITTERS))));
+            super(PumpkinCritterEntity.this, LivingEntity.class, 10, true, false, (entity, serverWorld) -> (!(entity.is(CropCritters.CROP_CRITTERS))));
         }
 
         @Override

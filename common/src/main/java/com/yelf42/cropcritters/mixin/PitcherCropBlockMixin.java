@@ -32,7 +32,7 @@ public abstract class PitcherCropBlockMixin {
 
     @Inject(method = "mayPlaceOn", at = @At("HEAD"), cancellable = true)
     private void allowPlantOnSoulAndDirt(BlockState floor, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (floor.is(BlockTags.DIRT)) cir.setReturnValue(true);
+        if (floor.is(BlockTags.SUPPORTS_VEGETATION)) cir.setReturnValue(true);
     }
 
     // Stop growth on non-farmland
@@ -48,17 +48,17 @@ public abstract class PitcherCropBlockMixin {
         BlockState soilCheck = world.getBlockState(pos.below());
         if (soilCheck.is(Blocks.FARMLAND)) {
             pushEntitiesUp(Blocks.FARMLAND.defaultBlockState(), Blocks.DIRT.defaultBlockState(), world, pos.below());
-            BlockState toDirt = (world.random.nextInt(4) == 0) ? Blocks.DIRT.defaultBlockState() : (world.random.nextInt(2) == 0) ? Blocks.ROOTED_DIRT.defaultBlockState() : Blocks.COARSE_DIRT.defaultBlockState();
+            BlockState toDirt = (world.getRandom().nextInt(4) == 0) ? Blocks.DIRT.defaultBlockState() : (world.getRandom().nextInt(2) == 0) ? Blocks.ROOTED_DIRT.defaultBlockState() : Blocks.COARSE_DIRT.defaultBlockState();
             world.setBlock(pos.below(), toDirt, Block.UPDATE_CLIENTS);
         } else if (soilCheck.is(ModBlocks.SOUL_FARMLAND)){
             pushEntitiesUp(ModBlocks.SOUL_FARMLAND.defaultBlockState(), Blocks.SOUL_SOIL.defaultBlockState(), world, pos.below());
-            BlockState toDirt = (world.random.nextInt(2) == 0) ? Blocks.SOUL_SOIL.defaultBlockState() : Blocks.SOUL_SAND.defaultBlockState();
+            BlockState toDirt = (world.getRandom().nextInt(2) == 0) ? Blocks.SOUL_SOIL.defaultBlockState() : Blocks.SOUL_SAND.defaultBlockState();
             world.setBlock(pos.below(), toDirt, Block.UPDATE_CLIENTS);
         } else {
             return;
         }
 
-        if (CritterHelper.spawnCritter(world, state, world.random, pos)) return;
+        if (CritterHelper.spawnCritter(world, state, world.getRandom(), pos)) return;
     }
 
 }

@@ -72,10 +72,10 @@ public class BoneTrapBlock extends VegetationBlock {
     protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         if (this.getStage(state) == 2) {
             world.setBlockAndUpdate(pos, state.setValue(STAGE, 1));
-            world.playSound(null, pos, ModSounds.BONE_TRAP_OPEN, SoundSource.BLOCKS, 0.5F, 1.0F + (world.random.nextFloat() * 0.6F - 0.3F));
-            world.scheduleTick(pos, this, 100 + world.random.nextInt(60), TickPriority.EXTREMELY_LOW);
+            world.playSound(null, pos, ModSounds.BONE_TRAP_OPEN, SoundSource.BLOCKS, 0.5F, 1.0F + (world.getRandom().nextFloat() * 0.6F - 0.3F));
+            world.scheduleTick(pos, this, 100 + world.getRandom().nextInt(60), TickPriority.EXTREMELY_LOW);
         } else {
-            world.playSound(null, pos, ModSounds.BONE_TRAP_OPEN, SoundSource.BLOCKS, 0.5F, 1.0F + (world.random.nextFloat() * 0.6F - 0.3F));
+            world.playSound(null, pos, ModSounds.BONE_TRAP_OPEN, SoundSource.BLOCKS, 0.5F, 1.0F + (world.getRandom().nextFloat() * 0.6F - 0.3F));
             world.setBlockAndUpdate(pos, state.setValue(STAGE, 0));
         }
     }
@@ -86,11 +86,11 @@ public class BoneTrapBlock extends VegetationBlock {
             double dist = livingEntity.position().distanceTo(pos.getBottomCenter());
             if (this.getStage(state) == 0 && dist <= 0.2F) {
 
-                world.playSound(null, pos, ModSounds.BONE_TRAP_CLOSE, SoundSource.BLOCKS, 0.5F, 1.0F + (world.random.nextFloat() * 0.6F - 0.3F));
+                world.playSound(null, pos, ModSounds.BONE_TRAP_CLOSE, SoundSource.BLOCKS, 0.5F, 1.0F + (world.getRandom().nextFloat() * 0.6F - 0.3F));
 
                 if (world instanceof ServerLevel serverWorld) {
-                    if (!(livingEntity.getType().is(CropCritters.WEED_IMMUNE))) livingEntity.hurtServer(serverWorld, world.damageSources().sweetBerryBush(), 4.0F);
-                    serverWorld.scheduleTick(pos, this, 40 + serverWorld.random.nextInt(20), TickPriority.EXTREMELY_LOW);
+                    if (!(livingEntity.is(CropCritters.WEED_IMMUNE))) livingEntity.hurtServer(serverWorld, world.damageSources().sweetBerryBush(), 4.0F);
+                    serverWorld.scheduleTick(pos, this, 40 + serverWorld.getRandom().nextInt(20), TickPriority.EXTREMELY_LOW);
                     serverWorld.setBlockAndUpdate(pos, state.setValue(STAGE, 2));
                 }
             } else if (this.getStage(state) == 2) {

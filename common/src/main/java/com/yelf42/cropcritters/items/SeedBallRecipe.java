@@ -1,17 +1,16 @@
 package com.yelf42.cropcritters.items;
 
+import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModComponents;
 import com.yelf42.cropcritters.registry.ModItems;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import com.yelf42.cropcritters.CropCritters;
@@ -20,9 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SeedBallRecipe extends CustomRecipe {
+    public static final SeedBallRecipe INSTANCE = new SeedBallRecipe();
+    public static final MapCodec<SeedBallRecipe> MAP_CODEC;
+    public static final StreamCodec<RegistryFriendlyByteBuf, SeedBallRecipe> STREAM_CODEC;
+    public static final RecipeSerializer<SeedBallRecipe> SERIALIZER;
 
-    public SeedBallRecipe(CraftingBookCategory category) {
-        super(category);
+
+    public SeedBallRecipe() {
+        super();
+    }
+
+    @Override
+    public CraftingBookCategory category() {
+        return CraftingBookCategory.MISC;
     }
 
     @Override
@@ -50,7 +59,7 @@ public class SeedBallRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
+    public ItemStack assemble(CraftingInput input) {
         ItemStack result = new ItemStack(ModItems.SEED_BALL, 1);
 
         List<Identifier> usedSeeds = new ArrayList<>();
@@ -83,8 +92,13 @@ public class SeedBallRecipe extends CustomRecipe {
         return null;
     }
 
-    @Override
     public RecipeSerializer<SeedBallRecipe> getSerializer() {
-        return ModItems.SEED_BALL_RECIPE;
+        return SERIALIZER;
+    }
+
+    static {
+        MAP_CODEC = MapCodec.unit(INSTANCE);
+        STREAM_CODEC = StreamCodec.unit(INSTANCE);
+        SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
     }
 }

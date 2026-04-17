@@ -178,8 +178,8 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
                     BlockState toWaterState = serverWorld.getBlockState(toWater);
                     if (toWaterState.getBlock() instanceof BonemealableBlock fertilizable) {
                         if (fertilizable.isValidBonemealTarget(serverWorld, toWater, toWaterState)) {
-                            if (fertilizable.isBonemealSuccess(serverWorld, serverWorld.random, toWater, toWaterState)) {
-                                fertilizable.performBonemeal(serverWorld, serverWorld.random, toWater, toWaterState);
+                            if (fertilizable.isBonemealSuccess(serverWorld, serverWorld.getRandom(), toWater, toWaterState)) {
+                                fertilizable.performBonemeal(serverWorld, serverWorld.getRandom(), toWater, toWaterState);
                             }
                         }
                     }
@@ -218,7 +218,7 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
     class MelonActiveTargetGoal extends NearestAttackableTargetGoal<LivingEntity> {
 
         public MelonActiveTargetGoal() {
-            super(MelonCritterEntity.this, LivingEntity.class, 10, true, false, (entity, serverWorld) -> (!(entity.getType().is(CropCritters.CROP_CRITTERS))));
+            super(MelonCritterEntity.this, LivingEntity.class, 10, true, false, (entity, serverWorld) -> (!(entity.is(CropCritters.CROP_CRITTERS))));
         }
 
         @Override

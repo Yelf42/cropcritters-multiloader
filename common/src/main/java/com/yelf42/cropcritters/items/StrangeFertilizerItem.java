@@ -136,7 +136,7 @@ public class StrangeFertilizerItem extends BoneMealItem {
         if (underwaterState.is(Blocks.WATER) && world.getFluidState(underwaterPos).getAmount() == 8) {
             useUnderwater(stack, world, underwaterPos, facing);
             return true;
-        } else if (state.is(BlockTags.DIRT) || state.getBlock() instanceof BonemealableBlock fertilizable && fertilizable.isValidBonemealTarget(world, blockPos, state)) {
+        } else if (state.is(BlockTags.SUPPORTS_VEGETATION) || state.getBlock() instanceof BonemealableBlock fertilizable && fertilizable.isValidBonemealTarget(world, blockPos, state)) {
             useOnLand(stack, world, blockPos);
             return true;
         } else {
@@ -164,7 +164,7 @@ public class StrangeFertilizerItem extends BoneMealItem {
 
             if (i == 0 && facing != null && facing.getAxis().isHorizontal()) {
                 blockState = (BlockState) BuiltInRegistries.BLOCK
-                        .getRandomElementOf(BlockTags.WALL_CORALS, world.random)
+                        .getRandomElementOf(BlockTags.WALL_CORALS, world.getRandom())
                         .map(blockEntry -> ((Block)blockEntry.value()).defaultBlockState())
                         .orElse(blockState);
                 if (blockState.hasProperty(BaseCoralWallFanBlock.FACING)) {
@@ -172,7 +172,7 @@ public class StrangeFertilizerItem extends BoneMealItem {
                 }
             } else if (random.nextInt(2) == 0) {
                 blockState = (BlockState) BuiltInRegistries.BLOCK
-                        .getRandomElementOf(CropCritters.UNDERWATER_STRANGE_FERTILIZERS, world.random)
+                        .getRandomElementOf(CropCritters.UNDERWATER_STRANGE_FERTILIZERS, world.getRandom())
                         .map(blockEntry -> ((Block)blockEntry.value()).defaultBlockState())
                         .orElse(blockState);
             }
@@ -232,17 +232,17 @@ public class StrangeFertilizerItem extends BoneMealItem {
 
                 if (floor.is(Blocks.CRIMSON_NYLIUM) || floor.is(Blocks.WARPED_NYLIUM)) {
                     toPlace = BuiltInRegistries.BLOCK
-                            .getRandomElementOf(CropCritters.ON_NYLIUM_STRANGE_FERTILIZERS, world.random)
+                            .getRandomElementOf(CropCritters.ON_NYLIUM_STRANGE_FERTILIZERS, world.getRandom())
                             .map(blockEntry -> ((Block)blockEntry.value()).defaultBlockState())
                             .orElse(Blocks.NETHER_SPROUTS.defaultBlockState());
                 } else if (floor.is(Blocks.MYCELIUM)) {
                     toPlace = BuiltInRegistries.BLOCK
-                            .getRandomElementOf(CropCritters.ON_MYCELIUM_STRANGE_FERTILIZERS, world.random)
+                            .getRandomElementOf(CropCritters.ON_MYCELIUM_STRANGE_FERTILIZERS, world.getRandom())
                             .map(blockEntry -> ((Block)blockEntry.value()).defaultBlockState())
                             .orElse(Blocks.BROWN_MUSHROOM.defaultBlockState());
                 } else {
                     toPlace = BuiltInRegistries.BLOCK
-                            .getRandomElementOf((random.nextInt(2) == 0) ? CropCritters.ON_LAND_RARE_STRANGE_FERTILIZERS : CropCritters.ON_LAND_COMMON_STRANGE_FERTILIZERS, world.random)
+                            .getRandomElementOf((random.nextInt(2) == 0) ? CropCritters.ON_LAND_RARE_STRANGE_FERTILIZERS : CropCritters.ON_LAND_COMMON_STRANGE_FERTILIZERS, world.getRandom())
                             .map(blockEntry -> ((Block)blockEntry.value()).defaultBlockState())
                             .orElse(Blocks.SHORT_GRASS.defaultBlockState());
                 }
