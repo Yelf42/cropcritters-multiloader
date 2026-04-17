@@ -62,7 +62,7 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
         this.goalSelector.addGoal(3, this.targetWorkGoal);
         this.targetSelector.addGoal(7, new MelonActiveTargetGoal());
         this.goalSelector.addGoal(7, new RangedAttackGoal(this, 1.25F, 20, 10.0F));
-        this.goalSelector.addGoal(12, new RandomStrollGoal(this, 0.8));
+        this.goalSelector.addGoal(12, new CritterWanderGoal());
         this.goalSelector.addGoal(20, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(20, new RandomLookAroundGoal(this));
     }
@@ -170,7 +170,7 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
 
     @Override
     protected int resetTicksUntilCanWork() {
-        return resetTicksUntilCanWork(Mth.nextInt(this.random, 500, 1000));
+        return resetTicksUntilCanWork(Mth.nextInt(this.random, 500, 800));
     }
 
     @Override

@@ -60,10 +60,10 @@ public class TorchflowerCritterEntity extends AbstractCropCritterEntity {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, temptGoal);
-        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, (double)2.0F, 6.0F, 2.0F));
+        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 2.0F, 6.0F, 2.0F));
         this.goalSelector.addGoal(8, new AvoidEntityGoal<>(this, Animal.class, 10.0F, 1.6, 1.4, (entity) -> FARM_ANIMALS_FILTER.test(entity) && !this.isTrusting()));
         this.goalSelector.addGoal(8, new AvoidEntityGoal<>(this, Player.class, 10.0F, 1.6, 1.4, (entity) -> NOTICEABLE_PLAYER_FILTER.test(entity) && !this.isTrusting()));
-        this.goalSelector.addGoal(12, new WaterAvoidingRandomStrollGoal(this, (double)1.0F));
+        this.goalSelector.addGoal(12, new WaterAvoidingRandomStrollGoal(this, 1.0F));
         this.goalSelector.addGoal(20, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(20, new RandomLookAroundGoal(this));
     }

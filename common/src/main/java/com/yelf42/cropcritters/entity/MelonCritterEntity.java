@@ -59,7 +59,7 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
         this.goalSelector.addGoal(4, new WateringGoal());
         this.targetSelector.addGoal(7, new MelonActiveTargetGoal());
         this.goalSelector.addGoal(7, new RangedAttackGoal(this, 1.25F, 20, 10.0F));
-        this.goalSelector.addGoal(12, new RandomStrollGoal(this, 0.8));
+        this.goalSelector.addGoal(12, new CritterWanderGoal());
         this.goalSelector.addGoal(20, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(20, new RandomLookAroundGoal(this));
     }

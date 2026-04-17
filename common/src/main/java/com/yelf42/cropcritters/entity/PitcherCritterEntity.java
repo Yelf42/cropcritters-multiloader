@@ -85,7 +85,7 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
         this.goalSelector.addGoal(2, temptGoal);
         this.goalSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 0, true, true, (entity, world) -> CAN_EAT.test(entity)));
         this.goalSelector.addGoal(4, new OcelotAttackGoal(this));
-        this.goalSelector.addGoal(12, new RandomStrollGoal(this, 0.8));
+        this.goalSelector.addGoal(12, new CritterWanderGoal());
         this.goalSelector.addGoal(20, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(20, new RandomLookAroundGoal(this));
     }
