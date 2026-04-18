@@ -103,6 +103,8 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
         Level world = this.level();
         if (!world.isClientSide()) {
 
+            if (!state.isSolid()) return;
+
             List<Identifier> crops = this.getItem().getOrDefault(ModComponents.SEED_TYPES, new ModComponents.SeedTypesComponent(DefaultSeedTypes)).seedTypes();
             if (crops.isEmpty()) {
                 this.discard();
