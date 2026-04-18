@@ -111,7 +111,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
         this.targetWorkGoal = new TargetWorkGoal();
         this.goalSelector.addGoal(8, this.targetWorkGoal);
         this.goalSelector.addGoal(9, new PickupItemGoal());
-        this.goalSelector.addGoal(12, new RandomStrollGoal(this, 0.8));
+        this.goalSelector.addGoal(12, new CritterWanderGoal());
         this.goalSelector.addGoal(20, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(20, new RandomLookAroundGoal(this));
     }

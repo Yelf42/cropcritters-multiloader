@@ -1,6 +1,8 @@
 package com.yelf42.cropcritters.entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.EntityType;
@@ -27,6 +29,13 @@ public class PotatoCritterEntity extends AbstractCropCritterEntity {
 
     @Override
     protected  int getTargetOffset() {return 1;}
+
+    @Override
+    public boolean isAttractive(BlockPos pos) {
+        BlockState target = this.level().getBlockState(pos);
+        BlockState above = this.level().getBlockState(pos.above());
+        return this.getTargetBlockFilter().test(target) && (above.isAir() || above.getBlock() instanceof BushBlock);
+    }
 
     @Override
     public void completeTargetGoal() {

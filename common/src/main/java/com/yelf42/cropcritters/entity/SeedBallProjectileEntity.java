@@ -1,6 +1,7 @@
 package com.yelf42.cropcritters.entity;
 
 import com.yelf42.cropcritters.registry.ModEntities;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -32,6 +33,7 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
 
     private static final List<ResourceLocation> DefaultSeedTypes = Arrays.asList(BuiltInRegistries.BLOCK.getKey(Blocks.WHEAT), BuiltInRegistries.BLOCK.getKey(Blocks.CARROTS), BuiltInRegistries.BLOCK.getKey(Blocks.POTATOES), BuiltInRegistries.BLOCK.getKey(Blocks.BEETROOTS));
 
+    private int range = 2;
 
     public SeedBallProjectileEntity(EntityType<? extends ThrowableItemProjectile> entityType, Level world) {
         super(entityType, world);
@@ -45,6 +47,25 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
     public SeedBallProjectileEntity(ServerLevel serverWorld, LivingEntity livingEntity, ItemStack itemStack) {
         super(ModEntities.SEED_BALL_PROJECTILE, livingEntity, serverWorld);
         this.setItem(itemStack);
+    }
+
+    public SeedBallProjectileEntity(ServerLevel serverWorld, LivingEntity livingEntity, ItemStack itemStack, int range) {
+        super(ModEntities.SEED_BALL_PROJECTILE, livingEntity, serverWorld);
+        this.setItem(itemStack);
+        this.range = range;
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putInt("Range", this.range);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        this.range = 2;
+        if (tag.contains("Range")) this.range = tag.getInt("Range");
     }
 
     @Override
@@ -94,7 +115,7 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
                 return;
             }
 
-            Iterable<BlockPos> iterable = BlockPos.withinManhattan(this.blockPosition(), 2, 3, 2);
+            Iterable<BlockPos> iterable = BlockPos.withinManhattan(this.blockPosition(), this.range, 3, this.range);
             for(BlockPos blockPos : iterable) {
                 BlockState blockState = BuiltInRegistries.BLOCK.get(crops.get(this.random.nextInt(crops.size()))).defaultBlockState();
                 if ((world.random.nextInt(2) == 0 || blockPos == this.blockPosition()) && blockState.canSurvive(world, blockPos) && world.getBlockState(blockPos).isAir()) {
