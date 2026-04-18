@@ -1,7 +1,11 @@
 package com.yelf42.cropcritters.entity;
 
+import com.yelf42.cropcritters.area_affectors.AffectorPositions;
+import com.yelf42.cropcritters.area_affectors.TypedBlockArea;
+import com.yelf42.cropcritters.registry.ModBlocks;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
@@ -10,6 +14,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -54,6 +59,7 @@ import com.yelf42.cropcritters.registry.ModItems;
 import com.yelf42.cropcritters.registry.ModParticles;
 import com.yelf42.cropcritters.registry.ModSounds;
 
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -83,6 +89,8 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
 
     BlockPos targetPos;
     TargetWorkGoal targetWorkGoal;
+    BlockPos nearestSoulRose;
+
 
     int ticksUntilCanWork = 20 * 10;
 
@@ -103,6 +111,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
         super.addAdditionalSaveData(tag);
         tag.putBoolean("Trusting", this.isTrusting());
         tag.putInt("TicksUntilCanWork", this.ticksUntilCanWork);
+        if (this.nearestSoulRose != null) tag.put("NearestSoulRose", NbtUtils.writeBlockPos(this.nearestSoulRose));
     }
 
     @Override
@@ -115,6 +124,12 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
             this.ticksUntilCanWork = tag.getInt("TicksUntilCanWork");
         } else {
             this.ticksUntilCanWork = resetTicksUntilCanWork();
+        }
+
+        if (tag.contains("NearestSoulRose")) {
+            this.nearestSoulRose = NbtUtils.readBlockPos(tag.getCompound("NearestSoulRose"));
+        } else {
+            this.nearestSoulRose = null;
         }
 
         this.targetPos = null;
@@ -146,7 +161,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
         this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, Player.class, 10.0F, 1.2, 1.4, (entity) -> NOTICEABLE_PLAYER_FILTER.test(entity) && !this.isTrusting()));
         this.targetWorkGoal = new TargetWorkGoal();
         this.goalSelector.addGoal(8, this.targetWorkGoal);
-        this.goalSelector.addGoal(12, new RandomStrollGoal(this, 0.8));
+        this.goalSelector.addGoal(12, new CritterWanderGoal());
         this.goalSelector.addGoal(20, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(20, new RandomLookAroundGoal(this));
     }
@@ -477,6 +492,78 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
 
         public boolean canUse() {
             return super.canUse() && !this.critter.isTrusting();
+        }
+    }
+
+
+    // Return null early if <32 blocks from soul rose
+    // Else return closest soul rose
+    private BlockPos nearestSoulRose() {
+        if (this.level() instanceof ServerLevel serverLevel) {
+            if (this.nearestSoulRose != null) {
+                double dist = this.nearestSoulRose.distSqr(this.blockPosition());
+                if (dist < 1024) return null;
+                if (dist > 8192 || !serverLevel.getBlockState(this.nearestSoulRose).is(ModBlocks.SOUL_ROSE)) this.nearestSoulRose = null;
+                return this.nearestSoulRose;
+            }
+
+            AffectorPositions affectorPositions = CropCritters.getAffectorPositions(serverLevel);
+            Collection<? extends TypedBlockArea> affectorsInSection = affectorPositions.getAffectorsInSection(this.blockPosition());
+
+            if (affectorsInSection.isEmpty()) return null;
+
+            BlockPos closest = new BlockPos(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE);
+            for (TypedBlockArea area : affectorsInSection) {
+                double dist = area.position().distSqr(this.blockPosition());
+                if (dist < 1024) {
+                    this.nearestSoulRose = area.position();
+                    return null;
+                }
+                if (closest.distSqr(this.blockPosition()) > dist) closest = area.position();
+            }
+
+            if (closest.distSqr(this.blockPosition()) > 4096) return null;
+            this.nearestSoulRose = closest;
+            return closest;
+        }
+
+        return null;
+    }
+
+    protected class CritterWanderGoal extends Goal {
+        CritterWanderGoal() {
+            super();
+            this.setFlags(EnumSet.of(Flag.MOVE));
+        }
+
+        public boolean canUse() {
+            return AbstractCropCritterEntity.this.navigation.isDone() && AbstractCropCritterEntity.this.random.nextInt(10) == 0;
+        }
+
+        public boolean canContinueToUse() {
+            return AbstractCropCritterEntity.this.navigation.isInProgress();
+        }
+
+        public void start() {
+            Vec3 targetPos = this.findPos();
+            if (targetPos != null) {
+                AbstractCropCritterEntity.this.navigation.moveTo(AbstractCropCritterEntity.this.navigation.createPath(BlockPos.containing(targetPos), 1), 0.8F);
+            }
+        }
+
+        public void stop() {
+            AbstractCropCritterEntity.this.getNavigation().stop();
+            super.stop();
+        }
+
+        private Vec3 findPos() {
+            BlockPos rose = AbstractCropCritterEntity.this.nearestSoulRose();
+            if (rose != null) {
+                Vec3 rosePosVec = Vec3.atCenterOf(rose);
+                return DefaultRandomPos.getPosTowards(AbstractCropCritterEntity.this, 10, 7, rosePosVec, Math.PI / 16.0f);
+            } else {
+                return DefaultRandomPos.getPos(AbstractCropCritterEntity.this, 10, 7);
+            }
         }
     }
 }
