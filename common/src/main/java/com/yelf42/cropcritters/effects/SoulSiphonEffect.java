@@ -84,6 +84,7 @@ public class SoulSiphonEffect extends MobEffect {
     }
 
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+        if (amplifier == 0) return false;
         int i = 42 / amplifier;
         if (i > 0) {
             return duration % i == 0;
