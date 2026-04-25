@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.blocks;
 
+import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModBlockEntities;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.world.level.block.Block;
@@ -119,20 +120,26 @@ public class SoulRoseBlockEntity extends BlockEntity {
             }
         }
 
-        int level = state.getValueOrElse(SoulRoseBlock.LEVEL, 0);
-        SoulRoseType type = state.getValueOrElse(SoulRoseBlock.TYPE, SoulRoseType.NONE);
+        BlockState newState = world.getBlockState(pos);
+
+        int level = newState.getValueOrElse(SoulRoseBlock.LEVEL, 0);
+        SoulRoseType type = newState.getValueOrElse(SoulRoseBlock.TYPE, SoulRoseType.NONE);
         if (level == 0 || type == SoulRoseType.NONE) return;
 
         // Copper undead attack
         if (world.getGameTime() % 30 == 0L) {
             if (type == SoulRoseType.GOLD) {
-                tryAttack((ServerLevel) world, pos, state, blockEntity);
+                tryAttack((ServerLevel) world, pos, newState, blockEntity);
             }
         }
     }
 
     private static void tryAttack(ServerLevel world, BlockPos pos, BlockState state, SoulRoseBlockEntity blockEntity) {
         int level = state.getValueOrElse(SoulRoseBlock.LEVEL, 0);
+        if (level == 0) {
+            CropCritters.LOGGER.warn("SoulRose has type but level 0");
+            return;
+        }
 
         List<LivingEntity> list = world.getEntitiesOfClass(LivingEntity.class, getAttackZone(pos, level), (entity) -> entity.is(EntityTypeTags.UNDEAD) && !entity.hasCustomName());
         for (LivingEntity livingEntity : list) {
