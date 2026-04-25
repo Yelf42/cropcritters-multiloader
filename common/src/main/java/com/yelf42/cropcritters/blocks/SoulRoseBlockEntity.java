@@ -119,20 +119,26 @@ public class SoulRoseBlockEntity extends BlockEntity {
             }
         }
 
-        int level = state.getOptionalValue(SoulRoseBlock.LEVEL).orElse(0);
-        SoulRoseType type = state.getOptionalValue(SoulRoseBlock.TYPE).orElse(SoulRoseType.NONE);
+        BlockState newState = world.getBlockState(pos);
+
+        int level = newState.getOptionalValue(SoulRoseBlock.LEVEL).orElse(0);
+        SoulRoseType type = newState.getOptionalValue(SoulRoseBlock.TYPE).orElse(SoulRoseType.NONE);
         if (level == 0 || type == SoulRoseType.NONE) return;
 
         // Copper undead attack
         if (world.getGameTime() % 30 == 0L) {
             if (type == SoulRoseType.GOLD) {
-                tryAttack((ServerLevel) world, pos, state, blockEntity);
+                tryAttack((ServerLevel) world, pos, newState, blockEntity);
             }
         }
     }
 
     private static void tryAttack(ServerLevel world, BlockPos pos, BlockState state, SoulRoseBlockEntity blockEntity) {
         int level = state.getOptionalValue(SoulRoseBlock.LEVEL).orElse(0);
+        if (level == 0) {
+            CropCritters.LOGGER.warn("SoulRose has type but level 0");
+            return;
+        }
 
         List<LivingEntity> list = world.getEntitiesOfClass(LivingEntity.class, getAttackZone(pos, level), (entity) -> entity.getType().is(CropCritters.UNDEAD) && !entity.hasCustomName());
         for (LivingEntity livingEntity : list) {

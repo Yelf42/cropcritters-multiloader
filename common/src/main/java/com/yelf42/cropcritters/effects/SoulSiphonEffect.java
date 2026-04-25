@@ -57,6 +57,7 @@ public class SoulSiphonEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
+        if (amplifier == 0) return;
         int i = 42 / amplifier;
         boolean shouldApplyEffect = i <= 0 || entity.tickCount % i == 0;
 
