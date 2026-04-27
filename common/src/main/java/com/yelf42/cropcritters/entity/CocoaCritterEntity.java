@@ -280,6 +280,10 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
         protected int ticks;
         protected Vec3 nextTarget;
 
+        public DepositInHopperGoal() {
+            setFlags(EnumSet.of(Flag.MOVE));
+        }
+
         @Override
         public boolean canUse() {
             if (!CocoaCritterEntity.this.isTrusting() || CocoaCritterEntity.this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty()) return false;
