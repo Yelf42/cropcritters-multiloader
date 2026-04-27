@@ -1,11 +1,9 @@
 package com.yelf42.cropcritters.entity;
 
-import com.yelf42.cropcritters.CropCritters;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.OcelotAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
@@ -29,7 +27,6 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
@@ -48,7 +45,8 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
         if ((entity.getBoundingBox().getXsize() >= this.getBoundingBox().getXsize())
                 || (entity.getBoundingBox().getYsize() >= this.getBoundingBox().getYsize())
                 || entity.isInvulnerable()
-                || entity instanceof Pufferfish) {
+                || entity instanceof Pufferfish
+                || entity instanceof Player) {
             return false;
         }
 
