@@ -43,6 +43,7 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -201,6 +202,11 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
 
 
     class PumpkinTargetWorkGoal extends AbstractCropCritterEntity.TargetWorkGoal {
+        public PumpkinTargetWorkGoal() {
+            super();
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+        }
+
         @Override
         public void start() {
             super.start();
