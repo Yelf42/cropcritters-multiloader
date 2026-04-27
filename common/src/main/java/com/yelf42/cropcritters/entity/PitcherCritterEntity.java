@@ -47,7 +47,8 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
         if ((entity.getBoundingBox().getXsize() >= this.getBoundingBox().getXsize())
                 || (entity.getBoundingBox().getYsize() >= this.getBoundingBox().getYsize())
                 || entity.isInvulnerable()
-                || entity instanceof Pufferfish) {
+                || entity instanceof Pufferfish
+                || entity instanceof Player) {
             return false;
         }
 
