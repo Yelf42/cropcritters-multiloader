@@ -40,6 +40,7 @@ import com.yelf42.cropcritters.blocks.SoulFarmland;
 import com.yelf42.cropcritters.registry.ModItems;
 import com.yelf42.cropcritters.registry.ModSounds;
 
+import java.util.EnumSet;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -192,6 +193,12 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
 
 
     class PumpkinTargetWorkGoal extends AbstractCropCritterEntity.TargetWorkGoal {
+
+        public PumpkinTargetWorkGoal() {
+            super();
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+        }
+
         @Override
         public void start() {
             super.start();
