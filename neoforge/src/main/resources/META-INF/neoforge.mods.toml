@@ -24,7 +24,7 @@ side = "BOTH" # Side this dependency is applied on - 'BOTH', 'CLIENT' or 'SERVER
 [[dependencies.cropcritters]]
 modId = "minecraft"
 type="required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "[${minecraft_version},${minecraft_version}]"
+versionRange = "[${minecraft_version},]"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.cropcritters]]
