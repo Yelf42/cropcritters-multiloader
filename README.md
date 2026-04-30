@@ -7,7 +7,7 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
 - New weed types:
     - Tumbleweed
 - Carrot Critter hoes beneath crops
-- Pumpkin Critter custom crops
+- Farm animals eat respective critters, become breedable
 - Golden Dandelion makes critters idle
 
 ## RepoCredits
