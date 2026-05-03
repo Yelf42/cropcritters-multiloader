@@ -8,6 +8,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
@@ -76,6 +77,6 @@ public class FarmlandDegradationMapping extends SimpleJsonResourceReloadListener
     public boolean growingMedium(BlockState blockState) {
         ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(blockState.getBlock());
 
-        return blockToBlockList.containsKey(blockId);
+        return blockToBlockList.containsKey(blockId) || blockState.getBlock() instanceof FarmBlock;
     }
 }
