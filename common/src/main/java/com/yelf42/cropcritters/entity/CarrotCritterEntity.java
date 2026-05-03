@@ -1,8 +1,8 @@
 package com.yelf42.cropcritters.entity;
 
+import com.yelf42.cropcritters.config.TillingBlockMapping;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
@@ -13,7 +13,6 @@ import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import com.yelf42.cropcritters.registry.ModBlocks;
 import com.yelf42.cropcritters.registry.ModSounds;
 
 import java.util.function.Predicate;
@@ -25,8 +24,7 @@ public class CarrotCritterEntity extends AbstractCropCritterEntity {
 
     @Override
     protected Predicate<BlockState> getTargetBlockFilter() {
-        return (blockState -> blockState.is(Blocks.DIRT) || blockState.is(Blocks.GRASS_BLOCK)
-                                        || blockState.is(Blocks.SOUL_SOIL) || blockState.is(Blocks.SOUL_SAND));
+        return (TillingBlockMapping.CARROT_INSTANCE::canTill);
     }
 
     @Override
@@ -37,8 +35,9 @@ public class CarrotCritterEntity extends AbstractCropCritterEntity {
         if (this.targetPos == null) return;
         this.playSound(ModSounds.ENTITY_CRITTER_TILL, 1.0F, 1.0F);
         BlockState target = this.level().getBlockState(this.targetPos);
-        BlockState farmland = (target.is(Blocks.DIRT) || target.is(Blocks.GRASS_BLOCK)) ? Blocks.FARMLAND.defaultBlockState() : (target.is(Blocks.SOUL_SAND) || target.is(Blocks.SOUL_SOIL)) ? ModBlocks.SOUL_FARMLAND.defaultBlockState() : null;
+        BlockState farmland = TillingBlockMapping.CARROT_INSTANCE.getTillingMapping(target).orElse(null);
         if (farmland == null) return;
+        Block.pushEntitiesUp(target, farmland, this.level(), this.targetPos);
         this.level().setBlock(this.targetPos, farmland, Block.UPDATE_ALL_IMMEDIATE);
         this.level().levelEvent(this, 2001, this.targetPos, Block.getId(this.level().getBlockState(this.targetPos)));
     }

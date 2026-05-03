@@ -1,5 +1,7 @@
 package com.yelf42.cropcritters;
 
+import com.yelf42.cropcritters.config.FarmlandDegradationMapping;
+import com.yelf42.cropcritters.config.TillingBlockMapping;
 import com.yelf42.cropcritters.entity.*;
 import com.yelf42.cropcritters.registry.*;
 import net.fabricmc.api.ModInitializer;
@@ -7,9 +9,11 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.registry.CompostableRegistry;
 import net.fabricmc.fabric.api.registry.FuelValueEvents;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackType;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -32,8 +36,6 @@ public class CropCrittersFabric implements ModInitializer {
         bind(BuiltInRegistries.CREATIVE_MODE_TAB, ModItems::registerTabs);
         bind(BuiltInRegistries.RECIPE_SERIALIZER, ModItems::registerRecipes);
 
-
-
         bind(BuiltInRegistries.MOB_EFFECT, ModEffects::register);
 
         bind(BuiltInRegistries.FEATURE, ModFeatures::registerFeatures);
@@ -51,6 +53,8 @@ public class CropCrittersFabric implements ModInitializer {
 
         PayloadTypeRegistry.clientboundPlay().register(ModPackets.WaterSprayS2CPayload.ID, ModPackets.WaterSprayS2CPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(ModPackets.ParticleRingS2CPayload.ID, ModPackets.ParticleRingS2CPayload.CODEC);
+
+        registerOnReloadMappings();
 
         CropCritters.init();
     }
@@ -99,5 +103,25 @@ public class CropCrittersFabric implements ModInitializer {
         FuelValueEvents.BUILD.register((builder, context) -> {
             builder.add(ModItems.LOST_SOUL, 80 * 20);
         });
+    }
+
+    private void registerOnReloadMappings() {
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(
+                CropCritters.identifier("block_mappings/carrot_tilling"),
+                TillingBlockMapping.CARROT_INSTANCE
+        );
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(
+                CropCritters.identifier("block_mappings/potato_tilling"),
+                TillingBlockMapping.POTATO_INSTANCE
+        );
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(
+                CropCritters.identifier("block_mappings/beetroot_tilling"),
+                TillingBlockMapping.BEETROOT_INSTANCE
+        );
+
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(
+                CropCritters.identifier("block_mappings/farmland_degradation"),
+                FarmlandDegradationMapping.INSTANCE
+        );
     }
 }

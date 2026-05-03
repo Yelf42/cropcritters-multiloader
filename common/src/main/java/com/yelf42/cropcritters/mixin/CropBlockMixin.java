@@ -1,6 +1,9 @@
 package com.yelf42.cropcritters.mixin;
 
+import com.yelf42.cropcritters.CropCritters;
+import com.yelf42.cropcritters.config.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
@@ -15,11 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import com.yelf42.cropcritters.config.AffectorsHelper;
 import com.yelf42.cropcritters.registry.ModBlocks;
-import com.yelf42.cropcritters.config.ConfigManager;
-import com.yelf42.cropcritters.config.CritterHelper;
-import com.yelf42.cropcritters.config.WeedHelper;
 
 import static net.minecraft.world.level.block.Block.pushEntitiesUp;
 
@@ -29,7 +28,7 @@ public abstract class CropBlockMixin {
     // Allows plants to be planted on SOUL_FARMLAND
     @Inject(method = "mayPlaceOn", at = @At("HEAD"), cancellable = true)
     private void allowPlantOnSoulAndDirt(BlockState floor, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (floor.is(BlockTags.SUPPORTS_VEGETATION)) cir.setReturnValue(true);
+        if (floor.is(BlockTags.SUPPORTS_VEGETATION) || floor.getBlock() instanceof FarmlandBlock) cir.setReturnValue(true);
     }
 
     /// getGrowthSpeed is different in fabric v neoforge
@@ -55,18 +54,11 @@ public abstract class CropBlockMixin {
         if (state.getBlock() instanceof CropBlock cropBlock) {
             if (cropBlock.getAge(state) + 1 != cropBlock.getMaxAge()) return;
             BlockState soilCheck = world.getBlockState(pos.below());
-            if (soilCheck.is(Blocks.FARMLAND)) {
-                // Farmland to dirt
-                pushEntitiesUp(Blocks.FARMLAND.defaultBlockState(), Blocks.DIRT.defaultBlockState(), world, pos.below());
-                BlockState toDirt = (random.nextInt(4) == 0) ? Blocks.DIRT.defaultBlockState() : (random.nextInt(2) == 0) ? Blocks.ROOTED_DIRT.defaultBlockState() : Blocks.COARSE_DIRT.defaultBlockState();
-                world.setBlock(pos.below(), toDirt, Block.UPDATE_CLIENTS);
-            } else if (soilCheck.is(ModBlocks.SOUL_FARMLAND)){
-                // Soul farmland to soul blocks
-                pushEntitiesUp(Blocks.FARMLAND.defaultBlockState(), Blocks.SOUL_SOIL.defaultBlockState(), world, pos.below());
-                BlockState toDirt = (random.nextInt(2) == 0) ? Blocks.SOUL_SOIL.defaultBlockState() : Blocks.SOUL_SAND.defaultBlockState();
-                world.setBlock(pos.below(), toDirt, Block.UPDATE_CLIENTS);
-            } else {
-                return;
+            BlockState degradeTo = FarmlandDegradationMapping.INSTANCE.getFarmlandDegradationMapping(soilCheck).orElse(null);
+
+            if (degradeTo != null && ((CropBlockAccessor)cropBlock).invokeMayPlaceOn(soilCheck, world, pos)) {
+                pushEntitiesUp(soilCheck, degradeTo, world, pos.below());
+                world.setBlock(pos.below(), degradeTo, Block.UPDATE_CLIENTS);
             }
 
             if (CritterHelper.spawnCritter(world, state, random, pos)) return;
@@ -85,7 +77,7 @@ public abstract class CropBlockMixin {
         }
 
         BlockState soilCheck = world.getBlockState(pos.below());
-        if (!(soilCheck.is(Blocks.FARMLAND) || soilCheck.is(ModBlocks.SOUL_FARMLAND))) {
+        if (!FarmlandDegradationMapping.INSTANCE.growingMedium(soilCheck)) {
             ci.cancel();
             return;
         }
@@ -95,7 +87,7 @@ public abstract class CropBlockMixin {
                 if (CritterHelper.spawnCritter(world, state, random, pos)) return;
             }
             if (random.nextDouble() < 0.03 * ((double) cropBlock.getAge(state) / (cropBlock.getMaxAge() - 1))) {
-                WeedHelper.generateWeed(state, world, pos, random, soilCheck.is(ModBlocks.SOUL_FARMLAND));
+                WeedHelper.generateWeed(state, world, pos, random, soilCheck.is(CropCritters.GROWS_NETHER_WEEDS));
             }
         }
     }

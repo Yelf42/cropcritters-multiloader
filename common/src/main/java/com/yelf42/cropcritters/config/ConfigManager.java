@@ -1,12 +1,16 @@
 package com.yelf42.cropcritters.config;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.yelf42.cropcritters.CropCritters;
+import net.minecraft.resources.Identifier;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public class ConfigManager {
     private static Path CONFIG_PATH;
@@ -112,5 +116,38 @@ public class ConfigManager {
         }
     }
 
+    // Farm block mappings:
+    public record BlockToBlockMapping(Identifier from, Identifier to) {
+        public static final Codec<BlockToBlockMapping> CODEC = RecordCodecBuilder.create(instance ->
+                instance.group(
+                        Identifier.CODEC.fieldOf("from").forGetter(BlockToBlockMapping::from),
+                        Identifier.CODEC.fieldOf("to").forGetter(BlockToBlockMapping::to)
+                ).apply(instance, BlockToBlockMapping::new)
+        );
+    }
+
+    public record BlockToBlockMappingFile(List<BlockToBlockMapping> mappings) {
+        public static final Codec<BlockToBlockMappingFile> CODEC = RecordCodecBuilder.create(instance ->
+                instance.group(
+                        BlockToBlockMapping.CODEC.listOf().fieldOf("mappings").forGetter(BlockToBlockMappingFile::mappings)
+                ).apply(instance, BlockToBlockMappingFile::new)
+        );
+    }
+
+    public record BlockToBlockListMapping(Identifier from, List<Identifier> to) {
+        public static final Codec<BlockToBlockListMapping> CODEC = RecordCodecBuilder.create(instance ->
+                instance.group(
+                        Identifier.CODEC.fieldOf("from").forGetter(BlockToBlockListMapping::from),
+                        Identifier.CODEC.listOf().fieldOf("to").forGetter(BlockToBlockListMapping::to)
+                ).apply(instance, BlockToBlockListMapping::new)
+        );
+    }
+    public record BlockToBlockListMappingFile(List<BlockToBlockListMapping> mappings) {
+        public static final Codec<BlockToBlockListMappingFile> CODEC = RecordCodecBuilder.create(instance ->
+                instance.group(
+                        BlockToBlockListMapping.CODEC.listOf().fieldOf("mappings").forGetter(BlockToBlockListMappingFile::mappings)
+                ).apply(instance, BlockToBlockListMappingFile::new)
+        );
+    }
 
 }

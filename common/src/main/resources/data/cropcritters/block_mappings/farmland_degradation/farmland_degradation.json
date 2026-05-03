@@ -1,0 +1,28 @@
+{
+  "mappings": [
+    {
+      "from": "minecraft:farmland",
+      "to": [
+        "minecraft:rooted_dirt",
+        "minecraft:coarse_dirt",
+        "minecraft:rooted_dirt",
+        "minecraft:coarse_dirt",
+        "minecraft:dirt"
+      ]
+    },
+    {
+      "from": "cropcritters:soul_farmland",
+      "to": [
+        "minecraft:soul_soil",
+        "minecraft:soul_sand"
+      ]
+    },
+    {
+      "from": "farmersdelight:rich_soil_farmland",
+      "to": [
+        "farmersdelight:rich_soil"
+      ]
+    }
+
+  ]
+}

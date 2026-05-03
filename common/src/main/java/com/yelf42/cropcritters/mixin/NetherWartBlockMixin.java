@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.mixin;
 
+import com.yelf42.cropcritters.CropCritters;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.NetherWartBlock;
@@ -29,9 +30,7 @@ public abstract class NetherWartBlockMixin {
     private void allowPlantOnSoulStuff(BlockState floor, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (floor.is(Blocks.SOUL_SAND) || floor.is(ModBlocks.SOUL_FARMLAND) || floor.is(Blocks.SOUL_SOIL)) {
             cir.setReturnValue(true);
-            return;
         }
-        cir.setReturnValue(false);
     }
 
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
@@ -56,6 +55,6 @@ public abstract class NetherWartBlockMixin {
 
         if (CritterHelper.spawnCritter(world, state, random, pos)) return;
 
-        WeedHelper.generateWeed(state, world, pos, random, true);
+        WeedHelper.generateWeed(state, world, pos, random, soilCheck.is(CropCritters.GROWS_NETHER_WEEDS));
     }
 }
