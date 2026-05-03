@@ -1,0 +1,12 @@
+{
+  "mappings": [
+    {
+      "from": "minecraft:coarse_dirt",
+      "to": "minecraft:dirt"
+    },
+    {
+      "from": "farmersdelight:organic_compost",
+      "to": "farmersdelight:rich_soil"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.yelf42.cropcritters.config.TillingBlockMapping;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BushBlock;
@@ -24,7 +25,7 @@ public class PotatoCritterEntity extends AbstractCropCritterEntity {
 
     @Override
     protected Predicate<BlockState> getTargetBlockFilter() {
-        return (blockState -> blockState.is(Blocks.COARSE_DIRT));
+        return (TillingBlockMapping.POTATO_INSTANCE::canTill);
     }
 
     @Override
@@ -41,7 +42,13 @@ public class PotatoCritterEntity extends AbstractCropCritterEntity {
     public void completeTargetGoal() {
         if (this.targetPos == null) return;
         this.playSound(ModSounds.ENTITY_CRITTER_TILL, 1.0F, 1.0F);
-        this.level().setBlock(this.targetPos, Blocks.DIRT.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
+
+        BlockState target = this.level().getBlockState(this.targetPos);
+        BlockState tillTo = TillingBlockMapping.POTATO_INSTANCE.getTillingMapping(target).orElse(null);
+        if (tillTo == null) return;
+        Block.pushEntitiesUp(target, tillTo, this.level(), this.targetPos);
+
+        this.level().setBlock(this.targetPos, tillTo, Block.UPDATE_ALL_IMMEDIATE);
         this.level().levelEvent(null, 2001, this.targetPos, Block.getId(this.level().getBlockState(this.targetPos)));
     }
 

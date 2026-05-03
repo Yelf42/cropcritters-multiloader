@@ -2,6 +2,8 @@ package com.yelf42.cropcritters;
 
 import com.yelf42.cropcritters.area_affectors.AffectorPositions;
 import com.yelf42.cropcritters.area_affectors.TypedBlockArea;
+import com.yelf42.cropcritters.config.FarmlandDegradationMapping;
+import com.yelf42.cropcritters.config.TillingBlockMapping;
 import com.yelf42.cropcritters.entity.*;
 import com.yelf42.cropcritters.registry.*;
 import net.fabricmc.api.ModInitializer;
@@ -10,13 +12,21 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -53,6 +63,8 @@ public class CropCrittersFabric implements ModInitializer {
 
         registerCompostable();
         registerFuel();
+
+        registerOnReloadMappings();
 
         CropCritters.init();
 
@@ -115,5 +127,30 @@ public class CropCrittersFabric implements ModInitializer {
 
     private void registerFuel() {
         FuelRegistry.INSTANCE.add(ModItems.LOST_SOUL, 80 * 20);
+    }
+
+    private void registerOnReloadMappings() {
+        registerReloadListener(CropCritters.identifier("block_mappings/carrot_tilling"), TillingBlockMapping.CARROT_INSTANCE);
+        registerReloadListener(CropCritters.identifier("block_mappings/potato_tilling"), TillingBlockMapping.POTATO_INSTANCE);
+        registerReloadListener(CropCritters.identifier("block_mappings/beetroot_tilling"), TillingBlockMapping.BEETROOT_INSTANCE);
+        registerReloadListener(CropCritters.identifier("block_mappings/farmland_degradation"), FarmlandDegradationMapping.INSTANCE);
+    }
+
+    private void registerReloadListener(ResourceLocation id, SimpleJsonResourceReloadListener listener) {
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(
+                new IdentifiableResourceReloadListener() {
+                    @Override
+                    public ResourceLocation getFabricId() {
+                        return id;
+                    }
+
+                    @Override
+                    public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager manager,
+                                                          ProfilerFiller prepProfiler, ProfilerFiller applyProfiler,
+                                                          Executor prepExec, Executor applyExec) {
+                        return listener.reload(barrier, manager, prepProfiler, applyProfiler, prepExec, applyExec);
+                    }
+                }
+        );
     }
 }

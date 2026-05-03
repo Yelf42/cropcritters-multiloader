@@ -37,6 +37,7 @@ public class CropCritters {
     public static final TagKey<Block> SPORES_INFECT = TagKey.create(Registries.BLOCK, identifier( "spores_infectable"));
     public static final TagKey<Block> IMMUNE_PLANTS = TagKey.create(Registries.BLOCK, identifier( "immune_plants"));
     public static final TagKey<Block> SNOW_FALL_KILLS = TagKey.create(Registries.BLOCK, identifier( "snow_fall_kills"));
+    public static final TagKey<Block> GROWS_NETHER_WEEDS = TagKey.create(Registries.BLOCK, identifier( "grows_nether_weeds"));
 
     public static final TagKey<Item> SEED_BALL_CROPS = TagKey.create(Registries.ITEM, identifier( "seed_ball_crops"));
 

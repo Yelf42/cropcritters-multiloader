@@ -1,5 +1,7 @@
 package com.yelf42.cropcritters;
 
+import com.yelf42.cropcritters.config.FarmlandDegradationMapping;
+import com.yelf42.cropcritters.config.TillingBlockMapping;
 import com.yelf42.cropcritters.entity.*;
 import com.yelf42.cropcritters.platform.NeoForgePlatformHelper;
 import com.yelf42.cropcritters.registry.*;
@@ -11,6 +13,8 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -66,6 +70,8 @@ public class CropCrittersNeoforge {
 
         eventBus.addListener(this::registerPayloadHandlers);
 
+        NeoForge.EVENT_BUS.addListener(this::registerOnReloadMappings);
+
         CropCritters.init();
 
     }
@@ -114,6 +120,13 @@ public class CropCrittersNeoforge {
                 ModPackets.ParticleRingS2CPayload.CODEC,
                 CropCrittersNeoforgeClient.ClientPayloadHandler::handleRing
         );
+    }
+
+    public void registerOnReloadMappings(AddReloadListenerEvent event) {
+        event.addListener(TillingBlockMapping.CARROT_INSTANCE);
+        event.addListener(TillingBlockMapping.POTATO_INSTANCE);
+        event.addListener(TillingBlockMapping.BEETROOT_INSTANCE);
+        event.addListener(FarmlandDegradationMapping.INSTANCE);
     }
 
 }
