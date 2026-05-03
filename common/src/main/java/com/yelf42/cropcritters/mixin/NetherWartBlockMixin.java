@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.mixin;
 
+import com.yelf42.cropcritters.CropCritters;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.NetherWartBlock;
@@ -56,6 +57,6 @@ public abstract class NetherWartBlockMixin {
 
         if (CritterHelper.spawnCritter(world, state, random, pos)) return;
 
-        WeedHelper.generateWeed(state, world, pos, random, true);
+        WeedHelper.generateWeed(state, world, pos, random, soilCheck.is(CropCritters.GROWS_NETHER_WEEDS));
     }
 }

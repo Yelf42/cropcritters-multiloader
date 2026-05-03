@@ -82,19 +82,23 @@ public class WeedHelper {
         // Break early, no weeds can grow
         if (!growOverworldWeed && !growNetherWeed) return;
 
+        BlockState soil = world.getBlockState(pos.below());
+        BlockState degradeTo = FarmlandDegradationMapping.INSTANCE.getFarmlandDegradationMapping(soil).orElse(null);
+
         if (nether && growNetherWeed) {
             // Special case checks
-            if (world.getBiome(pos).is(Biomes.SOUL_SAND_VALLEY)) {
+            if (world.getBiome(pos).is(Biomes.SOUL_SAND_VALLEY)
+                    && (soil.is(Blocks.SOUL_SAND) || soil.is(Blocks.SOUL_SOIL) || soil.is(ModBlocks.SOUL_FARMLAND))) {
                 placeUniqueWeed(ModBlocks.WITHERING_SPITEWEED.defaultBlockState(), world, pos, Blocks.BLACKSTONE.defaultBlockState());
                 return;
             }
 
             // Default
-            placeNetherWeed(getFromWeightedList(WEIGHTED_NETHER_WEEDS), world, pos, random);
+            placeWeed(getFromWeightedList(WEIGHTED_NETHER_WEEDS), world, pos, soil, degradeTo);
         } else if (!nether && growOverworldWeed) {
             // Special case checks
             if (world.isRainingAt(pos)) {
-                placeOverworldWeed(ModBlocks.LIVERWORT.defaultBlockState().setValue(MultifaceBlock.getFaceProperty(Direction.DOWN), true), world, pos, random);
+                placeWeed(ModBlocks.LIVERWORT.defaultBlockState().setValue(MultifaceBlock.getFaceProperty(Direction.DOWN), true), world, pos, soil, degradeTo);
                 return;
             }
 
@@ -104,20 +108,13 @@ public class WeedHelper {
             if (toPlace.is(ModBlocks.POPPER_PLANT) && (temp >= 1.0 || temp < 0.5)) toPlace = ModBlocks.CRAWL_THISTLE.defaultBlockState();
 
             // Default
-            placeOverworldWeed(toPlace, world, pos, random);
+            placeWeed(toPlace, world, pos, soil, degradeTo);
         }
     }
 
-    private static void placeNetherWeed(BlockState weedState, ServerLevel world, BlockPos pos, RandomSource random) {
-        pushEntitiesUp(ModBlocks.SOUL_FARMLAND.defaultBlockState(), Blocks.SOUL_SOIL.defaultBlockState(), world, pos.below());
-        world.setBlock(pos.below(), (random.nextInt(2) == 0) ? Blocks.SOUL_SOIL.defaultBlockState() : Blocks.SOUL_SAND.defaultBlockState(), Block.UPDATE_CLIENTS);
-        world.setBlockAndUpdate(pos, weedState);
-        world.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(null, weedState));
-    }
-
-    private static void placeOverworldWeed(BlockState weedState, ServerLevel world, BlockPos pos, RandomSource random) {
-        pushEntitiesUp(Blocks.FARMLAND.defaultBlockState(), Blocks.COARSE_DIRT.defaultBlockState(), world, pos.below());
-        world.setBlock(pos.below(), (random.nextInt(2) == 0) ? Blocks.COARSE_DIRT.defaultBlockState() : Blocks.ROOTED_DIRT.defaultBlockState(), Block.UPDATE_CLIENTS);
+    private static void placeWeed(BlockState weedState, ServerLevel world, BlockPos pos, BlockState soil, BlockState degradeTo) {
+        pushEntitiesUp(soil, degradeTo, world, pos.below());
+        world.setBlock(pos.below(), degradeTo, Block.UPDATE_CLIENTS);
         world.setBlockAndUpdate(pos, weedState);
         world.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(null, weedState));
     }

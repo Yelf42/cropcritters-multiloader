@@ -1,5 +1,7 @@
 package com.yelf42.cropcritters;
 
+import com.yelf42.cropcritters.config.FarmlandDegradationMapping;
+import com.yelf42.cropcritters.config.TillingBlockMapping;
 import com.yelf42.cropcritters.entity.*;
 import com.yelf42.cropcritters.platform.ForgePlatformHelper;
 import com.yelf42.cropcritters.registry.*;
@@ -13,6 +15,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -86,6 +89,8 @@ public class CropCrittersForge {
 
         BiomeModifiers.register(eventBus);
 
+        MinecraftForge.EVENT_BUS.addListener(this::registerOnReloadMappings);
+
         CropCritters.init();
 
     }
@@ -101,7 +106,7 @@ public class CropCrittersForge {
     public void setupCommon(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(
-                    new ResourceLocation(CropCritters.MOD_ID, "soul_rose"),
+                    CropCritters.identifier("soul_rose"),
                     () -> ModBlocks.POTTED_SOUL_ROSE
             );
             registerCompostable();
@@ -142,5 +147,12 @@ public class CropCrittersForge {
         ComposterBlock.COMPOSTABLES.put(ModBlocks.LIVERWORT.asItem(), 0.2f);
         ComposterBlock.COMPOSTABLES.put(ModBlocks.WAFTGRASS.asItem(), 0.2f);
         ComposterBlock.COMPOSTABLES.put(ModBlocks.WITHERING_SPITEWEED.asItem(), 0f);
+    }
+
+    public void registerOnReloadMappings(AddReloadListenerEvent event) {
+        event.addListener(TillingBlockMapping.CARROT_INSTANCE);
+        event.addListener(TillingBlockMapping.POTATO_INSTANCE);
+        event.addListener(TillingBlockMapping.BEETROOT_INSTANCE);
+        event.addListener(FarmlandDegradationMapping.INSTANCE);
     }
 }
