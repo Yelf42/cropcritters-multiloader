@@ -70,8 +70,9 @@ public class FarmlandDegradationMapping extends SimpleJsonResourceReloadListener
         if (!BuiltInRegistries.BLOCK.containsKey(id)) return Optional.empty();
 
         Block mappedBlock = BuiltInRegistries.BLOCK.get(id);
+        BlockState mappedState = mappedBlock.defaultBlockState();
 
-        return Optional.of(mappedBlock.defaultBlockState());
+        return Optional.of(mappedState);
     }
 
     public boolean growingMedium(BlockState blockState) {

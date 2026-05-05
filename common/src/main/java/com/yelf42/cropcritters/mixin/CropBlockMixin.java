@@ -56,9 +56,9 @@ public abstract class CropBlockMixin {
             BlockState soilCheck = world.getBlockState(pos.below());
             BlockState degradeTo = FarmlandDegradationMapping.INSTANCE.getFarmlandDegradationMapping(soilCheck).orElse(null);
 
-            if (degradeTo != null && ((CropBlockAccessor)cropBlock).invokeMayPlaceOn(soilCheck, world, pos)) {
+            if (degradeTo != null && ((CropBlockAccessor)cropBlock).invokeMayPlaceOn(degradeTo, world, pos)) {
                 pushEntitiesUp(soilCheck, degradeTo, world, pos.below());
-                world.setBlock(pos.below(), degradeTo, Block.UPDATE_CLIENTS);
+                world.setBlock(pos.below(), degradeTo, Block.UPDATE_ALL);
             }
 
             if (CritterHelper.spawnCritter(world, state, random, pos)) return;
