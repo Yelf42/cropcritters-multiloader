@@ -73,7 +73,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     @Override
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockState floor = world.getBlockState(pos.below());
-        return floor.is(BlockTags.DIRT);
+        return floor.is(BlockTags.DIRT) || floor.getBlock() instanceof FarmBlock;
     }
 
     @Override

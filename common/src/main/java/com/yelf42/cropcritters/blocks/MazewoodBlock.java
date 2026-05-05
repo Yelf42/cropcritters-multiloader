@@ -5,8 +5,7 @@ import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -17,8 +16,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -131,7 +128,7 @@ public class MazewoodBlock extends Block {
     @Override
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockState floor = world.getBlockState(pos.below());
-        return floor.is(BlockTags.DIRT) || floor.is(Blocks.FARMLAND) || (floor.getBlock() instanceof MazewoodBlock);
+        return floor.is(BlockTags.DIRT) || floor.getBlock() instanceof FarmBlock || (floor.getBlock() instanceof MazewoodBlock);
     }
 
     private static boolean isConnected(BlockState state, BooleanProperty property) {

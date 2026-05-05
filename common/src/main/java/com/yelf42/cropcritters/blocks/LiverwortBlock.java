@@ -44,7 +44,8 @@ public class LiverwortBlock extends MultifaceBlock implements BonemealableBlock 
         boolean bl = false;
         for(Direction direction : DIRECTIONS) {
             if (hasFace(state, direction)) {
-                if (!world.getBlockState(pos.relative(direction)).is(BlockTags.DIRT)) {
+                BlockState check = world.getBlockState(pos.relative(direction));
+                if (!check.is(BlockTags.DIRT) && !(check.getBlock() instanceof FarmBlock)) {
                     return false;
                 }
                 bl = true;

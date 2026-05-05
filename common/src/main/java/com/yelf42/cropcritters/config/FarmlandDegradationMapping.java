@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
 
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
+
 public class FarmlandDegradationMapping extends SimpleJsonResourceReloadListener {
 
     private static final Gson GSON = new GsonBuilder().create();
@@ -64,14 +66,19 @@ public class FarmlandDegradationMapping extends SimpleJsonResourceReloadListener
         ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(blockState.getBlock());
 
         List<ResourceLocation> list = blockToBlockList.get(blockId);
-        if (list == null || list.isEmpty()) return Optional.empty();
+        if (list == null || list.isEmpty()) {
+            return Optional.empty();
+        }
 
         ResourceLocation id = list.get(random.nextInt(list.size()));
-        if (!BuiltInRegistries.BLOCK.containsKey(id)) return Optional.empty();
+        if (!BuiltInRegistries.BLOCK.containsKey(id)) {
+            return Optional.empty();
+        }
 
         Block mappedBlock = BuiltInRegistries.BLOCK.get(id);
+        BlockState mappedState = mappedBlock.defaultBlockState();
 
-        return Optional.of(mappedBlock.defaultBlockState());
+        return Optional.of(mappedState);
     }
 
     public boolean growingMedium(BlockState blockState) {

@@ -2,10 +2,7 @@ package com.yelf42.cropcritters.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModBlocks;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerLevel;
@@ -85,7 +82,8 @@ public class MazewoodSaplingBlock extends BaseEntityBlock implements Bonemealabl
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-        return world.getBlockState(pos.below()).is(BlockTags.DIRT);
+        BlockState floor = world.getBlockState(pos.below());
+        return floor.is(BlockTags.DIRT) || floor.getBlock() instanceof FarmBlock;
     }
 
     @Override

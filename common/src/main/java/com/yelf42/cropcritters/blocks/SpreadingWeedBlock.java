@@ -3,11 +3,9 @@ package com.yelf42.cropcritters.blocks;
 import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -44,6 +42,11 @@ public class SpreadingWeedBlock extends BushBlock implements BonemealableBlock {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPES_BY_AGE[this.getAge(state)];
+    }
+
+    @Override
+    protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
+        return state.is(BlockTags.DIRT) || state.getBlock() instanceof FarmBlock;
     }
 
     public int getMaxNeighbours() { return 0; }
