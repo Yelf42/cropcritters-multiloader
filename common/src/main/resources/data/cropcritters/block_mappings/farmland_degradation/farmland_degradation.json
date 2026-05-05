@@ -44,7 +44,7 @@
     },
 
     {
-      "from": "immersive_weathering:loam_farmland",
+      "from": "immersive_weathering:loamy_farmland",
       "to": [
         "immersive_weathering:rooted_loam",
         "immersive_weathering:rooted_loam",
