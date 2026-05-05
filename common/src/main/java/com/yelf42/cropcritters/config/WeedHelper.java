@@ -113,8 +113,11 @@ public class WeedHelper {
     }
 
     private static void placeWeed(BlockState weedState, ServerLevel world, BlockPos pos, BlockState soil, BlockState degradeTo) {
-        pushEntitiesUp(soil, degradeTo, world, pos.below());
-        world.setBlock(pos.below(), degradeTo, Block.UPDATE_CLIENTS);
+        if (degradeTo != null) {
+            pushEntitiesUp(soil, degradeTo, world, pos.below());
+            world.setBlock(pos.below(), degradeTo, Block.UPDATE_CLIENTS);
+        }
+
         world.setBlockAndUpdate(pos, weedState);
         world.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(null, weedState));
     }

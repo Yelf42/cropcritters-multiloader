@@ -17,12 +17,46 @@
         "minecraft:soul_sand"
       ]
     },
+
     {
       "from": "farmersdelight:rich_soil_farmland",
       "to": [
         "farmersdelight:rich_soil"
       ]
-    }
+    },
 
+    {
+      "from": "immersive_weathering:silty_farmland",
+      "to": [
+        "immersive_weathering:rooted_silt",
+        "immersive_weathering:rooted_silt",
+        "immersive_weathering:silt"
+      ]
+    },
+
+    {
+      "from": "immersive_weathering:sandy_farmland",
+      "to": [
+        "immersive_weathering:rooted_sandy_dirt",
+        "immersive_weathering:rooted_sandy_dirt",
+        "immersive_weathering:sandy_dirt"
+      ]
+    },
+
+    {
+      "from": "immersive_weathering:loam_farmland",
+      "to": [
+        "immersive_weathering:rooted_loam",
+        "immersive_weathering:rooted_loam",
+        "immersive_weathering:loam"
+      ]
+    },
+
+    {
+      "from": "immersive_weathering:earthen_clay_farmland",
+      "to": [
+        "immersive_weathering:earthen_clay"
+      ]
+    }
   ]
 }
