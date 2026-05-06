@@ -1,11 +1,7 @@
 package com.yelf42.cropcritters.blocks;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
@@ -81,7 +77,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
     @Override
     protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockState floor = world.getBlockState(pos.below());
-        return floor.is(BlockTags.SUPPORTS_VEGETATION);
+        return floor.is(BlockTags.SUPPORTS_VEGETATION) || floor.getBlock() instanceof FarmlandBlock;
     }
 
     @Override

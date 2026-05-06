@@ -8,6 +8,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.MushroomBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -60,7 +61,7 @@ public class PuffbombPlantBlock extends MushroomBlock {
     protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockPos blockPos = pos.below();
         BlockState blockState = world.getBlockState(blockPos);
-        if (blockState.is(BlockTags.OVERRIDES_MUSHROOM_LIGHT_REQUIREMENT) || blockState.is(BlockTags.SUPPORTS_VEGETATION)) {
+        if (blockState.is(BlockTags.OVERRIDES_MUSHROOM_LIGHT_REQUIREMENT) || blockState.is(BlockTags.SUPPORTS_VEGETATION) || blockState.getBlock() instanceof FarmlandBlock) {
             return true;
         } else {
             return world.getRawBrightness(pos, 0) < 13 && blockState.isSolidRender();

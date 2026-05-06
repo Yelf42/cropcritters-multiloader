@@ -3,8 +3,7 @@ package com.yelf42.cropcritters.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -15,8 +14,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -137,7 +134,7 @@ public class MazewoodBlock extends Block {
     @Override
     protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockState floor = world.getBlockState(pos.below());
-        return floor.is(BlockTags.SUPPORTS_VEGETATION) || (floor.getBlock() instanceof MazewoodBlock);
+        return floor.is(BlockTags.SUPPORTS_VEGETATION) || floor.getBlock() instanceof FarmlandBlock || (floor.getBlock() instanceof MazewoodBlock);
     }
 
     private static boolean isConnected(BlockState state, Property<MazewoodShape> property) {

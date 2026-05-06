@@ -2,13 +2,7 @@ package com.yelf42.cropcritters.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.yelf42.cropcritters.registry.ModBlocks;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.MultifaceBlock;
-import net.minecraft.world.level.block.MultifaceSpreadeableBlock;
-import net.minecraft.world.level.block.MultifaceSpreader;
-import net.minecraft.world.level.block.PointedDripstoneBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -49,7 +43,8 @@ public class LiverwortBlock extends MultifaceSpreadeableBlock implements Bonemea
         boolean bl = false;
         for(Direction direction : DIRECTIONS) {
             if (hasFace(state, direction)) {
-                if (!world.getBlockState(pos.relative(direction)).is(BlockTags.SUPPORTS_VEGETATION)) {
+                BlockState check = world.getBlockState(pos.relative(direction));
+                if (!check.is(BlockTags.SUPPORTS_VEGETATION) && !(check.getBlock() instanceof FarmlandBlock)) {
                     return false;
                 }
                 bl = true;

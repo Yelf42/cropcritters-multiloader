@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -99,7 +100,8 @@ public class MazewoodSaplingBlock extends BaseEntityBlock implements Bonemealabl
 
     @Override
     protected boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-        return world.getBlockState(pos.below()).is(BlockTags.SUPPORTS_VEGETATION);
+        BlockState floor = world.getBlockState(pos.below());
+        return floor.is(BlockTags.SUPPORTS_VEGETATION) || floor.getBlock() instanceof FarmlandBlock;
     }
 
     @Override
