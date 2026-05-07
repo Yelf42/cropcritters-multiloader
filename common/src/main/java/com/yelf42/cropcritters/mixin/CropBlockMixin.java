@@ -22,6 +22,7 @@ import com.yelf42.cropcritters.registry.ModBlocks;
 
 import static net.minecraft.world.level.block.Block.pushEntitiesUp;
 
+// TODO inject into performBonemeal to catch mods that use that to grow via custom farmland
 @Mixin(CropBlock.class)
 public abstract class CropBlockMixin {
 
