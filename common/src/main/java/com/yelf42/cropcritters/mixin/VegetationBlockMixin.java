@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(VegetationBlock.class)
 public abstract class VegetationBlockMixin {
 
-    // TODO allow instance of farmland
+    // TODO allow instance of farmland or just remove this
     // Allows plants to be planted on SOUL_FARMLAND
     @Inject(method = "mayPlaceOn", at = @At("HEAD"), cancellable = true)
     private void allowPlantOnSoulAndDirt(BlockState floor, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
