@@ -11,6 +11,7 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
 - Cocoa critters harvest bushes (expandable for other mods?)
 - Switch Soul Rose Hint to structure system
 - Give clearer description on how to disable weed gen in config
+- Drowning/freezing immunity for critters
 
 ## RepoCredits
 [MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) <br>
