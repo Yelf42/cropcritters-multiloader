@@ -6,9 +6,16 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
 - Locust swarm raid
 - New weed types:
     - Tumbleweed
-- Carrot Critter hoes beneath crops
 - Farm animals eat respective critters, become breedable
 - Golden Dandelion makes critters idle
+- Cocoa critters harvest bushes (expandable for other mods?)
+
+  
+- Switch Soul Rose Hint to structure system
+- Effect instance fix
+- Give clearer description on how to disable weed gen in config
+- Drowning/freezing immunity for critters
+- pathfinding malus for doors/trapdoors
 
 ## RepoCredits
 [MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) <br>
