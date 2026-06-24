@@ -135,7 +135,7 @@ public class StrangleFern extends BaseEntityBlock implements BonemealableBlock {
         if (level instanceof ServerLevel
                 && isMature(state)
                 && entity instanceof LivingEntity livingEntity) {
-            livingEntity.addEffect(ModEffects.NATURAL_SPORES.get());
+            livingEntity.addEffect(ModEffects.sporesInstance());
             level.setBlock(pos, state.setValue(AGE, this.getMaxAge() - 1).setValue(CAN_SPREAD, false), 3);
         }
     }

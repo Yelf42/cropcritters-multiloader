@@ -204,7 +204,7 @@ public class ModBlocks {
                     .sound(SoundType.FUNGUS)
                     .pushReaction(PushReaction.DESTROY),
             new Item.Properties().food((new FoodProperties.Builder())
-                            .effect(ModEffects.EATEN_PUFFBOMB_POISONING.get(), 1.0F)
+                            .effect(ModEffects.puffbombPoisoningInstance(), 1.0F)
                             .build())
     );
 

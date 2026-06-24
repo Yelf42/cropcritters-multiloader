@@ -73,6 +73,7 @@ public class ConfigManager {
             writer.write("# CropCritters Configuration\n");
             writer.write("# Config changes only apply on restart\n");
             writer.write("# \n");
+            writer.write("# TO DISABLE WEED GENERATION, ALSO DISABLE monoculturePenalize \n");
             writer.write("# Weed percentage grow chances:\n");
             writer.write("regularWeedsGrowChance = " + CONFIG.regularWeedChance + "\n");
             writer.write("netherWeedsGrowChance = " + CONFIG.netherWeedChance + "\n");

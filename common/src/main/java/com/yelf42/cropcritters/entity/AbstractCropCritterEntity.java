@@ -100,6 +100,13 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     public AbstractCropCritterEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
         setPathfindingMalus(PathType.DAMAGE_OTHER, 0.0f);
+
+        // Treat these as impassible
+        setPathfindingMalus(PathType.TRAPDOOR, -1.0f);
+        setPathfindingMalus(PathType.DOOR_WOOD_CLOSED, -1.0f);
+        setPathfindingMalus(PathType.DOOR_OPEN, -1.0f);
+        setPathfindingMalus(PathType.DOOR_IRON_CLOSED, -1.0f);
+        setPathfindingMalus(PathType.WALKABLE_DOOR, -1.0f);
     }
 
     public void setTrusting(boolean trusting) {
