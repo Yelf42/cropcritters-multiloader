@@ -97,6 +97,18 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     public AbstractCropCritterEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
         setPathfindingMalus(BlockPathTypes.DAMAGE_OTHER, 0.0f);
+
+        // Treat these as impassible
+        setPathfindingMalus(BlockPathTypes.TRAPDOOR, -1.0f);
+        setPathfindingMalus(BlockPathTypes.DOOR_WOOD_CLOSED, -1.0f);
+        setPathfindingMalus(BlockPathTypes.DOOR_OPEN, -1.0f);
+        setPathfindingMalus(BlockPathTypes.DOOR_IRON_CLOSED, -1.0f);
+        setPathfindingMalus(BlockPathTypes.WALKABLE_DOOR, -1.0f);
+    }
+
+    @Override
+    public boolean canBreatheUnderwater() {
+        return true;
     }
 
     public void setTrusting(boolean trusting) {
