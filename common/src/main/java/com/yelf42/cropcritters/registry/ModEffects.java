@@ -19,10 +19,14 @@ public class ModEffects {
 
 
     public static final Holder<MobEffect> SPORES = register("spores_effect", new SporesEffect(MobEffectCategory.NEUTRAL, 5882118));
-    public static final MobEffectInstance NATURAL_SPORES = new MobEffectInstance(SPORES, 6000, 0, true, true, false);
+    public static MobEffectInstance sporesInstance() {
+        return new MobEffectInstance(SPORES, 6000, 0, true, true, false);
+    }
 
     public static final Holder<MobEffect> PUFFBOMB_POISONING = register("puffbomb_poisoning", new PuffbombPoisoningEffect(MobEffectCategory.HARMFUL, 16770790));
-    public static final MobEffectInstance EATEN_PUFFBOMB_POISONING = new MobEffectInstance(PUFFBOMB_POISONING, 2400, 0, false, false, true);
+    public static MobEffectInstance puffbombPoisoningInstance() {
+        return new MobEffectInstance(PUFFBOMB_POISONING, 2400, 0, false, false, true);
+    }
 
     public static final Holder<MobEffect> SOUL_SIPHON = register("soul_siphon", new SoulSiphonEffect(MobEffectCategory.HARMFUL, 7561558));
 

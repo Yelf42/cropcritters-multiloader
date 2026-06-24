@@ -21,7 +21,7 @@ public class SoulRoseHintFeature extends Feature<NoneFeatureConfiguration> {
 
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
-        CropCritters.LOGGER.info("Attempting to place SOUL_ROSE_HINT, ignore OutOfBounds errors");
+        //CropCritters.LOGGER.info("Attempting to place SOUL_ROSE_HINT, ignore OutOfBounds errors");
         RandomSource random = context.random();
         int level = random.nextInt(3) + 1;
         WorldGenLevel world = context.level();

@@ -215,7 +215,7 @@ public class ModBlocks {
                             .animation(ItemUseAnimation.EAT)
                             .sound(SoundEvents.GENERIC_EAT)
                             .hasConsumeParticles(true)
-                            .onConsume(new ApplyStatusEffectsConsumeEffect(ModEffects.EATEN_PUFFBOMB_POISONING))
+                            .onConsume(new ApplyStatusEffectsConsumeEffect(ModEffects.puffbombPoisoningInstance()))
                             .build())
     );
 
