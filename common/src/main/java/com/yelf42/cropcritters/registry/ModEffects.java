@@ -13,7 +13,6 @@ import com.yelf42.cropcritters.CropCritters;
 import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
 
-// TODO MobEffectInstance's should be replaced with a function that returns a new instance each time
 public class ModEffects {
 
     public static final LinkedHashMap<String, MobEffect> REGISTERED_EFFECTS = new LinkedHashMap<>();
