@@ -9,13 +9,7 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
 - Farm animals eat respective critters, become breedable
 - Golden Dandelion makes critters idle
 - Cocoa critters harvest bushes (expandable for other mods?)
-
-  
-- Switch Soul Rose Hint to structure system
-- Effect instance fix
-- Give clearer description on how to disable weed gen in config
-- Drowning/freezing immunity for critters
-- pathfinding malus for doors/trapdoors
+- Replace WEED_IMMUNE with separate tags for each weed
 
 ## RepoCredits
 [MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) <br>
