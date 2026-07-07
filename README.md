@@ -7,9 +7,9 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
 - New weed types:
     - Tumbleweed
 - Farm animals eat respective critters, become breedable
-- Golden Dandelion makes critters idle
-- Cocoa critters harvest bushes (expandable for other mods?)
+- Cocoa critters harvest bushes/more (expandable for other mods? Overweight Crops)
 - Replace WEED_IMMUNE with separate tags for each weed
+- Sable compatibility for Soul Rose (Mazewood Sapling?)
 
 ## RepoCredits
 [MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) <br>
