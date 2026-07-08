@@ -10,6 +10,7 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
 - Cocoa critters harvest bushes/more (expandable for other mods? Overweight Crops)
 - Replace WEED_IMMUNE with separate tags for each weed
 - Sable compatibility for Soul Rose (Mazewood Sapling?)
+- Better bush immunity
 
 ## RepoCredits
 [MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) <br>
