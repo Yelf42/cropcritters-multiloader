@@ -69,11 +69,11 @@ public class ModEventHandlers {
 
         // Harvest Popper Pod
         if (state.is(ModBlocks.POPPER_PLANT) && state.getValueOrElse(PopperPlantBlock.AGE, 0) == PopperPlantBlock.MAX_AGE) {
-            Vec3 center = pos.getCenter();
+            Vec3 center = Vec3.atCenterOf(pos);
             ItemStack itemStack = new ItemStack(ModItems.POPPER_POD);
             ItemEntity itemEntity = new ItemEntity(world, center.x, center.y, center.z, itemStack);
             itemEntity.setDefaultPickUpDelay();
-            ((ServerLevel) world).addFreshEntity(itemEntity);
+            world.addFreshEntity(itemEntity);
             world.setBlockAndUpdate(pos, state.setValue(PopperPlantBlock.AGE, 0));
             if (!player.isCreative()) stack.hurtWithoutBreaking(1, player);
             world.playSound(null, pos, SoundEvents.SHEARS_SNIP, SoundSource.PLAYERS, 1.0F, 1.0F);

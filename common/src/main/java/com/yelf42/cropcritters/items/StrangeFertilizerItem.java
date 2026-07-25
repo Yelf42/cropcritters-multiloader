@@ -1,6 +1,7 @@
 package com.yelf42.cropcritters.items;
 
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
+import net.minecraft.tags.BlockItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
@@ -187,7 +188,7 @@ public class StrangeFertilizerItem extends BoneMealItem {
                 BlockState blockState2 = world.getBlockState(blockPos2);
                 if (blockState2.is(Blocks.WATER) && world.getFluidState(blockPos2).getAmount() == 8) {
                     world.setBlock(blockPos2, blockState, Block.UPDATE_ALL);
-                } else if (random.nextInt(2) == 0 && !blockState2.is(BlockTags.SAPLINGS)) {
+                } else if (random.nextInt(2) == 0 && !blockState2.is(BlockItemTags.SAPLINGS.block())) {
                     growCrop(stack, world, blockPos2);
                 }
             }

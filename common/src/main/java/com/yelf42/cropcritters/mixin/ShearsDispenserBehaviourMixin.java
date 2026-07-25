@@ -30,7 +30,7 @@ public abstract class ShearsDispenserBehaviourMixin {
             world.gameEvent((Entity)null, GameEvent.SHEAR, pos);
             world.playSound(null, pos, SoundEvents.SHEARS_SNIP, SoundSource.PLAYERS, 1.0F, 1.0F);
 
-            Vec3 center = pos.getCenter();
+            Vec3 center = Vec3.atCenterOf(pos);
             ItemStack itemStack = new ItemStack(ModItems.POPPER_POD);
             ItemEntity itemEntity = new ItemEntity(world, center.x, center.y, center.z, itemStack);
             itemEntity.setDefaultPickUpDelay();

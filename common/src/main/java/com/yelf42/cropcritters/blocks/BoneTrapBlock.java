@@ -83,7 +83,7 @@ public class BoneTrapBlock extends VegetationBlock {
     @Override
     protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean bl) {
         if (entity instanceof LivingEntity livingEntity) {
-            double dist = livingEntity.position().distanceTo(pos.getBottomCenter());
+            double dist = livingEntity.position().distanceTo(Vec3.atBottomCenterOf(pos));
             if (this.getStage(state) == 0 && dist <= 0.2F) {
 
                 world.playSound(null, pos, ModSounds.BONE_TRAP_CLOSE, SoundSource.BLOCKS, 0.5F, 1.0F + (world.getRandom().nextFloat() * 0.6F - 0.3F));

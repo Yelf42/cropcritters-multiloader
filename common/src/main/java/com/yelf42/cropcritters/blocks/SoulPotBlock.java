@@ -114,7 +114,7 @@ public class SoulPotBlock extends BaseEntityBlock implements SimpleWaterloggedBl
                     world.playSound(null, pos.above(), ModSounds.WITHER_ROSE_CONVERT, SoundSource.BLOCKS);
                     world.playSound(null, pos.above(), ModSounds.WITHER_ROSE_CONVERT_EXTRA, SoundSource.BLOCKS);
 
-                    Vec3 center = pos.above().getCenter();
+                    Vec3 center = Vec3.atCenterOf(pos.above());
                     ModPackets.ParticleRingS2CPayload payload = new ModPackets.ParticleRingS2CPayload(center, 0.5F, 10, ModParticles.SOUL_GLOW);
                     ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(payload);
 

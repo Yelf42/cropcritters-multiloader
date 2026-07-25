@@ -1,11 +1,11 @@
 package com.yelf42.cropcritters.entity;
 
+import com.mojang.datafixers.util.Pair;
 import com.yelf42.cropcritters.registry.ModPackets;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,7 +29,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -105,8 +104,8 @@ public class MelonCritterEntity extends AbstractCropCritterEntity implements Ran
     }
 
     @Override
-    protected Tuple<Item, Integer> getLoot() {
-        return new Tuple<>(Items.MELON_SLICE, 8);
+    protected Pair<Item, Integer> getLoot() {
+        return new Pair<>(Items.MELON_SLICE, 8);
     }
 
     @Override

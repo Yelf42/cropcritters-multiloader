@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.mojang.datafixers.util.Pair;
 import com.yelf42.cropcritters.area_affectors.AffectorPositions;
 import com.yelf42.cropcritters.area_affectors.TypedBlockArea;
 import com.yelf42.cropcritters.registry.ModBlocks;
@@ -9,7 +10,6 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -42,7 +42,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
@@ -79,7 +78,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     protected abstract boolean isHealingItem(ItemStack itemStack);
     protected abstract int resetTicksUntilCanWork();
     public abstract void completeTargetGoal();
-    protected abstract Tuple<Item, Integer> getLoot();
+    protected abstract Pair<Item, Integer> getLoot();
 
     protected  int resetTicksUntilCanWork(int work) {
         return (int) ((double)work * ConfigManager.CONFIG.critterWorkSpeedMultiplier);
@@ -275,13 +274,13 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
 
     @Override
     protected void dropAllDeathLoot(ServerLevel world, DamageSource damageSource) {
-        Tuple<Item, Integer> loot = getLoot();
+        Pair<Item, Integer> loot = getLoot();
         int quantity = 1;
-        if (loot.getB() > 1 && damageSource.getEntity() instanceof Player) {
+        if (loot.getSecond() > 1 && damageSource.getEntity() instanceof Player) {
             boolean withHoe = damageSource.getWeaponItem() != null && damageSource.getWeaponItem().is(ItemTags.HOES);
-            if (withHoe) quantity = world.getRandom().nextInt(loot.getB()) + 1;
+            if (withHoe) quantity = world.getRandom().nextInt(loot.getSecond()) + 1;
         }
-        ItemStack toDrop = new ItemStack(loot.getA(), quantity);
+        ItemStack toDrop = new ItemStack(loot.getFirst(), quantity);
         this.spawnAtLocation(world, toDrop);
         this.dropExperience(world, damageSource.getEntity());
     }

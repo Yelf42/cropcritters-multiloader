@@ -92,7 +92,7 @@ public class PopperPlantBlock extends VegetationBlock implements BonemealableBlo
 
     private void spawnPopperPod(ServerLevel world, BlockState state, BlockPos pos) {
         ItemStack itemStack = new ItemStack(ModItems.POPPER_POD);
-        Vec3 center = pos.getCenter().add(state.getOffset(pos));
+        Vec3 center = (Vec3.atCenterOf(pos)).add(state.getOffset(pos));
         Projectile.spawnProjectile(new PopperPodEntity(world, center.x, center.y, center.z, itemStack), world, itemStack);
     }
 

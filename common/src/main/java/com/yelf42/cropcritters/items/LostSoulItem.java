@@ -1,14 +1,14 @@
 package com.yelf42.cropcritters.items;
 
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.monster.cubemob.Slime;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PitcherCropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import com.yelf42.cropcritters.config.CritterHelper;
 import com.yelf42.cropcritters.entity.AbstractCropCritterEntity;
 import com.yelf42.cropcritters.registry.ModSounds;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
@@ -46,9 +47,9 @@ public class LostSoulItem extends Item {
                 world.sendParticles(ParticleTypes.SMOKE, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 10, 0.5, 0.5, 0.5, 0F);
             } else {
                 world.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
-                Slime slime = EntityType.SLIME.create(world, EntitySpawnReason.SPAWN_ITEM_USE);
+                Slime slime = EntityTypes.SLIME.create(world, EntitySpawnReason.SPAWN_ITEM_USE);
                 slime.setSize(2, true);
-                slime.setPos(blockPos.getBottomCenter());
+                slime.setPos(Vec3.atBottomCenterOf(blockPos));
                 world.addFreshEntity(slime);
                 world.playSound(null, blockPos, ModSounds.SPAWN_SLIME, SoundSource.BLOCKS, 1F, 1F);
                 world.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 10, 0.5, 0.5, 0.5, 0F);
@@ -74,7 +75,7 @@ public class LostSoulItem extends Item {
                 toSpawnAt = blockPos.below();
             }
             world.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
-            critter.setPos(toSpawnAt.getBottomCenter());
+            critter.setPos(Vec3.atBottomCenterOf(toSpawnAt));
             world.addFreshEntity(critter);
             world.playSound(null, blockPos, ModSounds.SPAWN_CRITTER, SoundSource.BLOCKS, 1F, 1F);
             world.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, 10, 0.5, 0.5, 0.5, 0F);

@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -17,7 +18,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.level.block.Block;
@@ -109,8 +109,8 @@ public class NetherWartCritterEntity extends AbstractCropCritterEntity {
     }
 
     @Override
-    protected Tuple<Item, Integer> getLoot() {
-        return new Tuple<>(Items.NETHER_WART, 3);
+    protected Pair<Item, Integer> getLoot() {
+        return new Pair<>(Items.NETHER_WART, 3);
     }
 
     @Override

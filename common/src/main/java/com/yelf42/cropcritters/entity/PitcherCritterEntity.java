@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.OcelotAttackGoal;
@@ -25,7 +26,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
@@ -108,8 +108,8 @@ public class PitcherCritterEntity extends AbstractCropCritterEntity {
     public void completeTargetGoal() {}
 
     @Override
-    protected Tuple<Item, Integer> getLoot() {
-        return new Tuple<>(Items.PITCHER_PLANT, 1);
+    protected Pair<Item, Integer> getLoot() {
+        return new Pair<>(Items.PITCHER_PLANT, 1);
     }
 
     @Override

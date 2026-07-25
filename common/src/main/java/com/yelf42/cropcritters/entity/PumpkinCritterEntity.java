@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -26,7 +27,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -101,7 +101,7 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
         if (world instanceof ServerLevel serverWorld) {
             ItemStack held = this.getItemBySlot(EquipmentSlot.MAINHAND);
             ItemStack itemStack = held.isEmpty() ? new ItemStack(ModItems.SEED_BALL) : held;
-            float dist = (float) this.position().distanceTo(this.targetPos.getCenter());
+            float dist = (float) this.position().distanceTo(Vec3.atCenterOf(this.targetPos));
             Projectile.spawnProjectile(new SeedBallProjectileEntity(serverWorld, this, itemStack, 1), serverWorld, itemStack, (entity) -> entity.shoot(dir.x, 1.8F, dir.z, 0.4F * (dist / 5.0F), 0.0F));
         }
         this.playSound(ModSounds.ENTITY_CRITTER_SPIT, 2.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
@@ -160,8 +160,8 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
     }
 
     @Override
-    protected Tuple<Item, Integer> getLoot() {
-        return new Tuple<>(Items.PUMPKIN, 1);
+    protected Pair<Item, Integer> getLoot() {
+        return new Pair<>(Items.PUMPKIN, 1);
     }
 
     @Override

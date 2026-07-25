@@ -64,7 +64,7 @@ public class LostSoulInAJarBlock extends LanternBlock {
 
     @Override
     protected boolean triggerEvent(BlockState state, Level world, BlockPos pos, int type, int data) {
-        Vec3 cPos = pos.getCenter();
+        Vec3 cPos = Vec3.atCenterOf(pos);
         double angle = Math.toRadians((double)data);
         double planeOffset = 0.8f;
         double heightOffset = ((double)data / 360F) - 1.f;

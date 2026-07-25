@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
@@ -24,7 +25,6 @@ import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
@@ -81,8 +81,8 @@ public class PoisonousPotatoCritterEntity extends AbstractCropCritterEntity impl
     }
 
     @Override
-    protected Tuple<Item, Integer> getLoot() {
-        return new Tuple<>(Items.POISONOUS_POTATO, 2);
+    protected Pair<Item, Integer> getLoot() {
+        return new Pair<>(Items.POISONOUS_POTATO, 2);
     }
 
     @Override

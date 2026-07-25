@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -32,7 +33,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -89,7 +89,7 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
     @Override
     protected void readAdditionalSaveData(ValueInput view) {
         super.readAdditionalSaveData(view);
-        this.hopperPos = (BlockPos)view.read("hopper_pos", BlockPos.CODEC).orElse(null);
+        this.hopperPos = view.read("hopper_pos", BlockPos.CODEC).orElse(null);
     }
 
 
@@ -145,8 +145,8 @@ public class CocoaCritterEntity extends AbstractCropCritterEntity {
     }
 
     @Override
-    protected Tuple<Item, Integer> getLoot() {
-        return new Tuple<>(Items.COCOA_BEANS, 3);
+    protected Pair<Item, Integer> getLoot() {
+        return new Pair<>(Items.COCOA_BEANS, 3);
     }
 
     @Override

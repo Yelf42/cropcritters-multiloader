@@ -36,7 +36,7 @@ public class TorchflowerSparkBlock extends AirBlock {
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         super.animateTick(state, world, pos, random);
         if (world.isClientSide()) {
-            Vec3 p = pos.getCenter();
+            Vec3 p = Vec3.atCenterOf(pos);
             world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, p.x, p.y, p.z, 0F, 0F, 0F);
         }
     }

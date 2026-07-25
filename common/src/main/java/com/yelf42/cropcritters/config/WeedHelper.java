@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.config;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -7,7 +8,6 @@ import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -34,28 +34,28 @@ public class WeedHelper {
     // Liverwort (only generates when raining)
     // Mazewood sapling (generates from lightning, not this)
 
-    private static final List<Tuple<BlockState, Double>> WEIGHTED_NETHER_WEEDS = new ArrayList<>(List.of(
-            new Tuple<>(ModBlocks.WITHERING_SPITEWEED.defaultBlockState(), 0.2),
-            new Tuple<>(ModBlocks.WAFTGRASS.defaultBlockState(), 0.25),
-            new Tuple<>(ModBlocks.BONE_TRAP.defaultBlockState(), 0.25),
-            new Tuple<>(ModBlocks.CRIMSON_THORNWEED.defaultBlockState(), 0.3)
+    private static final List<Pair<BlockState, Double>> WEIGHTED_NETHER_WEEDS = new ArrayList<>(List.of(
+            new Pair<>(ModBlocks.WITHERING_SPITEWEED.defaultBlockState(), 0.2),
+            new Pair<>(ModBlocks.WAFTGRASS.defaultBlockState(), 0.25),
+            new Pair<>(ModBlocks.BONE_TRAP.defaultBlockState(), 0.25),
+            new Pair<>(ModBlocks.CRIMSON_THORNWEED.defaultBlockState(), 0.3)
     ));
 
-    private static final List<Tuple<BlockState, Double>> WEIGHTED_OVERWORLD_WEEDS = new ArrayList<>(List.of(
-            new Tuple<>(ModBlocks.POPPER_PLANT.defaultBlockState(), 0.15),
-            new Tuple<>(ModBlocks.PUFFBOMB_MUSHROOM.defaultBlockState(), 0.15),
-            new Tuple<>(ModBlocks.STRANGLE_FERN.defaultBlockState(), 0.3),
-            new Tuple<>(ModBlocks.CRAWL_THISTLE.defaultBlockState(), 0.4)
+    private static final List<Pair<BlockState, Double>> WEIGHTED_OVERWORLD_WEEDS = new ArrayList<>(List.of(
+            new Pair<>(ModBlocks.POPPER_PLANT.defaultBlockState(), 0.15),
+            new Pair<>(ModBlocks.PUFFBOMB_MUSHROOM.defaultBlockState(), 0.15),
+            new Pair<>(ModBlocks.STRANGLE_FERN.defaultBlockState(), 0.3),
+            new Pair<>(ModBlocks.CRAWL_THISTLE.defaultBlockState(), 0.4)
     ));
 
     // Assumes weights add up to 1
-    public static <A> A getFromWeightedList(List<Tuple<A, Double>> list) {
+    public static <A> A getFromWeightedList(List<Pair<A, Double>> list) {
         double r = Math.random();
-        for (Tuple<A, Double> pair : list) {
-            r -= pair.getB();
-            if (r <= 0) return pair.getA();
+        for (Pair<A, Double> pair : list) {
+            r -= pair.getSecond();
+            if (r <= 0) return pair.getFirst();
         }
-        return list.getLast().getA();
+        return list.getLast().getFirst();
     }
 
     public static void generateWeed(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, boolean nether) {

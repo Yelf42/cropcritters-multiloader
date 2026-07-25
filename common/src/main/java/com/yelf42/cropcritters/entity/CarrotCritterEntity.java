@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.mojang.datafixers.util.Pair;
 import com.yelf42.cropcritters.config.TillingBlockMapping;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -9,7 +10,6 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -43,8 +43,8 @@ public class CarrotCritterEntity extends AbstractCropCritterEntity {
     }
 
     @Override
-    protected Tuple<Item, Integer> getLoot() {
-        return new Tuple<>(Items.CARROT, 6);
+    protected Pair<Item, Integer> getLoot() {
+        return new Pair<>(Items.CARROT, 6);
     }
 
     @Override

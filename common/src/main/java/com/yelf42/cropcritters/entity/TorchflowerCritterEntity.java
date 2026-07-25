@@ -1,5 +1,6 @@
 package com.yelf42.cropcritters.entity;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -17,7 +18,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.ticks.TickPriority;
@@ -42,8 +42,8 @@ public class TorchflowerCritterEntity extends AbstractCropCritterEntity {
     protected int getTargetOffset() {return 0;}
 
     @Override
-    protected Tuple<Item, Integer> getLoot() {
-        return new Tuple<>(Items.TORCHFLOWER, 1);
+    protected Pair<Item, Integer> getLoot() {
+        return new Pair<>(Items.TORCHFLOWER, 1);
     }
 
     @Override

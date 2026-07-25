@@ -45,7 +45,7 @@ public class StrangleFernBlockEntityRenderer implements BlockEntityRenderer<Stra
         movingBlock.biome = level.getBiome(state.blockPos);
         movingBlock.cardinalLighting = CardinalLighting.DEFAULT;
 
-        queue.submitMovingBlock(matrices, movingBlock);
+        queue.submitMovingBlock(matrices, movingBlock, 0);
     }
 
 
