@@ -12,6 +12,7 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
 - Sable compatibility for Soul Rose (Mazewood Sapling?)
 - Better bush immunity
 - Grow large coral like Carpet
+- Allow untamed critters to despawn after a timer
 
 ## RepoCredits
 [MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) <br>
