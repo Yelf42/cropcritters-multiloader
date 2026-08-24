@@ -25,7 +25,7 @@ import static net.minecraft.world.level.block.Block.pushEntitiesUp;
 // TODO inject into performBonemeal to catch mods that use that to grow via custom farmland
 @Mixin(CropBlock.class)
 public abstract class CropBlockMixin {
-
+    // TODO doesn't play nice with custom crops that grow on other nonsense
     // Allows plants to be planted on SOUL_FARMLAND
     @Inject(method = "mayPlaceOn", at = @At("HEAD"), cancellable = true)
     private void allowPlantOnSoulAndDirt(BlockState floor, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
@@ -77,6 +77,7 @@ public abstract class CropBlockMixin {
             return;
         }
 
+        // TODO doesn't play nice with custom crops that grow on other nonsense
         BlockState soilCheck = world.getBlockState(pos.below());
         if (!FarmlandDegradationMapping.INSTANCE.growingMedium(soilCheck)) {
             ci.cancel();
