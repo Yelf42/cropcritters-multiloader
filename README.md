@@ -13,6 +13,7 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
 - Better bush immunity
 - Grow large coral like Carpet
 - Allow untamed critters to despawn after a timer
+- Bonemeal variant just for growing grasses
 
 ## RepoCredits
 [MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) <br>
