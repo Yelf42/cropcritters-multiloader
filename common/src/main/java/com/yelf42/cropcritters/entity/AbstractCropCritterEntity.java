@@ -71,6 +71,8 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     private static final Predicate<Entity> NOTICEABLE_PLAYER_FILTER = (entity) -> !entity.isDiscrete() && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(entity);
     private static final Predicate<Entity> FARM_ANIMALS_FILTER = (entity -> entity.is(CropCritters.SCARE_CRITTERS));
     public static final RawAnimation SIT = RawAnimation.begin().thenLoop("animated.sit");
+    private static final long DESPAWN_DELAY_TICKS = 12000;
+
 
     // Override these methods
     protected abstract Predicate<BlockState> getTargetBlockFilter();
@@ -92,6 +94,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     BlockPos targetPos;
     TargetWorkGoal targetWorkGoal;
     BlockPos nearestSoulRose;
+    long ticksAlive = 0;
 
     int ticksUntilCanWork = 20 * 10;
 
@@ -120,6 +123,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
         view.putBoolean("Trusting", this.isTrusting());
         view.putInt("TicksUntilCanWork", this.ticksUntilCanWork);
         view.storeNullable("NearestSoulRose", BlockPos.CODEC, this.nearestSoulRose);
+        view.putLong("TicksAlive", this.ticksAlive);
     }
 
     @Override
@@ -129,8 +133,21 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
         this.ticksUntilCanWork = view.getIntOr("TicksUntilCanWork", resetTicksUntilCanWork());
         this.targetPos = null;
         this.nearestSoulRose = view.read("NearestSoulRose", BlockPos.CODEC).orElse(null);
+        this.ticksAlive = view.getLongOr("TicksAlive", 0L);
     }
 
+    @Override
+    public boolean removeWhenFarAway(double distSqr) {
+        return (!this.isTrusting()) && this.ticksAlive >= DESPAWN_DELAY_TICKS;
+    }
+
+    @Override
+    public void checkDespawn() {
+        if (this.tickCount < DESPAWN_DELAY_TICKS) {
+            return;
+        }
+        super.checkDespawn();
+    }
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {return null;}
@@ -288,6 +305,15 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     @Override
     protected int getBaseExperienceReward(ServerLevel world) {
         return super.getBaseExperienceReward(world) + (this.isTrusting() ? 3 : 0);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!this.level().isClientSide() && !this.isTame()) {
+            this.ticksAlive++;
+        }
     }
 
     @Override

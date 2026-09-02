@@ -16,7 +16,7 @@ public class CropCrittersConfig {
     public boolean thornweedGeneration = true;
     public boolean waftgrassGeneration = true;
     public boolean spiteweedGeneration = true;
-    public boolean strangleFernGeneration = true;
+    public boolean strangleFernGeneration = false;
     public boolean puffbombGeneration = true;
     public boolean liverwortGeneration = true;
 

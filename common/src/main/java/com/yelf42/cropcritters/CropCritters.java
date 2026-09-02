@@ -22,7 +22,11 @@ public class CropCritters {
 
 
     // TAGS
-    public static final TagKey<EntityType<?>> WEED_IMMUNE = TagKey.create(Registries.ENTITY_TYPE, identifier( "weed_immune"));
+    public static final TagKey<EntityType<?>> WITHERING_SPITEWEED_IMMUNE = TagKey.create(Registries.ENTITY_TYPE, identifier( "withering_spiteweed_immune"));
+    public static final TagKey<EntityType<?>> WAFTGRASS_IMMUNE = TagKey.create(Registries.ENTITY_TYPE, identifier( "waftgrass_immune"));
+    public static final TagKey<EntityType<?>> CRIMSON_THORNWEED_IMMUNE = TagKey.create(Registries.ENTITY_TYPE, identifier( "crimson_thornweed_immune"));
+    public static final TagKey<EntityType<?>> CRAWL_THISTLE_IMMUNE = TagKey.create(Registries.ENTITY_TYPE, identifier( "crawl_thistle_immune"));
+
     public static final TagKey<EntityType<?>> CROP_CRITTERS = TagKey.create(Registries.ENTITY_TYPE, identifier( "crop_critters"));
     public static final TagKey<EntityType<?>> SCARE_CRITTERS = TagKey.create(Registries.ENTITY_TYPE, identifier( "scare_critters"));
     public static final TagKey<EntityType<?>> HAS_LOST_SOUL = TagKey.create(Registries.ENTITY_TYPE, identifier( "has_lost_soul"));

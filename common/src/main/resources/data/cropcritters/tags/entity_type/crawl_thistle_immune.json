@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#cropcritters:crop_critters",
+    "minecraft:parrot",
+    "minecraft:ocelot",
+    "minecraft:fox",
+    "minecraft:bee"
+  ]
+}
