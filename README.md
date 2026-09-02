@@ -13,6 +13,8 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
 - Config options for easy mode players
     - Turn off soil degrade. Only to be added after tool-change ability
 - Ability to give tools to critters to change their behaviour?
+- Increase seedballs per craft
+- Increase critter drops via Pitcher critter
 
 ## RepoCredits
 [MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) <br>
