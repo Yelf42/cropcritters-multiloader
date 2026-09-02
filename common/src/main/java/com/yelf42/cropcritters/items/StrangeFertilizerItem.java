@@ -1,6 +1,8 @@
 package com.yelf42.cropcritters.items;
 
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.ParticleUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
@@ -10,11 +12,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.level.block.BaseCoralWallFanBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.InteractionResult;
@@ -28,6 +26,8 @@ import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModBlocks;
 import com.yelf42.cropcritters.blocks.SoulRoseBlock;
 import com.yelf42.cropcritters.registry.ModSounds;
+import net.minecraft.world.level.levelgen.feature.*;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 import java.util.List;
 import java.util.Map;
@@ -94,6 +94,25 @@ public class StrangeFertilizerItem extends BoneMealItem {
 
         // Revive Coral
         if (tryReviveCoral(context.getItemInHand(), world, blockPos, world.getBlockState(blockPos))) {
+            if (playerEntity instanceof ServerPlayer) {
+                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) playerEntity, blockPos, itemStack);
+            }
+            return InteractionResult.SUCCESS;
+        }
+
+        // Try to grow large coral
+        if (tryGrowLargeCoral(world.getBlockState(blockPos))) {
+            world.levelEvent(1505, blockPos, 15);
+            BoneMealItem.addGrowthParticles(world, blockPos, 4);
+
+            if (world instanceof ServerLevel serverLevel) {
+                RandomSource random = serverLevel.getRandom();
+                if (random.nextInt(5) == 0 && growLargeCoral(serverLevel, random, blockPos)) {
+                    world.gameEvent(null, GameEvent.BLOCK_CHANGE, blockPos);
+                    itemStack.shrink(1);
+                }
+            }
+
             if (playerEntity instanceof ServerPlayer) {
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) playerEntity, blockPos, itemStack);
             }
@@ -292,5 +311,22 @@ public class StrangeFertilizerItem extends BoneMealItem {
                 });
     }
 
+
+    public static boolean tryGrowLargeCoral(BlockState state) {
+        return state.getBlock() instanceof CoralPlantBlock && state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false);
+    }
+
+    private static boolean growLargeCoral(ServerLevel serverLevel, RandomSource random, BlockPos pos) {
+        int variant = random.nextInt(3);
+        CoralFeature coral = switch (variant) {
+            case 0 -> new CoralClawFeature(NoneFeatureConfiguration.CODEC);
+            case 1 -> new CoralTreeFeature(NoneFeatureConfiguration.CODEC);
+            default -> new CoralMushroomFeature(NoneFeatureConfiguration.CODEC);
+        };
+
+        serverLevel.setBlock(pos, Blocks.WATER.defaultBlockState(), Block.UPDATE_NONE);
+
+        return coral.place(new FeaturePlaceContext<>(Optional.empty(), serverLevel, serverLevel.getChunkSource().getGenerator(), random, pos, new NoneFeatureConfiguration()));
+    }
 
 }

@@ -251,8 +251,11 @@ public class PumpkinCritterEntity extends AbstractCropCritterEntity implements R
                 if (PumpkinCritterEntity.this.level().getGameTime() < l) {
                     long2LongOpenHashMap.put(blockPos.asLong(), l);
                 } else if (isAttractive(blockPos)) {
+                    if (blockPos.closerToCenterThan(PumpkinCritterEntity.this.position(), 1.3)) {
+                        return Optional.of(blockPos);
+                    }
                     Path path = PumpkinCritterEntity.this.navigation.createPath(blockPos, 0);
-                    if (path != null && path.canReach() && !blockPos.closerToCenterThan(PumpkinCritterEntity.this.position(), 1)) {
+                    if (path != null && path.canReach() && !blockPos.closerToCenterThan(PumpkinCritterEntity.this.position(), 3)) {
                         return Optional.of(blockPos);
                     }
 

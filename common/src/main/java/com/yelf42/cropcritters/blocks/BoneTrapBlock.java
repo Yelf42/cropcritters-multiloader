@@ -82,7 +82,7 @@ public class BoneTrapBlock extends BushBlock {
                 world.playSound(null, pos, ModSounds.BONE_TRAP_CLOSE, SoundSource.BLOCKS, 0.5F, 1.0F + (world.random.nextFloat() * 0.6F - 0.3F));
 
                 if (world instanceof ServerLevel serverWorld) {
-                    if (!(livingEntity.getType().is(CropCritters.WEED_IMMUNE))) livingEntity.hurt(world.damageSources().sweetBerryBush(), 4.0F);
+                    if (!(livingEntity.getType().is(CropCritters.CROP_CRITTERS))) livingEntity.hurt(world.damageSources().sweetBerryBush(), 4.0F);
                     serverWorld.scheduleTick(pos, this, 40 + serverWorld.random.nextInt(20), TickPriority.EXTREMELY_LOW);
                     serverWorld.setBlockAndUpdate(pos, state.setValue(STAGE, 2));
                 }

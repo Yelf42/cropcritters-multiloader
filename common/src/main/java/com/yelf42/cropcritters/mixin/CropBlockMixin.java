@@ -2,6 +2,7 @@ package com.yelf42.cropcritters.mixin;
 
 import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.config.*;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -14,6 +15,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.biome.Biomes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,10 +27,17 @@ import static net.minecraft.world.level.block.Block.pushEntitiesUp;
 @Mixin(CropBlock.class)
 public abstract class CropBlockMixin {
 
-    // Allows plants to be planted on SOUL_FARMLAND
-    @Inject(method = "mayPlaceOn", at = @At("HEAD"), cancellable = true)
-    private void allowPlantOnSoulAndDirt(BlockState floor, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (floor.is(BlockTags.DIRT) || floor.getBlock() instanceof FarmBlock) cir.setReturnValue(true);
+    @Shadow
+    protected abstract boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos);
+
+    @Inject(method = "canSurvive", at = @At("RETURN"), cancellable = true)
+    private void allowSurviveOnDirtFamily(BlockState state, LevelReader world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValueZ()) return;
+
+        BlockState below = world.getBlockState(pos.below());
+        if (state.getFluidState().isEmpty() && (below.is(BlockTags.DIRT) || below.getBlock() instanceof FarmBlock)) {
+            cir.setReturnValue(true);
+        }
     }
 
     /// getGrowthSpeed is different in fabric v neoforge
@@ -56,7 +65,7 @@ public abstract class CropBlockMixin {
             BlockState soilCheck = world.getBlockState(pos.below());
             BlockState degradeTo = FarmlandDegradationMapping.INSTANCE.getFarmlandDegradationMapping(soilCheck).orElse(null);
 
-            if (degradeTo != null && ((CropBlockAccessor)cropBlock).invokeMayPlaceOn(degradeTo, world, pos)) {
+            if (degradeTo != null && ((CropBlockAccessor)cropBlock).invokeCanSurvive(degradeTo, world, pos)) {
                 pushEntitiesUp(soilCheck, degradeTo, world, pos.below());
                 world.setBlock(pos.below(), degradeTo, Block.UPDATE_ALL);
             }
@@ -76,8 +85,13 @@ public abstract class CropBlockMixin {
             return;
         }
 
-        BlockState soilCheck = world.getBlockState(pos.below());
-        if (!FarmlandDegradationMapping.INSTANCE.growingMedium(soilCheck)) {
+        BlockPos soilPos = pos.below();
+        BlockState soilCheck = world.getBlockState(soilPos);
+
+        boolean nativeGrowable = this.mayPlaceOn(soilCheck, world, soilPos);
+        boolean registeredMedium = FarmlandDegradationMapping.INSTANCE.growingMedium(soilCheck);
+
+        if (!nativeGrowable && !registeredMedium) {
             ci.cancel();
             return;
         }

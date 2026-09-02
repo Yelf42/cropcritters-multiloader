@@ -70,6 +70,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     private static final Predicate<Entity> NOTICEABLE_PLAYER_FILTER = (entity) -> !entity.isDiscrete() && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(entity);
     private static final Predicate<Entity> FARM_ANIMALS_FILTER = (entity -> entity.getType().is(CropCritters.SCARE_CRITTERS));
     public static final RawAnimation SIT = RawAnimation.begin().thenLoop("animated.sit");
+    private static final long DESPAWN_DELAY_TICKS = 12000;
 
     // Override these methods
     protected abstract Predicate<BlockState> getTargetBlockFilter();
@@ -90,7 +91,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     BlockPos targetPos;
     TargetWorkGoal targetWorkGoal;
     BlockPos nearestSoulRose;
-
+    long ticksAlive = 0;
 
     int ticksUntilCanWork = 20 * 10;
 
@@ -123,6 +124,7 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
         super.addAdditionalSaveData(tag);
         tag.putBoolean("Trusting", this.isTrusting());
         tag.putInt("TicksUntilCanWork", this.ticksUntilCanWork);
+        tag.putLong("TicksAlive", this.ticksAlive);
         if (this.nearestSoulRose != null) tag.put("NearestSoulRose", NbtUtils.writeBlockPos(this.nearestSoulRose));
     }
 
@@ -144,9 +146,23 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
             this.nearestSoulRose = null;
         }
 
+        this.ticksAlive = tag.contains("TicksAlive") ? tag.getLong("TicksAlive") : 0L;
+
         this.targetPos = null;
     }
 
+    @Override
+    public boolean removeWhenFarAway(double distSqr) {
+        return (!this.isTrusting()) && this.ticksAlive >= DESPAWN_DELAY_TICKS;
+    }
+
+    @Override
+    public void checkDespawn() {
+        if (this.tickCount < DESPAWN_DELAY_TICKS) {
+            return;
+        }
+        super.checkDespawn();
+    }
 
     @Override
     public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {return null;}
@@ -307,6 +323,15 @@ public abstract class AbstractCropCritterEntity extends TamableAnimal implements
     public void aiStep() {
         super.aiStep();
         handleTicksUntilCanWork();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!this.level().isClientSide() && !this.isTame()) {
+            this.ticksAlive++;
+        }
     }
 
     protected void handleTicksUntilCanWork() {

@@ -2,6 +2,7 @@ package com.yelf42.cropcritters.mixin;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,5 +13,8 @@ public interface CropBlockAccessor {
 
     @Invoker("mayPlaceOn")
     boolean invokeMayPlaceOn(BlockState floor, BlockGetter world, BlockPos pos);
+
+    @Invoker("canSurvive")
+    boolean invokeCanSurvive(BlockState state, LevelReader level, BlockPos pos);
 
 }

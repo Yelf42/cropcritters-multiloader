@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:hoglin",
+    "minecraft:piglin",
+    "minecraft:piglin_brute",
+    "minecraft:magma_cube",
+    "#cropcritters:undead",
+    "#cropcritters:crop_critters"
+  ]
+}

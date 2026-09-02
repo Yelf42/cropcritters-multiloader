@@ -1,6 +1,5 @@
 package com.yelf42.cropcritters.entity;
 
-import com.yelf42.cropcritters.CropCritters;
 import com.yelf42.cropcritters.registry.ModEntities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
@@ -20,6 +19,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -34,6 +34,7 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
     private static final List<ResourceLocation> DefaultSeedTypes = Arrays.asList(BuiltInRegistries.BLOCK.getKey(Blocks.WHEAT), BuiltInRegistries.BLOCK.getKey(Blocks.CARROTS), BuiltInRegistries.BLOCK.getKey(Blocks.POTATOES), BuiltInRegistries.BLOCK.getKey(Blocks.BEETROOTS));
 
     private int range = 2;
+    private int intangibleCooldown = 5;
 
     public SeedBallProjectileEntity(EntityType<? extends ThrowableItemProjectile> entityType, Level world) {
         super(entityType, world);
@@ -87,27 +88,50 @@ public class SeedBallProjectileEntity extends ThrowableItemProjectile {
         }
     }
 
-
+    @Override
+    public void tick() {
+        this.intangibleCooldown--;
+        super.tick();
+    }
 
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
+        if (this.intangibleCooldown > 0) return;
+
         Entity entity = entityHitResult.getEntity();
-        if (entity instanceof Player player) player.addEffect((new MobEffectInstance(MobEffects.BLINDNESS, 20 * 4, 0)));
+        boolean discard = false;
         if (entity instanceof LivingEntity livingEntity) {
             int p = ModComponents.getPoisonous(this.getItem()).poisonStacks();
-            livingEntity.addEffect((new MobEffectInstance(MobEffects.POISON, 20 * 6 * p, 0)));
+            if (p > 0) {
+                livingEntity.addEffect((new MobEffectInstance(MobEffects.POISON, 20 * 6 * p, 0)));
+                discard = true;
+            }
         }
-        if (!this.level().isClientSide()) {
+
+        if (entity instanceof Player player) {
+            player.addEffect((new MobEffectInstance(MobEffects.BLINDNESS, 20 * 4, 0)));
+            discard = true;
+        }
+
+        if (discard && !this.level().isClientSide()) {
             this.level().broadcastEntityEvent(this, (byte)3);
             this.discard();
         }
     }
 
     @Override
+    protected void onHitBlock(BlockHitResult hitResult) {
+        if (this.intangibleCooldown > 0) return;
+
+        BlockState state = this.level().getBlockState(hitResult.getBlockPos());
+        this.onInsideBlock(state);
+    }
+
+    @Override
     protected void onInsideBlock(BlockState state) {
         Level world = this.level();
         if (!world.isClientSide()) {
-            if (!state.isSolid()) return;
+            if (!state.blocksMotion()) return;
 
             List<ResourceLocation> crops = ModComponents.getSeedTypes(this.getItem()).seedTypes();
             if (crops.isEmpty()) {
