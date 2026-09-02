@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:undead",
+    "#cropcritters:crop_critters"
+  ]
+}

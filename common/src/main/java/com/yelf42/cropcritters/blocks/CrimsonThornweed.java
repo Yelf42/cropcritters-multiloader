@@ -29,7 +29,7 @@ public class CrimsonThornweed extends SpreadingWeedBlock {
     protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         // Apply damage, avoid critters and nether mobs
         if (entity instanceof LivingEntity livingEntity
-                && !(livingEntity.getType().is(CropCritters.WEED_IMMUNE))) {
+                && !(livingEntity.getType().is(CropCritters.CRIMSON_THORNWEED_IMMUNE))) {
             Vec3 vec3d = new Vec3(0.9, 0.9F, 0.9);
             livingEntity.makeStuckInBlock(state, vec3d);
             if (world instanceof ServerLevel) livingEntity.hurt(world.damageSources().sweetBerryBush(), 2.0F);

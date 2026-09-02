@@ -58,7 +58,7 @@ public class WitheringSpiteweed extends SpreadingWeedBlock {
     @Override
     protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         if (entity instanceof LivingEntity livingEntity
-                && !(livingEntity.getType().is(CropCritters.WEED_IMMUNE))) {
+                && !(livingEntity.getType().is(CropCritters.WITHERING_SPITEWEED_IMMUNE))) {
             Vec3 vec3d = new Vec3(0.9, 0.9F, 0.9);
             livingEntity.makeStuckInBlock(state, vec3d);
             if (world instanceof ServerLevel && !livingEntity.isInvulnerableTo(world.damageSources().wither())) {
