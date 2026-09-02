@@ -8,15 +8,11 @@ This is a multiloader re-make of the [Fabric CropCritters project](https://githu
     - Tumbleweed
 - Farm animals eat respective critters, become breedable
 - Cocoa critters harvest bushes/more (expandable for other mods? Overweight Crops)
-- Replace WEED_IMMUNE with separate tags for each weed
 - Sable compatibility for Soul Rose (Mazewood Sapling?)
-- Better bush immunity
-- Grow large coral like Carpet
-- Allow untamed critters to despawn after a timer
 - Bonemeal variant just for growing grasses
 - Config options for easy mode players
+    - Turn off soil degrade. Only to be added after tool-change ability
 - Ability to give tools to critters to change their behaviour?
-- Buff pumpkin critter spitting, ignore entity collision on seedball, ignore all collisions for X ticks, try plant regardless?
 
 ## RepoCredits
 [MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) <br>
